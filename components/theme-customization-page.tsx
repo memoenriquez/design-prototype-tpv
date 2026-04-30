@@ -66,8 +66,9 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
   const handlePresetSelect = (presetKey: string) => {
     const preset = themePresets[presetKey]
     if (preset) {
-      setDraft(preset)
-      setPreviewTheme(preset)
+      const nextDraft = { ...preset, presetName: presetKey }
+      setDraft(nextDraft)
+      setPreviewTheme(nextDraft)
     }
   }
 
@@ -140,14 +141,14 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
         {/* Save bar when changes exist */}
         {hasChanges && (
           <div 
-            className="flex items-center justify-between px-4 py-3 border-t"
+            className="flex min-w-0 items-center justify-between gap-3 border-t px-4 py-3"
             style={{ 
               backgroundColor: "var(--theme-primary)",
               borderColor: "rgba(255,255,255,0.1)"
             }}
           >
-            <p className="text-sm text-white font-medium">Cambios sin guardar</p>
-            <div className="flex gap-2">
+            <p className="min-w-0 truncate text-sm font-medium text-white">Cambios sin guardar</p>
+            <div className="flex shrink-0 gap-2">
               <Button
                 variant="ghost"
                 size="sm"
@@ -198,6 +199,8 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                 return (
                   <button
                     key={preset.key}
+                    type="button"
+                    aria-pressed={isActive}
                     onClick={() => handlePresetSelect(preset.key)}
                     className={cn(
                       "flex items-center gap-4 p-4 rounded-2xl border-2 transition-all text-left",
@@ -210,15 +213,15 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                     {/* Color preview circles */}
                     <div className="flex -space-x-2">
                       <div 
-                        className="w-8 h-8 rounded-full border-2 border-white shadow-md"
+                        className="size-8 rounded-full border-2 border-white shadow-md"
                         style={{ backgroundColor: presetTheme.primaryColor }}
                       />
                       <div 
-                        className="w-8 h-8 rounded-full border-2 border-white shadow-md"
+                        className="size-8 rounded-full border-2 border-white shadow-md"
                         style={{ backgroundColor: presetTheme.secondaryColor }}
                       />
                       <div 
-                        className="w-8 h-8 rounded-full border-2 border-white shadow-md"
+                        className="size-8 rounded-full border-2 border-white shadow-md"
                         style={{ backgroundColor: presetTheme.backgroundColor }}
                       />
                     </div>
@@ -241,7 +244,7 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                     
                     <PresetIcon 
                       className={cn(
-                        "w-5 h-5 shrink-0",
+                        "size-5 shrink-0",
                         isActive ? "text-[var(--theme-primary)]" : "text-gray-400"
                       )} 
                     />
@@ -353,9 +356,12 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                   {[0, 8, 16, 24].map((radius) => (
                     <button
                       key={radius}
+                      type="button"
+                      aria-label={`Usar radio de esquinas de ${radius} pixeles`}
+                      aria-pressed={draft.borderRadius === radius}
                       onClick={() => updateDraft({ borderRadius: radius })}
                       className={cn(
-                        "w-14 h-14 border-2 transition-all",
+                        "size-14 border-2 transition-all",
                         draft.borderRadius === radius
                           ? "border-[var(--theme-primary)] bg-[var(--theme-primary)]/10"
                           : "border-gray-200"
@@ -481,10 +487,10 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                 </p>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex w-full min-w-0 gap-2">
               <Button 
                 size="sm"
-                className="flex-1 text-white"
+                className="min-w-0 flex-1 text-white"
                 style={{ 
                   backgroundColor: draft.primaryColor,
                   borderRadius: `${draft.borderRadius * 0.5}px`
@@ -495,7 +501,7 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
               <Button 
                 size="sm"
                 variant="outline"
-                className="flex-1"
+                className="min-w-0 flex-1"
                 style={{ 
                   borderColor: draft.primaryColor,
                   color: draft.primaryColor,

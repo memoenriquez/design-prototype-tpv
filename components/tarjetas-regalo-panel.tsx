@@ -7,6 +7,14 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
+import { CloseButton } from "@/components/ui/close-button"
+import {
   Empty,
   EmptyContent,
   EmptyDescription,
@@ -24,8 +32,7 @@ import {
   Search,
   Check,
   Star,
-  Copy,
-  Loader2
+  Copy
 } from "lucide-react"
 import { TransactionModal, ConfirmTransactionModal, TransactionStatus, TransactionDetails } from "./transaction-modal"
 
@@ -67,6 +74,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [selectedCard, setSelectedCard] = useState<GiftCard | null>(null)
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null)
+  const [showAmountSheet, setShowAmountSheet] = useState(false)
   
   // Modal states
   const [showConfirm, setShowConfirm] = useState(false)
@@ -83,6 +91,8 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
     return matchesSearch && matchesCategory
   })
 
+  const popularCards = giftCards.filter(card => card.popular)
+
   const transactionDetails: TransactionDetails = {
     type: `Tarjeta ${selectedCard?.name || ""}`,
     amount: `$${selectedAmount?.toLocaleString('es-MX') || 0}.00`,
@@ -92,12 +102,24 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
   }
 
   const handlePurchase = () => {
+    setShowAmountSheet(false)
     setShowConfirm(true)
+  }
+
+  const handleCardSelect = (card: GiftCard) => {
+    setSelectedCard(card)
+    setSelectedAmount(null)
+    setShowAmountSheet(true)
+  }
+
+  const handleCloseAmountSheet = () => {
+    setShowAmountSheet(false)
   }
 
   const handleConfirmTransaction = () => {
     setIsProcessing(true)
     setShowConfirm(false)
+    setShowAmountSheet(false)
     setShowResult(true)
     setTransactionStatus("processing")
 
@@ -129,33 +151,33 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
     setShowCodeModal(false)
     setSelectedCard(null)
     setSelectedAmount(null)
+    setShowAmountSheet(false)
     setGeneratedCode("")
   }
 
   return (
     <>
-      <div className="flex flex-col gap-4 w-full overflow-hidden box-border animate-slide-up" style={{ maxWidth: "100%" }}>
+      <div className="flex w-full max-w-full min-w-0 flex-col gap-4 box-border animate-slide-up">
         {/* Main Card */}
-        <Card className="border-0 shadow-xl shadow-[#000D94]/5 overflow-hidden w-full" style={{ maxWidth: "100%" }}>
+        <Card className="w-full min-w-0 overflow-hidden border-0 shadow-xl shadow-[#000D94]/5">
           {/* Header */}
-          <CardHeader className="bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 text-white p-4 pb-5 relative overflow-hidden">
+          <CardHeader className="relative overflow-hidden bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 p-3 pb-4 text-white sm:p-4 sm:pb-6">
             {/* Decorative elements */}
-            <div className="absolute inset-0 opacity-20 pointer-events-none" aria-hidden="true">
-              <div className="absolute top-2 left-4 size-6 rotate-12 rounded-lg border-2 border-white" />
-              <div className="absolute top-6 right-6 size-5 rounded-full border-2 border-white" />
-              <div className="absolute bottom-3 left-10 size-3 rounded-full bg-white" />
+            <div className="pointer-events-none absolute inset-0 opacity-10" aria-hidden="true">
+              <div className="absolute -top-8 -right-8 size-24 rounded-full bg-white blur-2xl" />
+              <div className="absolute -bottom-6 left-8 size-20 rounded-full bg-white blur-xl" />
             </div>
             
-            <div className="relative z-10 w-full flex flex-col gap-3">
+            <div className="relative z-10 flex w-full flex-col gap-3">
               {/* Title row */}
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0 flex-1">
-                  <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide">Tarjetas de regalo</p>
-                  <h3 className="text-lg font-bold leading-tight">Regala experiencias</h3>
+                  <p className="text-[10px] font-medium text-white/70 sm:text-xs">Tarjetas de regalo</p>
+                  <h3 className="text-base font-bold leading-tight sm:text-lg">Regala experiencias</h3>
                 </div>
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                  <Gift className="size-5 text-white" />
-                </div>
+                <Badge className="shrink-0 border-0 bg-white/20 text-[10px] text-white sm:text-xs">
+                  Entrega inmediata
+                </Badge>
               </div>
               
               {/* Search */}
@@ -166,19 +188,22 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                   placeholder="Buscar tarjeta..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 h-11 bg-white/15 border-white/20 text-white placeholder:text-white/50 rounded-xl text-sm focus:bg-white/20 transition-colors"
+                  aria-label="Buscar tarjeta de regalo"
+                  className="h-10 w-full rounded-xl border-white/20 bg-white/15 pl-10 text-sm text-white placeholder:text-white/50 transition-colors focus:bg-white/20 sm:h-11"
                 />
               </div>
             </div>
           </CardHeader>
           
           {/* Content */}
-          <CardContent className="p-4 flex flex-col gap-4 w-full overflow-hidden">
+          <CardContent className="flex w-full min-w-0 flex-col gap-4 overflow-x-hidden p-3 sm:p-4">
             {/* Categories - Horizontal scroll */}
-            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1">
+            <div className="flex w-full max-w-full min-w-0 gap-2 overflow-x-auto pb-1 scrollbar-hide">
               {categories.map((category) => (
                 <button
                   key={category.id}
+                  type="button"
+                  aria-pressed={selectedCategory === category.id}
                   onClick={() => setSelectedCategory(category.id)}
                   className={cn(
                     "flex min-h-[40px] shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 touch-target",
@@ -193,26 +218,51 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
               ))}
             </div>
 
+            {/* Popular Cards */}
+            <div>
+              <div className="mb-2 flex items-center gap-1.5 sm:mb-3 sm:gap-2">
+                <Star className="size-3.5 shrink-0 fill-yellow-500 text-yellow-500 sm:size-4" />
+                <span className="text-xs font-semibold text-foreground/80 sm:text-sm">Populares</span>
+              </div>
+              <div className="flex w-full max-w-full min-w-0 gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                {popularCards.map((card) => (
+                  <button
+                    key={card.id}
+                    type="button"
+                    aria-pressed={selectedCard?.id === card.id}
+                    onClick={() => handleCardSelect(card)}
+                    className="flex flex-shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-gray-50 to-gray-100 px-3 py-1.5 text-xs font-medium text-foreground/80 transition-all duration-200 active:-translate-y-0.5 active:shadow-md sm:px-4 sm:py-2 sm:text-sm touch-target"
+                  >
+                    <div className={cn("flex size-5 scale-75 items-center justify-center rounded-full bg-gradient-to-br text-[10px] font-bold text-white sm:size-6 sm:text-xs", card.color)}>
+                      {card.logo}
+                    </div>
+                    {card.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Section header */}
             <div className="flex items-center gap-2">
-              <Star className="size-4 shrink-0 fill-yellow-500 text-yellow-500" />
-              <span className="text-sm font-semibold text-gray-700">Mas vendidas</span>
+              <Gift className="size-4 shrink-0 text-purple-500" />
+              <span className="text-sm font-semibold text-foreground/80">
+                {searchQuery || selectedCategory !== "all" ? "Resultados" : "Todas las tarjetas"}
+              </span>
             </div>
 
             {/* Cards Grid - Responsive columns */}
-            <div className="grid grid-cols-2 gap-3 w-full overflow-hidden">
+            <div className="grid w-full min-w-0 grid-cols-2 gap-3 overflow-hidden">
               {filteredCards.map((card, index) => (
                 <button
                   key={card.id}
-                  onClick={() => {
-                    setSelectedCard(card)
-                    setSelectedAmount(null)
-                  }}
+                  type="button"
+                  aria-pressed={selectedCard?.id === card.id}
+                  onClick={() => handleCardSelect(card)}
                   className={cn(
-                    "group flex min-h-[120px] min-w-0 flex-col overflow-hidden rounded-2xl border-2 p-3 text-left transition-all duration-200",
+                    "group relative flex min-h-[120px] min-w-0 flex-col overflow-hidden rounded-xl border p-3 text-left transition-all duration-200 sm:rounded-2xl sm:p-4",
                     selectedCard?.id === card.id
                       ? "border-purple-500 bg-purple-50 shadow-lg shadow-purple-500/20"
-                      : "border-transparent bg-white shadow-sm hover:shadow-md active:scale-[0.98]"
+                      : "border-gray-100 bg-gradient-to-br from-white to-gray-50 shadow-sm hover:shadow-md active:scale-[0.98]"
                   )}
                   style={{ animationDelay: `${index * 0.03}s` }}
                 >
@@ -228,13 +278,13 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                   
                   {/* Info */}
                   <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                    <h4 className="font-semibold text-gray-900 text-sm truncate">{card.name}</h4>
-                    <p className="text-xs text-gray-500">Desde ${card.amounts[0]}</p>
+                    <h4 className="truncate text-sm font-semibold text-foreground">{card.name}</h4>
+                    <p className="text-xs text-muted-foreground">Desde ${card.amounts[0]}</p>
                   </div>
                   
                   {/* Badge */}
                   {card.popular && (
-                    <Badge className="mt-2 w-fit bg-yellow-100 text-yellow-700 border-0 text-[10px] font-medium px-2 py-0.5">
+                    <Badge className="mt-2 w-fit border-0 bg-yellow-100 px-2 py-0.5 text-[10px] font-medium text-yellow-700">
                       Popular
                     </Badge>
                   )}
@@ -271,55 +321,90 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
           </CardContent>
         </Card>
 
-        {/* Selected Card - Amount Selection */}
-        {selectedCard && (
-          <Card className="border-0 shadow-lg overflow-hidden w-full animate-slide-up">
-            <CardHeader className={cn("bg-gradient-to-r p-4 text-white", selectedCard.color)}>
-              <div className="flex items-center gap-3">
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/20 text-xl font-bold backdrop-blur-sm">
-                  {selectedCard.logo}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-bold text-base truncate">{selectedCard.name}</h3>
-                  <p className="text-white/80 text-xs">Selecciona el monto</p>
-                </div>
-              </div>
-            </CardHeader>
-            
-            <CardContent className="p-4 flex flex-col gap-4">
-              {/* Amount buttons - Responsive grid */}
-              <div className="grid grid-cols-2 gap-2">
-                {selectedCard.amounts.map((amt) => (
-                  <button
-                    key={amt}
-                    onClick={() => setSelectedAmount(amt)}
-                    className={cn(
-                      "flex min-h-[56px] items-center justify-center gap-2 rounded-xl border-2 p-4 text-lg font-bold transition-all duration-200 touch-target",
-                      selectedAmount === amt
-                        ? "border-purple-500 bg-purple-50 text-purple-700 shadow-md"
-                        : "border-gray-200 bg-white text-gray-900 hover:border-purple-300 active:scale-[0.98]"
-                    )}
-                  >
-                    <span>${amt}</span>
-                    {selectedAmount === amt && (
-                      <Check className="size-4 shrink-0 text-purple-500" />
-                    )}
-                  </button>
-                ))}
-              </div>
-              
-              {/* Purchase button */}
-              <Button 
-                className="w-full h-12 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white font-bold text-base rounded-xl shadow-lg shadow-purple-500/25 disabled:opacity-50 disabled:shadow-none transition-all duration-200"
-                disabled={!selectedAmount}
-                onClick={handlePurchase}
-              >
-                Comprar ${selectedAmount || 0} MXN
-              </Button>
-            </CardContent>
-          </Card>
-        )}
       </div>
+
+      {/* Gift Card Amount Sheet */}
+      <Sheet open={showAmountSheet} onOpenChange={setShowAmountSheet}>
+        <SheetContent
+          side="bottom"
+          showCloseButton={false}
+          className="max-h-[70vh] overflow-hidden rounded-t-3xl border-0 px-0 pb-8"
+        >
+          {selectedCard && (
+            <>
+              <div className={cn("-mt-6 bg-gradient-to-r px-4 pt-2 pb-4 text-white sm:px-6 sm:pb-5", selectedCard.color)}>
+                <div className="mb-3 flex justify-center">
+                  <div className="h-1.5 w-12 rounded-full bg-white/30" />
+                </div>
+
+                <SheetHeader className="text-left">
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/20 text-lg font-bold shadow-lg backdrop-blur-sm sm:size-14 sm:rounded-2xl sm:text-xl">
+                      {selectedCard.logo}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <SheetTitle className="truncate text-lg font-bold text-white sm:text-xl">
+                        {selectedCard.name}
+                      </SheetTitle>
+                      <SheetDescription className="text-xs text-white/70 sm:text-sm">
+                        Selecciona el monto de la tarjeta
+                      </SheetDescription>
+                    </div>
+                    <CloseButton
+                      onAction={handleCloseAmountSheet}
+                      buttonStyle="glass"
+                      size="md"
+                    />
+                  </div>
+                </SheetHeader>
+              </div>
+
+              <div className="max-h-[calc(70vh-120px)] min-w-0 overflow-y-auto px-4 pt-4 sm:px-6 sm:pt-5">
+                <div className="flex min-w-0 flex-col gap-4">
+                  <div
+                    className="grid min-w-0 grid-cols-2 gap-2"
+                    role="radiogroup"
+                    aria-label={`Montos disponibles para ${selectedCard.name}`}
+                  >
+                    {selectedCard.amounts.map((amt) => (
+                      <button
+                        key={amt}
+                        type="button"
+                        role="radio"
+                        aria-checked={selectedAmount === amt}
+                        onClick={() => setSelectedAmount(amt)}
+                        className={cn(
+                          "flex min-h-[56px] min-w-0 items-center justify-center gap-2 rounded-xl border-2 p-4 text-lg font-bold transition-all duration-200 touch-target",
+                          selectedAmount === amt
+                            ? "border-purple-500 bg-purple-50 text-purple-700 shadow-md"
+                            : "border-gray-200 bg-white text-foreground hover:border-purple-300 active:scale-[0.98]"
+                        )}
+                      >
+                        <span>${amt}</span>
+                        {selectedAmount === amt && (
+                          <Check className="size-4 shrink-0 text-purple-500" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+
+                  <Button
+                    className="h-12 w-full rounded-xl bg-gradient-to-r from-[#0BBD33] to-[#099a2a] text-base font-bold text-white shadow-lg shadow-[#0BBD33]/25 transition-all duration-200 hover:from-[#099a2a] hover:to-[#078523] disabled:opacity-50 disabled:shadow-none"
+                    disabled={!selectedAmount}
+                    onClick={handlePurchase}
+                  >
+                    Comprar ${selectedAmount || 0} MXN
+                  </Button>
+
+                  <p className="pb-4 text-center text-[10px] text-muted-foreground sm:text-xs">
+                    Tu codigo se generara despues de confirmar la compra
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
 
       {/* Confirmation Modal */}
       <ConfirmTransactionModal
@@ -359,7 +444,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
 
       {/* Code Display Modal */}
       <Dialog open={showCodeModal} onOpenChange={setShowCodeModal}>
-        <DialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto bg-white border-0 rounded-2xl shadow-2xl p-5">
+        <DialogContent className="w-[calc(100%-2rem)] max-w-md bg-white border-0 rounded-2xl shadow-2xl p-5">
           <DialogHeader className="text-center pb-4">
             <div className={cn("mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br text-xl font-bold text-white shadow-lg", selectedCard?.color || "from-purple-500 to-pink-500")}>
               {selectedCard?.logo}
@@ -406,17 +491,17 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
             </div>
 
             {/* Actions */}
-            <DialogFooter className="flex-row gap-3">
+            <DialogFooter className="gap-3 sm:flex-row">
               <Button
                 variant="outline"
-                className="flex-1 h-12 rounded-xl border-gray-200 text-sm font-medium"
+                className="h-12 w-full rounded-xl border-gray-200 text-sm font-medium sm:flex-1"
                 onClick={handleCopyCode}
               >
                 <Copy data-icon="inline-start" />
                 Copiar
               </Button>
               <Button
-                className="flex-1 h-12 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 rounded-xl text-white text-sm font-medium shadow-lg shadow-purple-500/25"
+                className="h-12 w-full rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-sm font-medium text-white shadow-lg shadow-purple-500/25 hover:from-purple-700 hover:to-pink-600 sm:flex-1"
                 onClick={handleNewTransaction}
               >
                 Nueva Compra

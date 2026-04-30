@@ -214,6 +214,7 @@ export function NotificationsPopover() {
                             {notification.title}
                           </p>
                           <button
+                            type="button"
                             onClick={(e) => {
                               e.stopPropagation()
                               removeNotification(notification.id)

@@ -220,16 +220,17 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
+/* Opt-in custom scrollbar */
+.scrollbar-thin::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
 }
 
-::-webkit-scrollbar-track {
+.scrollbar-thin::-webkit-scrollbar-track {
   background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
+.scrollbar-thin::-webkit-scrollbar-thumb {
   background: var(--ctcpay-blue);
   border-radius: 4px;
   opacity: 0.5;

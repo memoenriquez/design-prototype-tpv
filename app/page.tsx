@@ -12,8 +12,6 @@ import { RecentTransactions } from "@/components/recent-transactions"
 import { ProfilePage } from "@/components/profile-page"
 import { ThemeCustomizationPage } from "@/components/theme-customization-page"
 import { BottomNavigation } from "@/components/bottom-navigation"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Button } from "@/components/ui/button"
 import { CloseButton } from "@/components/ui/close-button"
 import { Sparkles, Home } from "lucide-react"
 
@@ -117,7 +115,7 @@ export default function POSApp() {
 
   return (
     <div 
-      className="min-h-screen min-h-[100dvh] flex flex-col w-full sm:max-w-[430px] mx-auto relative overflow-hidden"
+      className="relative mx-auto flex h-screen h-[100dvh] w-full min-w-0 flex-col overflow-x-hidden sm:max-w-[430px]"
       style={{ backgroundColor: "var(--theme-background, #F8FAFC)" }}
     >
       {/* Background decorative elements */}
@@ -132,8 +130,8 @@ export default function POSApp() {
       <POSHeader airtimeBalance={airtimeBalance} />
 
       {/* Main Content */}
-      <ScrollArea className="flex-1 pb-32 relative z-10">
-        <main className="p-4 sm:p-5 space-y-6 w-full max-w-full overflow-x-hidden">
+      <div className="scrollbar-hide relative z-10 flex-1 overflow-x-hidden overflow-y-auto pb-32">
+        <main className="flex w-full max-w-full min-w-0 flex-col gap-6 overflow-x-hidden p-4 sm:p-5">
           {activePanel === "inicio" ? (
             <>
               {/* Welcome message */}
@@ -164,7 +162,7 @@ export default function POSApp() {
               <QuickActions onActionClick={handleActionClick} />
             </>
           ) : (
-            <div className="space-y-4">
+            <div className="flex min-w-0 flex-col gap-4">
               {/* Back Button Header */}
               <div className="flex items-center gap-3 animate-slide-up">
                 <CloseButton 
@@ -202,7 +200,7 @@ export default function POSApp() {
             </div>
           )}
         </main>
-      </ScrollArea>
+      </div>
 
       {/* Bottom Navigation */}
       <BottomNavigation 

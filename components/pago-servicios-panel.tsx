@@ -190,8 +190,8 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
 
   return (
     <>
-      <div className="flex w-full max-w-full flex-col gap-4 overflow-hidden box-border animate-slide-up">
-        <Card className="border-0 shadow-xl shadow-[#000D94]/5 overflow-hidden w-full box-border">
+      <div className="flex w-full max-w-full min-w-0 flex-col gap-4 box-border animate-slide-up">
+        <Card className="w-full min-w-0 overflow-hidden border-0 shadow-xl shadow-[#000D94]/5 box-border">
           <CardHeader className="bg-gradient-to-r from-[#000D94] to-[#1a2eb8] text-white p-3 sm:p-4 pb-4 sm:pb-6">
             <div className="flex items-center justify-between mb-2 sm:mb-3 gap-2">
               <div className="min-w-0 flex-1">
@@ -216,14 +216,14 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
             </div>
           </CardHeader>
           
-          <CardContent className="p-3 sm:p-4 overflow-hidden w-full box-border">
+          <CardContent className="w-full min-w-0 overflow-x-hidden p-3 sm:p-4 box-border">
             {/* Popular Services */}
             <div className="mb-3 sm:mb-4">
               <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
                 <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-yellow-500 fill-yellow-500 shrink-0" />
                 <span className="text-xs sm:text-sm font-semibold text-foreground/80">Populares</span>
               </div>
-              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide max-w-full">
+              <div className="flex w-full max-w-full min-w-0 gap-2 overflow-x-auto pb-2 scrollbar-hide">
                 {serviceCategories.filter(c => c.popular).map((category) => (
                   <button
                     key={category.id}
@@ -240,7 +240,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
             </div>
 
             {/* All Categories Grid */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full">
+            <div className="grid w-full min-w-0 grid-cols-2 gap-2 sm:gap-3">
               {filteredCategories.map((category, index) => (
                 <button
                   key={category.id}
@@ -279,7 +279,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                 
                 <SheetHeader className="text-left">
                   <div className="flex items-center gap-3">
-                    <div className="flex size-11 items-center justify-center rounded-xl bg-white/20 shadow-lg backdrop-blur-sm sm:size-14 sm:rounded-2xl [&>svg]:size-5 sm:[&>svg]:size-7">
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/20 shadow-lg backdrop-blur-sm sm:size-14 sm:rounded-2xl [&>svg]:size-5 sm:[&>svg]:size-7">
                       {selectedCategory.icon}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -306,7 +306,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                     <button
                       key={service}
                       onClick={() => handleServiceSelect(service)}
-                      className="w-full p-3.5 sm:p-4 bg-white border border-gray-100 hover:border-gray-200 active:bg-gray-50 rounded-xl sm:rounded-2xl text-left flex items-center justify-between transition-all duration-200 group touch-target shadow-sm hover:shadow-md animate-slide-up"
+                      className="flex w-full min-w-0 items-center justify-between rounded-xl border border-gray-100 bg-white p-3.5 text-left shadow-sm transition-all duration-200 hover:border-gray-200 hover:shadow-md active:bg-gray-50 sm:rounded-2xl sm:p-4 group touch-target animate-slide-up"
                       style={{ animationDelay: `${index * 0.05}s` }}
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -349,7 +349,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
             {/* Reference Input */}
             <div className="flex flex-col gap-1.5 sm:gap-2">
               <label className="text-xs sm:text-sm font-medium text-gray-700">Numero de referencia o contrato</label>
-              <div className="flex gap-2">
+              <div className="flex w-full min-w-0 gap-2">
                 <Input
                   type="text"
                   placeholder="Ej: 123456789012"
@@ -358,12 +358,12 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                     setServiceReference(e.target.value)
                     setRefFound(false)
                   }}
-                  className="flex-1 h-10 sm:h-12 rounded-lg sm:rounded-xl border-gray-200 focus:border-[#000D94] focus:ring-[#000D94]/20 text-sm"
+                  className="h-10 min-w-0 flex-1 rounded-lg border-gray-200 text-sm focus:border-[#000D94] focus:ring-[#000D94]/20 sm:h-12 sm:rounded-xl"
                 />
                 <Button
                   onClick={handleSearchReference}
                   disabled={serviceReference.length < 8 || isSearchingRef}
-                  className="h-10 sm:h-12 px-3 sm:px-4 bg-[#000D94] hover:bg-[#000D94]/90 rounded-lg sm:rounded-xl"
+                  className="h-10 shrink-0 rounded-lg bg-[#000D94] px-3 hover:bg-[#000D94]/90 sm:h-12 sm:rounded-xl sm:px-4"
                 >
                   {isSearchingRef ? (
                     <Loader2 className="animate-spin" data-icon="inline-start" />
@@ -396,16 +396,16 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
             )}
 
             {/* Action Buttons */}
-            <DialogFooter className="flex-row gap-2 pt-2 sm:gap-3">
+            <DialogFooter className="gap-2 pt-2 sm:flex-row sm:gap-3">
               <Button
                 variant="outline"
-                className="flex-1 h-10 sm:h-12 rounded-lg sm:rounded-xl border-gray-200 text-xs sm:text-sm"
+                className="h-10 w-full rounded-lg border-gray-200 text-xs sm:h-12 sm:flex-1 sm:rounded-xl sm:text-sm"
                 onClick={() => setShowPaymentForm(false)}
               >
                 Cancelar
               </Button>
               <Button
-                className="flex-1 h-10 sm:h-12 bg-[#0BBD33] hover:bg-[#0BBD33]/90 rounded-lg sm:rounded-xl text-white text-xs sm:text-sm"
+                className="h-10 w-full rounded-lg bg-[#0BBD33] text-xs text-white hover:bg-[#0BBD33]/90 sm:h-12 sm:flex-1 sm:rounded-xl sm:text-sm"
                 disabled={!refFound}
                 onClick={handlePayService}
               >

@@ -84,11 +84,11 @@ const transactions: Transaction[] = [
 ]
 
 const typeIcons = {
-  "tiempo-aire": <Smartphone className="size-4.5" />,
-  "cobro": <CreditCard className="size-4.5" />,
-  "servicio": <Receipt className="size-4.5" />,
-  "telepeaje": <Car className="size-4.5" />,
-  "regalo": <Gift className="size-4.5" />
+  "tiempo-aire": <Smartphone className="size-5" />,
+  "cobro": <CreditCard className="size-5" />,
+  "servicio": <Receipt className="size-5" />,
+  "telepeaje": <Car className="size-5" />,
+  "regalo": <Gift className="size-5" />
 }
 
 const typeColors = {
@@ -127,29 +127,31 @@ export function RecentTransactions({ expanded = false }: RecentTransactionsProps
   const displayedTransactions = expanded ? transactions : transactions.slice(0, 4)
 
   return (
-    <div className="flex flex-col gap-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-      <div className="flex items-center justify-between px-1">
-        <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold text-foreground/80">
+    <div className="flex min-w-0 flex-col gap-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+      <div className="flex min-w-0 items-center justify-between gap-2 px-1">
+        <div className="flex min-w-0 items-center gap-2">
+          <h3 className="truncate text-sm font-semibold text-foreground/80">
             {expanded ? "Historial de transacciones" : "Transacciones recientes"}
           </h3>
-          <TrendingUp className="size-4 text-[#0BBD33]" />
+          <TrendingUp className="size-4 shrink-0 text-[#0BBD33]" />
         </div>
         {!expanded && (
-          <button className="text-xs text-[#000D94] font-semibold hover:underline flex items-center gap-1 transition-colors hover:text-[#0015b3]">
+          <button type="button" className="flex shrink-0 items-center gap-1 text-xs font-semibold text-[#000D94] transition-colors hover:text-[#0015b3] hover:underline">
             Ver todas
-            <ChevronRight className="h-3.5 w-3.5" />
+            <ChevronRight className="size-3.5" />
           </button>
         )}
       </div>
       
       {expanded && (
-        <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
+        <div className="flex w-full max-w-full min-w-0 gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {["Todas", "Tiempo Aire", "Cobros", "Servicios", "Telepeaje"].map((filter, i) => (
             <button
               key={filter}
+              type="button"
+              aria-pressed={i === 0}
               className={cn(
-                "px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-200",
+                "shrink-0 rounded-full px-4 py-2 text-xs font-medium whitespace-nowrap transition-all duration-200",
                 i === 0
                   ? "bg-[#000D94] text-white shadow-md"
                   : "bg-gray-100 text-foreground/70 hover:bg-gray-200"
@@ -161,18 +163,18 @@ export function RecentTransactions({ expanded = false }: RecentTransactionsProps
         </div>
       )}
       
-      <div className="flex flex-col gap-3">
+      <div className="flex min-w-0 flex-col gap-3">
         {displayedTransactions.map((transaction, index) => (
           <Card 
             key={transaction.id}
-            className="border-0 shadow-lg shadow-gray-100/50 rounded-2xl bg-white group animate-scale-in"
+            className="min-w-0 rounded-2xl border-0 bg-white shadow-lg shadow-gray-100/50 group animate-scale-in"
             style={{ animationDelay: `${0.3 + index * 0.05}s` }}
           >
-            <CardContent className="flex items-center justify-between p-4">
-              <div className="flex items-center gap-4">
+            <CardContent className="flex min-w-0 items-center justify-between gap-3 p-4">
+              <div className="flex min-w-0 items-center gap-4">
                 <div
                   className={cn(
-                    "size-12 rounded-2xl flex items-center justify-center shadow-md transition-transform duration-300 group-hover:scale-110",
+                    "flex size-12 shrink-0 items-center justify-center rounded-2xl shadow-md transition-transform duration-300 group-hover:scale-110",
                     typeColors[transaction.type].bg,
                     typeColors[transaction.type].text,
                     typeColors[transaction.type].shadow
@@ -180,9 +182,9 @@ export function RecentTransactions({ expanded = false }: RecentTransactionsProps
                 >
                   {typeIcons[transaction.type]}
                 </div>
-                <div>
-                  <p className="font-semibold text-sm text-foreground">{transaction.description}</p>
-                  <div className="flex items-center gap-2 mt-0.5">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-foreground">{transaction.description}</p>
+                  <div className="mt-0.5 flex min-w-0 items-center gap-2">
                     {transaction.status === "completed" ? (
                       <Badge className="border-0 bg-[#0BBD33]/10 text-[#0BBD33]">
                         <CheckCircle2 className="size-3.5" />
@@ -194,11 +196,11 @@ export function RecentTransactions({ expanded = false }: RecentTransactionsProps
                         Pendiente
                       </Badge>
                     )}
-                    <span className="text-xs text-muted-foreground">- {transaction.time}</span>
+                    <span className="truncate text-xs text-muted-foreground">- {transaction.time}</span>
                   </div>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="shrink-0 text-right">
                 <p className={cn("font-bold text-base", transaction.type === "cobro" ? "text-[#0BBD33]" : "text-foreground")}>
                   {transaction.type === "cobro" ? "+" : "-"}${transaction.amount.toLocaleString('es-MX')}
                 </p>

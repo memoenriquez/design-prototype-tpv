@@ -208,7 +208,8 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
             </h3>
             <div className="divide-y divide-gray-50">
               {section.items.map((item) => {
-                const hasAction = 'action' in item && item.action
+                const action = 'action' in item ? item.action : undefined
+                const hasAction = Boolean(action)
                 const hasToggle = 'toggle' in item && item.toggle
                 
                 if (hasToggle) {
@@ -235,12 +236,8 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
                   )
                 }
                 
-                return (
-                  <button
-                    key={item.label}
-                    onClick={hasAction ? item.action : undefined}
-                    className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors cursor-pointer"
-                  >
+                const rowContent = (
+                  <>
                     <div className="flex items-center gap-3">
                       <div 
                         className="flex size-10 items-center justify-center rounded-full"
@@ -265,7 +262,30 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
                       </div>
                     </div>
                     <ChevronRight className="size-5" style={{ color: "var(--theme-text-secondary, #64748B)", opacity: 0.5 }} />
-                  </button>
+                  </>
+                )
+
+                if (hasAction) {
+                  return (
+                    <button
+                      key={item.label}
+                      type="button"
+                      onClick={action}
+                      className="flex w-full items-center justify-between p-4 transition-colors hover:bg-gray-50"
+                    >
+                      {rowContent}
+                    </button>
+                  )
+                }
+
+                return (
+                  <div
+                    key={item.label}
+                    className="flex w-full items-center justify-between p-4"
+                    aria-disabled="true"
+                  >
+                    {rowContent}
+                  </div>
                 )
               })}
             </div>
@@ -273,7 +293,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
         ))}
 
         {/* Logout Button */}
-        <button className="w-full flex items-center justify-center gap-2 p-4 bg-red-50 rounded-2xl hover:bg-red-100 transition-colors">
+        <button type="button" className="w-full flex items-center justify-center gap-2 p-4 bg-red-50 rounded-2xl hover:bg-red-100 transition-colors">
           <LogOut className="size-5 text-red-500" />
           <span className="text-red-500 font-medium">Cerrar sesion</span>
         </button>

@@ -82,8 +82,8 @@ export function TransactionModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-white border-0 rounded-3xl shadow-2xl">
-        <div className="flex flex-col items-center py-6">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-md rounded-3xl border-0 bg-white shadow-2xl">
+        <div className="flex min-w-0 flex-col items-center py-6">
           {/* Status Icon */}
           <div className={cn(
             "mb-6 flex size-20 items-center justify-center rounded-full",
@@ -93,7 +93,7 @@ export function TransactionModal({
           </div>
 
           {/* Title */}
-          <DialogHeader className="text-center">
+          <DialogHeader className="min-w-0 text-center">
             <DialogTitle className="text-xl font-bold text-ctcpay-dark">
               {title || config.title}
             </DialogTitle>
@@ -104,40 +104,40 @@ export function TransactionModal({
 
           {/* Transaction Details */}
           {details && status !== "processing" && (
-            <div className="mt-6 flex w-full flex-col gap-3 rounded-2xl bg-gray-50 p-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-500">Tipo</span>
-                <span className="text-sm font-medium text-ctcpay-dark">{details.type}</span>
+            <div className="mt-6 flex w-full min-w-0 flex-col gap-3 rounded-2xl bg-gray-50 p-4">
+              <div className="flex min-w-0 items-center justify-between gap-3">
+                <span className="shrink-0 text-sm text-gray-500">Tipo</span>
+                <span className="min-w-0 truncate text-sm font-medium text-ctcpay-dark">{details.type}</span>
               </div>
               {details.recipient && (
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">Destinatario</span>
-                  <span className="text-sm font-medium text-ctcpay-dark">{details.recipient}</span>
+                <div className="flex min-w-0 items-center justify-between gap-3">
+                  <span className="shrink-0 text-sm text-gray-500">Destinatario</span>
+                  <span className="min-w-0 truncate text-sm font-medium text-ctcpay-dark">{details.recipient}</span>
                 </div>
               )}
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-500">Monto</span>
-                <span className="text-sm font-bold text-ctcpay-dark">{details.amount}</span>
+              <div className="flex min-w-0 items-center justify-between gap-3">
+                <span className="shrink-0 text-sm text-gray-500">Monto</span>
+                <span className="min-w-0 truncate text-sm font-bold text-ctcpay-dark">{details.amount}</span>
               </div>
               {details.commission && (
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">Comision</span>
-                  <span className="text-sm text-gray-600">{details.commission}</span>
+                <div className="flex min-w-0 items-center justify-between gap-3">
+                  <span className="shrink-0 text-sm text-gray-500">Comision</span>
+                  <span className="min-w-0 truncate text-sm text-gray-600">{details.commission}</span>
                 </div>
               )}
               {details.reference && (
                 <>
                   <Separator />
-                  <div className="flex justify-between items-center pt-2">
-                    <span className="text-sm text-gray-500">Referencia</span>
-                    <span className="text-xs font-mono text-ctcpay-blue">{details.reference}</span>
+                  <div className="flex min-w-0 items-center justify-between gap-3 pt-2">
+                    <span className="shrink-0 text-sm text-gray-500">Referencia</span>
+                    <span className="min-w-0 truncate text-xs font-mono text-ctcpay-blue">{details.reference}</span>
                   </div>
                 </>
               )}
               {details.date && (
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">Fecha</span>
-                  <span className="text-sm text-gray-600">{details.date}</span>
+                <div className="flex min-w-0 items-center justify-between gap-3">
+                  <span className="shrink-0 text-sm text-gray-500">Fecha</span>
+                  <span className="min-w-0 truncate text-sm text-gray-600">{details.date}</span>
                 </div>
               )}
             </div>
@@ -145,12 +145,12 @@ export function TransactionModal({
 
           {/* Action Buttons */}
           {status !== "processing" && (
-            <DialogFooter className="w-full mt-6 flex-col gap-3 sm:flex-col">
+            <DialogFooter className="mt-6 w-full min-w-0 flex-col gap-3 sm:flex-col">
               {status === "success" && (
-                <div className="flex gap-3">
+                <div className="flex w-full min-w-0 gap-3">
                   <Button
                     variant="outline"
-                    className="flex-1 rounded-xl border-gray-200"
+                    className="min-w-0 flex-1 rounded-xl border-gray-200"
                     onClick={() => {}}
                   >
                     <Receipt data-icon="inline-start" />
@@ -158,7 +158,7 @@ export function TransactionModal({
                   </Button>
                   <Button
                     variant="outline"
-                    className="flex-1 rounded-xl border-gray-200"
+                    className="min-w-0 flex-1 rounded-xl border-gray-200"
                     onClick={() => {}}
                   >
                     <Share2 data-icon="inline-start" />
@@ -216,7 +216,7 @@ export function ConfirmTransactionModal({
 }: ConfirmTransactionModalProps) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-white border-0 rounded-3xl shadow-2xl">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-md rounded-3xl border-0 bg-white shadow-2xl">
         <DialogHeader className="text-center pb-4">
           <DialogTitle className="text-xl font-bold text-ctcpay-dark">
             {title}
@@ -227,48 +227,48 @@ export function ConfirmTransactionModal({
         </DialogHeader>
 
         {/* Transaction Details */}
-        <div className="flex w-full flex-col gap-3 rounded-2xl bg-gray-50 p-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-500">Tipo</span>
-            <span className="text-sm font-medium text-ctcpay-dark">{details.type}</span>
+        <div className="flex w-full min-w-0 flex-col gap-3 rounded-2xl bg-gray-50 p-4">
+          <div className="flex min-w-0 items-center justify-between gap-3">
+            <span className="shrink-0 text-sm text-gray-500">Tipo</span>
+            <span className="min-w-0 truncate text-sm font-medium text-ctcpay-dark">{details.type}</span>
           </div>
           {details.recipient && (
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">Destinatario</span>
-              <span className="text-sm font-medium text-ctcpay-dark">{details.recipient}</span>
+            <div className="flex min-w-0 items-center justify-between gap-3">
+              <span className="shrink-0 text-sm text-gray-500">Destinatario</span>
+              <span className="min-w-0 truncate text-sm font-medium text-ctcpay-dark">{details.recipient}</span>
             </div>
           )}
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-500">Monto</span>
-            <span className="text-lg font-bold text-ctcpay-dark">{details.amount}</span>
+          <div className="flex min-w-0 items-center justify-between gap-3">
+            <span className="shrink-0 text-sm text-gray-500">Monto</span>
+            <span className="min-w-0 truncate text-lg font-bold text-ctcpay-dark">{details.amount}</span>
           </div>
           {details.commission && (
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">Comision</span>
-              <span className="text-sm text-gray-600">{details.commission}</span>
+            <div className="flex min-w-0 items-center justify-between gap-3">
+              <span className="shrink-0 text-sm text-gray-500">Comision</span>
+              <span className="min-w-0 truncate text-sm text-gray-600">{details.commission}</span>
             </div>
           )}
           <Separator />
-          <div className="flex justify-between items-center pt-2">
-            <span className="text-sm font-medium text-gray-700">Total</span>
-            <span className="text-lg font-bold text-ctcpay-green">
+          <div className="flex min-w-0 items-center justify-between gap-3 pt-2">
+            <span className="shrink-0 text-sm font-medium text-gray-700">Total</span>
+            <span className="min-w-0 truncate text-lg font-bold text-ctcpay-green">
               {details.amount}
             </span>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <DialogFooter className="mt-4 flex-row gap-3">
+        <DialogFooter className="mt-4 gap-3 sm:flex-row">
           <Button
             variant="outline"
-            className="flex-1 rounded-xl h-12 border-gray-200"
+            className="h-12 w-full rounded-xl border-gray-200 sm:flex-1"
             onClick={onClose}
             disabled={isLoading}
           >
             Cancelar
           </Button>
           <Button
-            className="flex-1 rounded-xl h-12 bg-ctcpay-green hover:bg-ctcpay-green/90 text-white"
+            className="h-12 w-full rounded-xl bg-ctcpay-green text-white hover:bg-ctcpay-green/90 sm:flex-1"
             onClick={onConfirm}
             disabled={isLoading}
           >

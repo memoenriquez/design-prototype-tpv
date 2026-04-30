@@ -13,16 +13,17 @@ import {
   ArrowRight
 } from "lucide-react"
 import { TransactionModal, ConfirmTransactionModal, TransactionStatus, TransactionDetails } from "./transaction-modal"
+import { cn } from "@/lib/utils"
 
 interface CobrarPanelProps {
   onBack?: () => void
 }
 
 const paymentMethods = [
-  { id: "tarjeta", name: "Tarjeta", icon: <CreditCard className="h-5 w-5" />, color: "from-[#000D94] to-[#1a2eb8]" },
-  { id: "contactless", name: "Contactless", icon: <Nfc className="h-5 w-5" />, color: "from-cyan-500 to-blue-500" },
-  { id: "qr", name: "Codigo QR", icon: <QrCode className="h-5 w-5" />, color: "from-[#0BBD33] to-[#099a2a]" },
-  { id: "vales", name: "Vales", icon: <Wallet className="h-5 w-5" />, color: "from-orange-400 to-red-500" },
+  { id: "tarjeta", name: "Tarjeta", icon: <CreditCard className="size-5" />, color: "from-[#000D94] to-[#1a2eb8]" },
+  { id: "contactless", name: "Contactless", icon: <Nfc className="size-5" />, color: "from-cyan-500 to-blue-500" },
+  { id: "qr", name: "Codigo QR", icon: <QrCode className="size-5" />, color: "from-[#0BBD33] to-[#099a2a]" },
+  { id: "vales", name: "Vales", icon: <Wallet className="size-5" />, color: "from-orange-400 to-red-500" },
 ]
 
 export function CobrarPanel({ onBack }: CobrarPanelProps) {
@@ -43,6 +44,12 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
     } else if (amount.length < 10) {
       setAmount(prev => prev + key)
     }
+  }
+
+  const getKeyLabel = (key: string) => {
+    if (key === "delete") return "Borrar ultimo digito"
+    if (key === ".") return "Agregar punto decimal"
+    return `Agregar ${key}`
   }
 
   const formattedAmount = amount ? 
@@ -92,13 +99,13 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
 
   return (
     <>
-      <div className="space-y-4 animate-slide-up w-full max-w-full overflow-hidden">
+      <div className="flex w-full max-w-full min-w-0 flex-col gap-4 animate-slide-up">
         {/* Amount Display */}
-        <Card className="border-0 shadow-xl shadow-[#000D94]/10 overflow-hidden w-full">
+        <Card className="w-full min-w-0 overflow-hidden border-0 shadow-xl shadow-[#000D94]/10">
           <CardHeader className="bg-gradient-to-br from-[#000D94] via-[#0015b3] to-[#1a2eb8] text-white p-4 sm:p-6 text-center relative overflow-hidden">
             {/* Decorative elements */}
-            <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+            <div className="absolute top-0 right-0 size-24 -translate-y-1/2 translate-x-1/2 rounded-full bg-white/5 sm:size-32" />
+            <div className="absolute bottom-0 left-0 size-16 -translate-x-1/2 translate-y-1/2 rounded-full bg-white/5 sm:size-24" />
             
             <div className="relative z-10">
               <p className="text-white/70 text-xs sm:text-sm font-medium mb-1 sm:mb-2">Monto a cobrar</p>
@@ -110,43 +117,49 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
             </div>
           </CardHeader>
           
-          <CardContent className="p-3 sm:p-4">
+          <CardContent className="min-w-0 p-3 sm:p-4">
             {/* Payment Methods */}
             <div className="mb-4 sm:mb-6">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground mb-2 sm:mb-3 uppercase tracking-wider">Metodo de pago</p>
-              <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+              <div className="grid min-w-0 grid-cols-4 gap-1.5 sm:gap-2">
                 {paymentMethods.map((method) => (
                   <button
                     key={method.id}
+                    type="button"
+                    aria-pressed={selectedMethod === method.id}
                     onClick={() => setSelectedMethod(method.id)}
-                    className={`p-2 sm:p-3 rounded-lg sm:rounded-xl flex flex-col items-center gap-1 sm:gap-2 transition-all duration-300 touch-target ${
+                    className={cn(
+                      "flex min-w-0 flex-col items-center gap-1 rounded-lg p-2 transition-all duration-300 sm:gap-2 sm:rounded-xl sm:p-3 touch-target",
                       selectedMethod === method.id
-                        ? `bg-gradient-to-br ${method.color} text-white shadow-lg scale-[1.02] sm:scale-105`
-                        : 'bg-gray-50 text-foreground/70 active:bg-gray-100'
-                    }`}
+                        ? `scale-[1.02] bg-gradient-to-br ${method.color} text-white shadow-lg sm:scale-105`
+                        : "bg-gray-50 text-foreground/70 active:bg-gray-100"
+                    )}
                   >
-                    <div className="[&>svg]:w-4 [&>svg]:h-4 sm:[&>svg]:w-5 sm:[&>svg]:h-5">
+                    <div className="[&>svg]:size-4 sm:[&>svg]:size-5">
                       {method.icon}
                     </div>
-                    <span className="text-[8px] sm:text-[10px] font-medium leading-tight">{method.name}</span>
+                    <span className="max-w-full truncate text-[8px] font-medium leading-tight sm:text-[10px]">{method.name}</span>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Numeric Keypad */}
-            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            <div className="grid min-w-0 grid-cols-3 gap-2 sm:gap-3">
               {['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', 'delete'].map((key) => (
                 <button
                   key={key}
+                  type="button"
+                  aria-label={getKeyLabel(key)}
                   onClick={() => handleKeyPress(key)}
-                  className={`h-11 sm:h-14 rounded-xl sm:rounded-2xl font-bold text-lg sm:text-xl transition-all duration-200 active:scale-95 touch-target ${
-                    key === 'delete'
-                      ? 'bg-red-50 text-red-500 active:bg-red-100'
-                      : 'bg-gray-50 text-foreground active:bg-gray-100 active:shadow-md'
-                  }`}
+                  className={cn(
+                    "h-11 min-w-0 rounded-xl text-lg font-bold transition-all duration-200 active:scale-95 sm:h-14 sm:rounded-2xl sm:text-xl touch-target",
+                    key === "delete"
+                      ? "bg-red-50 text-red-500 active:bg-red-100"
+                      : "bg-gray-50 text-foreground active:bg-gray-100 active:shadow-md"
+                  )}
                 >
-                  {key === 'delete' ? <Delete className="h-5 w-5 sm:h-6 sm:w-6 mx-auto" /> : key}
+                  {key === 'delete' ? <Delete className="mx-auto size-5 sm:size-6" /> : key}
                 </button>
               ))}
             </div>
@@ -154,10 +167,11 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
         </Card>
 
         {/* Quick Amounts */}
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide max-w-full">
+        <div className="flex w-full max-w-full min-w-0 gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {[50, 100, 200, 500, 1000].map((quickAmount) => (
             <button
               key={quickAmount}
+              type="button"
               onClick={() => setAmount(quickAmount.toString())}
               className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white border border-gray-200 rounded-full text-xs sm:text-sm font-semibold text-[#000D94] active:bg-[#000D94] active:text-white active:border-[#000D94] transition-all duration-200 whitespace-nowrap flex-shrink-0 touch-target"
             >
@@ -174,18 +188,18 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
         >
           <span className="flex items-center gap-2">
             Cobrar ${formattedAmount}
-            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+            <ArrowRight className="size-4 sm:size-5" />
           </span>
         </Button>
 
         {/* Payment Info */}
-        <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
-            <Check className="h-3 w-3 text-[#0BBD33]" />
+            <Check className="size-3 text-[#0BBD33]" />
             <span>Pago seguro</span>
           </div>
           <div className="flex items-center gap-1">
-            <Check className="h-3 w-3 text-[#0BBD33]" />
+            <Check className="size-3 text-[#0BBD33]" />
             <span>Comprobante digital</span>
           </div>
         </div>
