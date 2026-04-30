@@ -5,7 +5,16 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
+import { cn } from "@/lib/utils"
 import { 
   Gift,
   Gamepad2,
@@ -42,11 +51,11 @@ const giftCards: GiftCard[] = [
 ]
 
 const categories = [
-  { id: "all", name: "Todos", icon: <Gift className="h-4 w-4" /> },
-  { id: "gaming", name: "Gaming", icon: <Gamepad2 className="h-4 w-4" /> },
-  { id: "music", name: "Musica", icon: <Music className="h-4 w-4" /> },
-  { id: "streaming", name: "Streaming", icon: <Tv className="h-4 w-4" /> },
-  { id: "shopping", name: "Compras", icon: <ShoppingBag className="h-4 w-4" /> },
+  { id: "all", name: "Todos", icon: <Gift className="size-4" /> },
+  { id: "gaming", name: "Gaming", icon: <Gamepad2 className="size-4" /> },
+  { id: "music", name: "Musica", icon: <Music className="size-4" /> },
+  { id: "streaming", name: "Streaming", icon: <Tv className="size-4" /> },
+  { id: "shopping", name: "Compras", icon: <ShoppingBag className="size-4" /> },
 ]
 
 interface TarjetasRegaloPanelProps {
@@ -132,9 +141,9 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
           <CardHeader className="bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 text-white p-4 pb-5 relative overflow-hidden">
             {/* Decorative elements */}
             <div className="absolute inset-0 opacity-20 pointer-events-none" aria-hidden="true">
-              <div className="absolute top-2 left-4 w-6 h-6 border-2 border-white rounded-lg rotate-12" />
-              <div className="absolute top-6 right-6 w-5 h-5 border-2 border-white rounded-full" />
-              <div className="absolute bottom-3 left-10 w-3 h-3 bg-white rounded-full" />
+              <div className="absolute top-2 left-4 size-6 rotate-12 rounded-lg border-2 border-white" />
+              <div className="absolute top-6 right-6 size-5 rounded-full border-2 border-white" />
+              <div className="absolute bottom-3 left-10 size-3 rounded-full bg-white" />
             </div>
             
             <div className="relative z-10 w-full flex flex-col gap-3">
@@ -144,14 +153,14 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                   <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide">Tarjetas de regalo</p>
                   <h3 className="text-lg font-bold leading-tight">Regala experiencias</h3>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-                  <Gift className="h-5 w-5 text-white" />
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
+                  <Gift className="size-5 text-white" />
                 </div>
               </div>
               
               {/* Search */}
               <div className="relative w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50 pointer-events-none" />
+                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/50 pointer-events-none" />
                 <Input
                   type="text"
                   placeholder="Buscar tarjeta..."
@@ -171,17 +180,14 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`
-                    flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium 
-                    whitespace-nowrap transition-all duration-200 shrink-0
-                    min-h-[40px] touch-target
-                    ${selectedCategory === category.id
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg shadow-purple-500/25'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 active:scale-95'
-                    }
-                  `}
+                  className={cn(
+                    "flex min-h-[40px] shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 touch-target",
+                    selectedCategory === category.id
+                      ? "bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg shadow-purple-500/25"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200 active:scale-95"
+                  )}
                 >
-                  <span className="[&>svg]:w-4 [&>svg]:h-4">{category.icon}</span>
+                  <span className="[&>svg]:size-4">{category.icon}</span>
                   <span>{category.name}</span>
                 </button>
               ))}
@@ -189,7 +195,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
 
             {/* Section header */}
             <div className="flex items-center gap-2">
-              <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 shrink-0" />
+              <Star className="size-4 shrink-0 fill-yellow-500 text-yellow-500" />
               <span className="text-sm font-semibold text-gray-700">Mas vendidas</span>
             </div>
 
@@ -202,25 +208,20 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                     setSelectedCard(card)
                     setSelectedAmount(null)
                   }}
-                  className={`
-                    group flex flex-col p-3 rounded-2xl border-2 
-                    transition-all duration-200 text-left 
-                    min-h-[120px] overflow-hidden min-w-0
-                    ${selectedCard?.id === card.id
-                      ? 'border-purple-500 bg-purple-50 shadow-lg shadow-purple-500/20'
-                      : 'border-transparent bg-white shadow-sm hover:shadow-md active:scale-[0.98]'
-                    }
-                  `}
+                  className={cn(
+                    "group flex min-h-[120px] min-w-0 flex-col overflow-hidden rounded-2xl border-2 p-3 text-left transition-all duration-200",
+                    selectedCard?.id === card.id
+                      ? "border-purple-500 bg-purple-50 shadow-lg shadow-purple-500/20"
+                      : "border-transparent bg-white shadow-sm hover:shadow-md active:scale-[0.98]"
+                  )}
                   style={{ animationDelay: `${index * 0.03}s` }}
                 >
                   {/* Logo */}
                   <div 
-                    className={`
-                      w-12 h-12 rounded-xl bg-gradient-to-br ${card.color} 
-                      flex items-center justify-center text-white font-bold text-base
-                      shadow-md mb-2 transition-transform duration-200
-                      group-hover:scale-105 group-active:scale-100
-                    `}
+                    className={cn(
+                      "mb-2 flex size-12 items-center justify-center rounded-xl bg-gradient-to-br text-base font-bold text-white shadow-md transition-transform duration-200 group-hover:scale-105 group-active:scale-100",
+                      card.color
+                    )}
                   >
                     {card.logo}
                   </div>
@@ -243,20 +244,29 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
 
             {/* Empty state */}
             {filteredCards.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-8 text-center">
-                <Gift className="h-12 w-12 text-gray-300 mb-3" />
-                <p className="text-sm text-gray-500">No se encontraron tarjetas</p>
-                <Button
-                  variant="link"
-                  className="text-purple-600 text-sm mt-1"
-                  onClick={() => {
-                    setSearchQuery("")
-                    setSelectedCategory("all")
-                  }}
-                >
-                  Limpiar filtros
-                </Button>
-              </div>
+              <Empty className="border-0 py-8">
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <Gift />
+                  </EmptyMedia>
+                  <EmptyTitle>No se encontraron tarjetas</EmptyTitle>
+                  <EmptyDescription>
+                    Ajusta la busqueda o limpia los filtros para ver mas opciones.
+                  </EmptyDescription>
+                </EmptyHeader>
+                <EmptyContent>
+                  <Button
+                    variant="link"
+                    className="text-sm text-purple-600"
+                    onClick={() => {
+                      setSearchQuery("")
+                      setSelectedCategory("all")
+                    }}
+                  >
+                    Limpiar filtros
+                  </Button>
+                </EmptyContent>
+              </Empty>
             )}
           </CardContent>
         </Card>
@@ -264,9 +274,9 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
         {/* Selected Card - Amount Selection */}
         {selectedCard && (
           <Card className="border-0 shadow-lg overflow-hidden w-full animate-slide-up">
-            <CardHeader className={`bg-gradient-to-r ${selectedCard.color} text-white p-4`}>
+            <CardHeader className={cn("bg-gradient-to-r p-4 text-white", selectedCard.color)}>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center font-bold text-xl shrink-0">
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/20 text-xl font-bold backdrop-blur-sm">
                   {selectedCard.logo}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -283,20 +293,16 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                   <button
                     key={amt}
                     onClick={() => setSelectedAmount(amt)}
-                    className={`
-                      flex items-center justify-center gap-2 
-                      p-4 rounded-xl border-2 
-                      font-bold text-lg transition-all duration-200
-                      min-h-[56px] touch-target
-                      ${selectedAmount === amt
-                        ? 'border-purple-500 bg-purple-50 text-purple-700 shadow-md'
-                        : 'border-gray-200 bg-white text-gray-900 hover:border-purple-300 active:scale-[0.98]'
-                      }
-                    `}
+                    className={cn(
+                      "flex min-h-[56px] items-center justify-center gap-2 rounded-xl border-2 p-4 text-lg font-bold transition-all duration-200 touch-target",
+                      selectedAmount === amt
+                        ? "border-purple-500 bg-purple-50 text-purple-700 shadow-md"
+                        : "border-gray-200 bg-white text-gray-900 hover:border-purple-300 active:scale-[0.98]"
+                    )}
                   >
                     <span>${amt}</span>
                     {selectedAmount === amt && (
-                      <Check className="h-4 w-4 text-purple-500 shrink-0" />
+                      <Check className="size-4 shrink-0 text-purple-500" />
                     )}
                   </button>
                 ))}
@@ -355,7 +361,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
       <Dialog open={showCodeModal} onOpenChange={setShowCodeModal}>
         <DialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto bg-white border-0 rounded-2xl shadow-2xl p-5">
           <DialogHeader className="text-center pb-4">
-            <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${selectedCard?.color || "from-purple-500 to-pink-500"} flex items-center justify-center text-white font-bold text-xl mx-auto mb-4 shadow-lg`}>
+            <div className={cn("mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br text-xl font-bold text-white shadow-lg", selectedCard?.color || "from-purple-500 to-pink-500")}>
               {selectedCard?.logo}
             </div>
             <DialogTitle className="text-lg font-bold text-gray-900">
@@ -378,12 +384,13 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                   variant="ghost"
                   size="sm"
                   onClick={handleCopyCode}
-                  className="h-8 w-8 p-0 shrink-0 hover:bg-gray-100"
+                  className="size-8 shrink-0 p-0 hover:bg-gray-100"
+                  aria-label="Copiar codigo de tarjeta"
                 >
                   {codeCopied ? (
-                    <Check className="h-4 w-4 text-green-500" />
+                    <Check className="text-green-500" data-icon="inline-start" />
                   ) : (
-                    <Copy className="h-4 w-4 text-gray-500" />
+                    <Copy className="text-gray-500" data-icon="inline-start" />
                   )}
                 </Button>
               </div>
@@ -393,19 +400,19 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
             </div>
 
             {/* Instructions */}
-            <div className="text-xs text-gray-500 text-center space-y-1">
+            <div className="flex flex-col gap-1 text-center text-xs text-gray-500">
               <p>Canjea este codigo en {selectedCard?.name}</p>
               <p>Valido por 12 meses desde la compra</p>
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3">
+            <DialogFooter className="flex-row gap-3">
               <Button
                 variant="outline"
                 className="flex-1 h-12 rounded-xl border-gray-200 text-sm font-medium"
                 onClick={handleCopyCode}
               >
-                <Copy className="h-4 w-4 mr-2" />
+                <Copy data-icon="inline-start" />
                 Copiar
               </Button>
               <Button
@@ -414,7 +421,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
               >
                 Nueva Compra
               </Button>
-            </div>
+            </DialogFooter>
           </div>
         </DialogContent>
       </Dialog>

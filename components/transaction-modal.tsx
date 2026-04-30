@@ -5,11 +5,13 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { CheckCircle2, XCircle, Loader2, AlertCircle, Receipt, Share2, Download } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
+import { CheckCircle2, XCircle, Loader2, AlertCircle, Receipt, Share2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export type TransactionStatus = "processing" | "success" | "error" | "warning"
@@ -84,10 +86,10 @@ export function TransactionModal({
         <div className="flex flex-col items-center py-6">
           {/* Status Icon */}
           <div className={cn(
-            "w-20 h-20 rounded-full flex items-center justify-center mb-6",
+            "mb-6 flex size-20 items-center justify-center rounded-full",
             config.bgClass
           )}>
-            <Icon className={cn("w-10 h-10", config.iconClass)} />
+            <Icon className={cn("size-10", config.iconClass)} />
           </div>
 
           {/* Title */}
@@ -102,7 +104,7 @@ export function TransactionModal({
 
           {/* Transaction Details */}
           {details && status !== "processing" && (
-            <div className="w-full mt-6 bg-gray-50 rounded-2xl p-4 space-y-3">
+            <div className="mt-6 flex w-full flex-col gap-3 rounded-2xl bg-gray-50 p-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Tipo</span>
                 <span className="text-sm font-medium text-ctcpay-dark">{details.type}</span>
@@ -124,10 +126,13 @@ export function TransactionModal({
                 </div>
               )}
               {details.reference && (
-                <div className="flex justify-between items-center pt-2 border-t border-gray-200">
-                  <span className="text-sm text-gray-500">Referencia</span>
-                  <span className="text-xs font-mono text-ctcpay-blue">{details.reference}</span>
-                </div>
+                <>
+                  <Separator />
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="text-sm text-gray-500">Referencia</span>
+                    <span className="text-xs font-mono text-ctcpay-blue">{details.reference}</span>
+                  </div>
+                </>
               )}
               {details.date && (
                 <div className="flex justify-between items-center">
@@ -140,7 +145,7 @@ export function TransactionModal({
 
           {/* Action Buttons */}
           {status !== "processing" && (
-            <div className="w-full mt-6 space-y-3">
+            <DialogFooter className="w-full mt-6 flex-col gap-3 sm:flex-col">
               {status === "success" && (
                 <div className="flex gap-3">
                   <Button
@@ -148,7 +153,7 @@ export function TransactionModal({
                     className="flex-1 rounded-xl border-gray-200"
                     onClick={() => {}}
                   >
-                    <Receipt className="w-4 h-4 mr-2" />
+                    <Receipt data-icon="inline-start" />
                     Recibo
                   </Button>
                   <Button
@@ -156,7 +161,7 @@ export function TransactionModal({
                     className="flex-1 rounded-xl border-gray-200"
                     onClick={() => {}}
                   >
-                    <Share2 className="w-4 h-4 mr-2" />
+                    <Share2 data-icon="inline-start" />
                     Compartir
                   </Button>
                 </div>
@@ -183,7 +188,7 @@ export function TransactionModal({
               >
                 {status === "success" ? "Nueva Transaccion" : "Cerrar"}
               </Button>
-            </div>
+            </DialogFooter>
           )}
         </div>
       </DialogContent>
@@ -222,7 +227,7 @@ export function ConfirmTransactionModal({
         </DialogHeader>
 
         {/* Transaction Details */}
-        <div className="w-full bg-gray-50 rounded-2xl p-4 space-y-3">
+        <div className="flex w-full flex-col gap-3 rounded-2xl bg-gray-50 p-4">
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-500">Tipo</span>
             <span className="text-sm font-medium text-ctcpay-dark">{details.type}</span>
@@ -243,7 +248,8 @@ export function ConfirmTransactionModal({
               <span className="text-sm text-gray-600">{details.commission}</span>
             </div>
           )}
-          <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+          <Separator />
+          <div className="flex justify-between items-center pt-2">
             <span className="text-sm font-medium text-gray-700">Total</span>
             <span className="text-lg font-bold text-ctcpay-green">
               {details.amount}
@@ -252,7 +258,7 @@ export function ConfirmTransactionModal({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3 mt-4">
+        <DialogFooter className="mt-4 flex-row gap-3">
           <Button
             variant="outline"
             className="flex-1 rounded-xl h-12 border-gray-200"
@@ -268,14 +274,14 @@ export function ConfirmTransactionModal({
           >
             {isLoading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="animate-spin" data-icon="inline-start" />
                 Procesando...
               </>
             ) : (
               "Confirmar"
             )}
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

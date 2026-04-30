@@ -1,15 +1,24 @@
 "use client"
 
-import { useState } from "react"
+import { type KeyboardEvent, useState } from "react"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
-import { Bell, CheckCircle2, AlertCircle, Info, Gift, TrendingUp, X } from "lucide-react"
+import { Bell, CheckCircle2, AlertCircle, Info, Gift, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Badge } from "@/components/ui/badge"
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
+import { Separator } from "@/components/ui/separator"
 
 interface Notification {
   id: string
@@ -106,19 +115,30 @@ export function NotificationsPopover() {
     setNotifications(prev => prev.filter(n => n.id !== id))
   }
 
+  const handleNotificationKeyDown = (
+    event: KeyboardEvent<HTMLDivElement>,
+    id: string
+  ) => {
+    if (event.key !== "Enter" && event.key !== " ") return
+
+    event.preventDefault()
+    markAsRead(id)
+  }
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
           size="icon"
-          className="relative w-10 h-10 rounded-full bg-white/10 hover:bg-white/20"
+          className="relative size-10 rounded-full bg-white/10 hover:bg-white/20"
+          aria-label={`Notificaciones${unreadCount > 0 ? `, ${unreadCount} sin leer` : ""}`}
         >
-          <Bell className="w-5 h-5 text-white" />
+          <Bell className="text-white" data-icon="inline-start" />
           {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center animate-pulse">
+            <Badge className="absolute -top-1 -right-1 size-5 rounded-full border-0 bg-red-500 p-0 text-[10px] font-bold text-white animate-pulse">
               {unreadCount}
-            </span>
+            </Badge>
           )}
         </Button>
       </PopoverTrigger>
@@ -128,7 +148,7 @@ export function NotificationsPopover() {
         sideOffset={8}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-100">
+        <div className="flex items-center justify-between p-4">
           <h3 className="font-semibold text-ctcpay-dark">Notificaciones</h3>
           {unreadCount > 0 && (
             <Button
@@ -141,18 +161,22 @@ export function NotificationsPopover() {
             </Button>
           )}
         </div>
+        <Separator />
 
         {/* Notifications List */}
         <ScrollArea className="h-[320px]">
           {notifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 px-4">
-              <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-                <Bell className="w-8 h-8 text-gray-400" />
-              </div>
-              <p className="text-gray-500 text-sm text-center">
-                No tienes notificaciones
-              </p>
-            </div>
+            <Empty className="min-h-[320px] border-0 p-6">
+              <EmptyHeader>
+                <EmptyMedia variant="icon" className="rounded-full">
+                  <Bell />
+                </EmptyMedia>
+                <EmptyTitle>No tienes notificaciones</EmptyTitle>
+                <EmptyDescription>
+                  Las alertas y avisos importantes apareceran aqui.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
           ) : (
             <div className="divide-y divide-gray-50">
               {notifications.map((notification) => {
@@ -162,18 +186,24 @@ export function NotificationsPopover() {
                 return (
                   <div
                     key={notification.id}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Marcar como leida: ${notification.title}`}
                     className={cn(
-                      "relative p-4 hover:bg-gray-50 transition-colors cursor-pointer group",
+                      "relative p-4 hover:bg-gray-50 focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-inset focus-visible:outline-none transition-colors cursor-pointer group",
                       !notification.read && "bg-ctcpay-blue/5"
                     )}
                     onClick={() => markAsRead(notification.id)}
+                    onKeyDown={(event) =>
+                      handleNotificationKeyDown(event, notification.id)
+                    }
                   >
                     <div className="flex gap-3">
                       <div className={cn(
-                        "w-10 h-10 rounded-full flex items-center justify-center shrink-0",
+                        "size-10 rounded-full flex items-center justify-center shrink-0",
                         config.bgClass
                       )}>
-                        <Icon className={cn("w-5 h-5", config.iconClass)} />
+                        <Icon className={cn("size-5", config.iconClass)} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
@@ -188,9 +218,11 @@ export function NotificationsPopover() {
                               e.stopPropagation()
                               removeNotification(notification.id)
                             }}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            onKeyDown={(e) => e.stopPropagation()}
+                            aria-label={`Eliminar notificacion: ${notification.title}`}
+                            className="opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline-none"
                           >
-                            <X className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+                            <X className="size-4 text-gray-400 hover:text-gray-600" />
                           </button>
                         </div>
                         <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">
@@ -202,7 +234,7 @@ export function NotificationsPopover() {
                       </div>
                     </div>
                     {!notification.read && (
-                      <div className="absolute left-1.5 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-ctcpay-blue" />
+                      <div className="absolute left-1.5 top-1/2 size-2 -translate-y-1/2 rounded-full bg-ctcpay-blue" />
                     )}
                   </div>
                 )
@@ -212,7 +244,8 @@ export function NotificationsPopover() {
         </ScrollArea>
 
         {/* Footer */}
-        <div className="p-3 border-t border-gray-100 bg-gray-50">
+        <Separator />
+        <div className="p-3 bg-gray-50">
           <Button
             variant="ghost"
             className="w-full text-sm text-ctcpay-blue hover:text-ctcpay-blue/80 hover:bg-ctcpay-blue/10"

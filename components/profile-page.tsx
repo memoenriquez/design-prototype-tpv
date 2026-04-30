@@ -4,6 +4,8 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { CloseButton } from "@/components/ui/close-button"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Separator } from "@/components/ui/separator"
 import { 
   User, 
   CreditCard, 
@@ -81,9 +83,10 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
             <Button
               variant="ghost"
               size="icon"
-              className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20"
+              className="size-10 rounded-full bg-white/10 hover:bg-white/20"
+              aria-label="Editar perfil"
             >
-              <Edit2 className="w-5 h-5 text-white" />
+              <Edit2 className="text-white" data-icon="inline-start" />
             </Button>
           </div>
 
@@ -91,26 +94,28 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
           <div className="flex flex-col items-center">
             <div className="relative">
               <div 
-                className="w-24 h-24 rounded-full p-1"
+                className="size-24 rounded-full p-1"
                 style={{ background: "linear-gradient(135deg, var(--theme-secondary, #0BBD33), var(--theme-primary, #000D94))" }}
               >
-                <div 
-                  className="w-full h-full rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: "var(--theme-card, #FFFFFF)" }}
-                >
-                  <span 
+                <Avatar className="size-full">
+                  <AvatarFallback
                     className="text-3xl font-bold"
-                    style={{ color: "var(--theme-primary, #000D94)" }}
+                    style={{
+                      backgroundColor: "var(--theme-card, #FFFFFF)",
+                      color: "var(--theme-primary, #000D94)",
+                    }}
                   >
                     JM
-                  </span>
-                </div>
+                  </AvatarFallback>
+                </Avatar>
               </div>
               <button 
-                className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+                type="button"
+                className="absolute right-0 bottom-0 flex size-8 items-center justify-center rounded-full shadow-lg"
                 style={{ backgroundColor: "var(--theme-secondary, #0BBD33)" }}
+                aria-label="Cambiar foto de perfil"
               >
-                <Camera className="w-4 h-4 text-white" />
+                <Camera className="size-4 text-white" />
               </button>
             </div>
             <h2 className="text-xl font-bold text-white mt-4">Juan Martinez</h2>
@@ -122,12 +127,12 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
                 <p className="text-lg sm:text-2xl font-bold text-white">156</p>
                 <p className="text-[10px] sm:text-xs text-white/60">Transacciones</p>
               </div>
-              <div className="w-px bg-white/20 self-stretch hidden sm:block" />
+              <Separator orientation="vertical" className="hidden h-auto self-stretch bg-white/20 sm:block" />
               <div className="text-center min-w-[60px]">
                 <p className="text-lg sm:text-2xl font-bold text-white">$45.2K</p>
                 <p className="text-[10px] sm:text-xs text-white/60">Este mes</p>
               </div>
-              <div className="w-px bg-white/20 self-stretch hidden sm:block" />
+              <Separator orientation="vertical" className="hidden h-auto self-stretch bg-white/20 sm:block" />
               <div className="text-center min-w-[60px]">
                 <p className="text-lg sm:text-2xl font-bold" style={{ color: "var(--theme-secondary, #0BBD33)" }}>Activo</p>
                 <p className="text-[10px] sm:text-xs text-white/60">Estatus</p>
@@ -152,13 +157,13 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
           <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--theme-text-secondary, #64748B)" }}>
             INFORMACION DE CONTACTO
           </h3>
-          <div className="space-y-3">
+          <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
               <div 
-                className="w-10 h-10 rounded-full flex items-center justify-center"
+                className="flex size-10 items-center justify-center rounded-full"
                 style={{ backgroundColor: "rgba(0, 13, 148, 0.1)" }}
               >
-                <Mail className="w-5 h-5" style={{ color: "var(--theme-primary, #000D94)" }} />
+                <Mail className="size-5" style={{ color: "var(--theme-primary, #000D94)" }} />
               </div>
               <div>
                 <p className="text-xs" style={{ color: "var(--theme-text-secondary, #64748B)" }}>Correo electronico</p>
@@ -167,10 +172,10 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
             </div>
             <div className="flex items-center gap-3">
               <div 
-                className="w-10 h-10 rounded-full flex items-center justify-center"
+                className="flex size-10 items-center justify-center rounded-full"
                 style={{ backgroundColor: "rgba(11, 189, 51, 0.1)" }}
               >
-                <Phone className="w-5 h-5" style={{ color: "var(--theme-secondary, #0BBD33)" }} />
+                <Phone className="size-5" style={{ color: "var(--theme-secondary, #0BBD33)" }} />
               </div>
               <div>
                 <p className="text-xs" style={{ color: "var(--theme-text-secondary, #64748B)" }}>Telefono</p>
@@ -178,8 +183,8 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center">
-                <MapPin className="w-5 h-5 text-amber-500" />
+              <div className="flex size-10 items-center justify-center rounded-full bg-amber-500/10">
+                <MapPin className="size-5 text-amber-500" />
               </div>
               <div>
                 <p className="text-xs" style={{ color: "var(--theme-text-secondary, #64748B)" }}>Ubicacion</p>
@@ -191,7 +196,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
       </div>
 
       {/* Menu Sections */}
-      <div className="px-4 mt-4 space-y-4">
+      <div className="flex flex-col gap-4 px-4 mt-4">
         {menuItems.map((section) => (
           <div 
             key={section.section} 
@@ -213,8 +218,8 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
                       className="w-full flex items-center justify-between p-4"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                          <item.icon className="w-5 h-5 text-gray-600" />
+                        <div className="flex size-10 items-center justify-center rounded-full bg-gray-100">
+                          <item.icon className="size-5 text-gray-600" />
                         </div>
                         <div className="text-left">
                           <p className="text-sm font-medium" style={{ color: "var(--theme-text-primary, #0A1628)" }}>{item.label}</p>
@@ -238,7 +243,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
                   >
                     <div className="flex items-center gap-3">
                       <div 
-                        className="w-10 h-10 rounded-full flex items-center justify-center"
+                        className="flex size-10 items-center justify-center rounded-full"
                         style={{ 
                           backgroundColor: item.icon === Palette 
                             ? "rgba(139, 92, 246, 0.1)" 
@@ -246,7 +251,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
                         }}
                       >
                         <item.icon 
-                          className="w-5 h-5" 
+                          className="size-5" 
                           style={{ 
                             color: item.icon === Palette 
                               ? "#8B5CF6" 
@@ -259,7 +264,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
                         <p className="text-xs" style={{ color: "var(--theme-text-secondary, #64748B)" }}>{item.description}</p>
                       </div>
                     </div>
-                    <ChevronRight className="w-5 h-5" style={{ color: "var(--theme-text-secondary, #64748B)", opacity: 0.5 }} />
+                    <ChevronRight className="size-5" style={{ color: "var(--theme-text-secondary, #64748B)", opacity: 0.5 }} />
                   </button>
                 )
               })}
@@ -269,7 +274,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
 
         {/* Logout Button */}
         <button className="w-full flex items-center justify-center gap-2 p-4 bg-red-50 rounded-2xl hover:bg-red-100 transition-colors">
-          <LogOut className="w-5 h-5 text-red-500" />
+          <LogOut className="size-5 text-red-500" />
           <span className="text-red-500 font-medium">Cerrar sesion</span>
         </button>
 

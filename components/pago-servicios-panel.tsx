@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { Separator } from "@/components/ui/separator"
 import { 
   Sheet,
   SheetContent,
@@ -30,6 +31,7 @@ import {
 } from "lucide-react"
 import { CloseButton } from "@/components/ui/close-button"
 import { TransactionModal, TransactionStatus, TransactionDetails } from "./transaction-modal"
+import { cn } from "@/lib/utils"
 
 interface ServiceCategory {
   id: string
@@ -44,7 +46,7 @@ const serviceCategories: ServiceCategory[] = [
   {
     id: "cfe",
     name: "CFE Luz",
-    icon: <Zap className="h-6 w-6" />,
+    icon: <Zap className="size-6" />,
     color: "from-yellow-400 to-orange-500",
     services: ["CFE Domestico", "CFE Comercial"],
     popular: true
@@ -52,14 +54,14 @@ const serviceCategories: ServiceCategory[] = [
   {
     id: "agua",
     name: "Agua",
-    icon: <Droplets className="h-6 w-6" />,
+    icon: <Droplets className="size-6" />,
     color: "from-blue-400 to-cyan-500",
     services: ["JMAS", "CESPE", "SIAPA"]
   },
   {
     id: "tv",
     name: "TV Cable",
-    icon: <Tv className="h-6 w-6" />,
+    icon: <Tv className="size-6" />,
     color: "from-purple-400 to-pink-500",
     services: ["SKY", "Dish", "Izzi TV", "TotalPlay"],
     popular: true
@@ -67,28 +69,28 @@ const serviceCategories: ServiceCategory[] = [
   {
     id: "internet",
     name: "Internet",
-    icon: <Wifi className="h-6 w-6" />,
+    icon: <Wifi className="size-6" />,
     color: "from-green-400 to-emerald-500",
     services: ["Telmex", "Izzi", "TotalPlay", "Megacable"]
   },
   {
     id: "telefono",
     name: "Telefono",
-    icon: <Phone className="h-6 w-6" />,
+    icon: <Phone className="size-6" />,
     color: "from-indigo-400 to-blue-500",
     services: ["Telmex Fijo", "AT&T Fijo"]
   },
   {
     id: "predial",
     name: "Predial",
-    icon: <Building2 className="h-6 w-6" />,
+    icon: <Building2 className="size-6" />,
     color: "from-gray-400 to-slate-500",
     services: ["Predial Municipal", "Tenencia"]
   },
   {
     id: "auto",
     name: "Telepeaje",
-    icon: <Car className="h-6 w-6" />,
+    icon: <Car className="size-6" />,
     color: "from-teal-400 to-cyan-500",
     services: ["TAG IAVE", "PASE", "Televia"],
     popular: true
@@ -96,7 +98,7 @@ const serviceCategories: ServiceCategory[] = [
   {
     id: "seguros",
     name: "Seguros",
-    icon: <Shield className="h-6 w-6" />,
+    icon: <Shield className="size-6" />,
     color: "from-red-400 to-rose-500",
     services: ["GNP", "AXA", "Qualitas"]
   }
@@ -188,7 +190,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
 
   return (
     <>
-      <div className="space-y-4 animate-slide-up w-full max-w-full overflow-hidden box-border">
+      <div className="flex w-full max-w-full flex-col gap-4 overflow-hidden box-border animate-slide-up">
         <Card className="border-0 shadow-xl shadow-[#000D94]/5 overflow-hidden w-full box-border">
           <CardHeader className="bg-gradient-to-r from-[#000D94] to-[#1a2eb8] text-white p-3 sm:p-4 pb-4 sm:pb-6">
             <div className="flex items-center justify-between mb-2 sm:mb-3 gap-2">
@@ -203,7 +205,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
             
             {/* Search */}
             <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-white/50" />
+              <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-white/50 sm:size-4" />
               <Input
                 type="text"
                 placeholder="Buscar servicio..."
@@ -228,7 +230,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                     onClick={() => handleCategorySelect(category)}
                     className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-gray-50 to-gray-100 rounded-full whitespace-nowrap text-xs sm:text-sm font-medium text-foreground/80 active:shadow-md transition-all duration-200 active:-translate-y-0.5 flex-shrink-0 touch-target"
                   >
-                    <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gradient-to-br ${category.color} flex items-center justify-center text-white scale-75 [&>svg]:w-3 [&>svg]:h-3 sm:[&>svg]:w-4 sm:[&>svg]:h-4`}>
+                    <div className={cn("flex size-5 scale-75 items-center justify-center rounded-full bg-gradient-to-br text-white [&>svg]:size-3 sm:size-6 sm:[&>svg]:size-4", category.color)}>
                       {category.icon}
                     </div>
                     {category.name}
@@ -246,12 +248,12 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                   className="group p-3 sm:p-4 bg-gradient-to-br from-white to-gray-50 rounded-xl sm:rounded-2xl border border-gray-100 active:border-[#000D94]/20 active:shadow-lg transition-all duration-300 text-left relative animate-scale-in touch-target overflow-hidden min-w-0"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
-                  <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center text-white mb-2 sm:mb-3 group-active:scale-110 transition-transform duration-300 shadow-lg [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-6 sm:[&>svg]:h-6`}>
+                  <div className={cn("mb-2 flex size-10 items-center justify-center rounded-lg bg-gradient-to-br text-white shadow-lg transition-transform duration-300 group-active:scale-110 sm:mb-3 sm:size-12 sm:rounded-xl [&>svg]:size-5 sm:[&>svg]:size-6", category.color)}>
                     {category.icon}
                   </div>
                   <h4 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5 sm:mb-1 truncate">{category.name}</h4>
                   <p className="text-[10px] sm:text-xs text-muted-foreground">{category.services.length} servicios</p>
-                  <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 text-[#000D94] opacity-0 group-active:opacity-100 transition-opacity absolute top-3 right-3 sm:top-4 sm:right-4" />
+                  <ChevronRight className="absolute top-3 right-3 size-3 text-[#000D94] opacity-0 transition-opacity group-active:opacity-100 sm:top-4 sm:right-4 sm:size-4" />
                 </button>
               ))}
             </div>
@@ -263,20 +265,21 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
       <Sheet open={showCategorySheet} onOpenChange={setShowCategorySheet}>
         <SheetContent 
           side="bottom" 
+          showCloseButton={false}
           className="rounded-t-3xl border-0 px-0 pb-8 max-h-[70vh] overflow-hidden"
         >
           {selectedCategory && (
             <>
               {/* Header with gradient background */}
-              <div className={`bg-gradient-to-r ${selectedCategory.color} text-white px-4 sm:px-6 pt-2 pb-4 sm:pb-5 -mt-6`}>
+              <div className={cn("-mt-6 bg-gradient-to-r px-4 pt-2 pb-4 text-white sm:px-6 sm:pb-5", selectedCategory.color)}>
                 {/* Drag handle */}
                 <div className="flex justify-center mb-3">
-                  <div className="w-12 h-1.5 rounded-full bg-white/30" />
+                  <div className="h-1.5 w-12 rounded-full bg-white/30" />
                 </div>
                 
                 <SheetHeader className="text-left">
                   <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-7 sm:[&>svg]:h-7">
+                    <div className="flex size-11 items-center justify-center rounded-xl bg-white/20 shadow-lg backdrop-blur-sm sm:size-14 sm:rounded-2xl [&>svg]:size-5 sm:[&>svg]:size-7">
                       {selectedCategory.icon}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -298,7 +301,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
               
               {/* Services List */}
               <div className="px-4 sm:px-6 pt-4 sm:pt-5 overflow-y-auto max-h-[calc(70vh-120px)]">
-                <div className="space-y-2 sm:space-y-3">
+                <div className="flex flex-col gap-2 sm:gap-3">
                   {selectedCategory.services.map((service, index) => (
                     <button
                       key={service}
@@ -307,15 +310,15 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                       style={{ animationDelay: `${index * 0.05}s` }}
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br ${selectedCategory.color} opacity-20 flex items-center justify-center shrink-0`}>
-                          <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
+                        <div className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br opacity-20 sm:size-10 sm:rounded-xl", selectedCategory.color)}>
+                          <CheckCircle2 className="size-4 text-gray-700 sm:size-5" />
                         </div>
                         <div className="min-w-0">
                           <span className="font-semibold text-foreground text-sm sm:text-base block truncate">{service}</span>
                           <span className="text-[10px] sm:text-xs text-muted-foreground">Pago inmediato</span>
                         </div>
                       </div>
-                      <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300 group-hover:text-[#000D94] group-hover:translate-x-1 transition-all shrink-0" />
+                      <ChevronRight className="size-4 shrink-0 text-gray-300 transition-all group-hover:translate-x-1 group-hover:text-[#000D94] sm:size-5" />
                     </button>
                   ))}
                 </div>
@@ -342,9 +345,9 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3 sm:space-y-4 py-3 sm:py-4">
+          <div className="flex flex-col gap-3 py-3 sm:gap-4 sm:py-4">
             {/* Reference Input */}
-            <div className="space-y-1.5 sm:space-y-2">
+            <div className="flex flex-col gap-1.5 sm:gap-2">
               <label className="text-xs sm:text-sm font-medium text-gray-700">Numero de referencia o contrato</label>
               <div className="flex gap-2">
                 <Input
@@ -363,9 +366,9 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                   className="h-10 sm:h-12 px-3 sm:px-4 bg-[#000D94] hover:bg-[#000D94]/90 rounded-lg sm:rounded-xl"
                 >
                   {isSearchingRef ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="animate-spin" data-icon="inline-start" />
                   ) : (
-                    <Search className="h-4 w-4" />
+                    <Search data-icon="inline-start" />
                   )}
                 </Button>
               </div>
@@ -373,7 +376,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
 
             {/* Amount Display (after reference found) */}
             {refFound && (
-              <div className="bg-gray-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 space-y-2 sm:space-y-3 animate-scale-in">
+              <div className="flex flex-col gap-2 rounded-xl bg-gray-50 p-3 animate-scale-in sm:gap-3 sm:rounded-2xl sm:p-4">
                 <div className="flex justify-between items-center">
                   <span className="text-xs sm:text-sm text-gray-500">Titular</span>
                   <span className="text-xs sm:text-sm font-medium text-gray-900 truncate ml-2">Juan Martinez Lopez</span>
@@ -382,7 +385,8 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                   <span className="text-xs sm:text-sm text-gray-500">Referencia</span>
                   <span className="text-xs sm:text-sm font-mono text-gray-600 truncate ml-2">{serviceReference}</span>
                 </div>
-                <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+                <Separator />
+                <div className="flex justify-between items-center pt-2">
                   <span className="text-xs sm:text-sm font-medium text-gray-700">Monto a pagar</span>
                   <span className="text-lg sm:text-xl font-bold text-[#0BBD33]">
                     ${parseFloat(paymentAmount).toLocaleString('es-MX', { minimumFractionDigits: 2 })}
@@ -392,7 +396,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
             )}
 
             {/* Action Buttons */}
-            <div className="flex gap-2 sm:gap-3 pt-2">
+            <DialogFooter className="flex-row gap-2 pt-2 sm:gap-3">
               <Button
                 variant="outline"
                 className="flex-1 h-10 sm:h-12 rounded-lg sm:rounded-xl border-gray-200 text-xs sm:text-sm"
@@ -407,7 +411,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
               >
                 Pagar Servicio
               </Button>
-            </div>
+            </DialogFooter>
           </div>
         </DialogContent>
       </Dialog>
