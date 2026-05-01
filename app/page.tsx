@@ -158,8 +158,11 @@ export default function POSApp() {
         <div className="absolute top-20 left-1/2 size-72 -translate-x-1/2 rounded-full blur-3xl" style={{ background: "linear-gradient(135deg, rgba(var(--theme-secondary-rgb), 0.03), rgba(var(--theme-primary-rgb), 0.03))" }} />
       </div>
 
-      {/* Header with persistent airtime balance */}
-      <POSHeader airtimeBalance={airtimeBalance} />
+      {/* Header */}
+      <POSHeader
+        airtimeBalance={airtimeBalance}
+        showAirtimeBalance={activePanel === "tiempo-aire"}
+      />
 
       {/* Main Content */}
       <div className="scrollbar-hide relative z-10 flex-1 overflow-x-hidden overflow-y-auto pb-32">

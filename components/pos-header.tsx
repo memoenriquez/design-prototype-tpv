@@ -6,9 +6,10 @@ import { NotificationsPopover } from "./notifications-popover"
 
 interface POSHeaderProps {
   airtimeBalance: number
+  showAirtimeBalance?: boolean
 }
 
-export function POSHeader({ airtimeBalance }: POSHeaderProps) {
+export function POSHeader({ airtimeBalance, showAirtimeBalance = false }: POSHeaderProps) {
   return (
     <header
       className="sticky top-0 z-50 px-3 py-3 text-white shadow-xl sm:px-4 sm:py-4 pt-safe"
@@ -28,15 +29,24 @@ export function POSHeader({ airtimeBalance }: POSHeaderProps) {
           <CTCPayLogo size="sm" variant="light" />
         </div>
         
-        {/* Airtime Balance - Always Visible */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 bg-gradient-to-r from-white/15 to-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl px-2.5 sm:px-4 py-1.5 sm:py-2 border border-white/10 shadow-lg min-w-0 flex-1 max-w-[180px] sm:max-w-none sm:flex-none">
+        {/* Context status pill */}
+        <div className="flex min-w-0 max-w-[180px] flex-1 items-center gap-1.5 rounded-xl border border-white/10 bg-gradient-to-r from-white/15 to-white/10 px-2.5 py-1.5 shadow-lg backdrop-blur-sm sm:max-w-none sm:flex-none sm:gap-2.5 sm:rounded-2xl sm:px-4 sm:py-2">
           <div className="relative shrink-0">
             <Wallet className="size-3.5 sm:size-4" style={{ color: "var(--theme-secondary)" }} />
             <span className="absolute -top-0.5 -right-0.5 size-1.5 rounded-full animate-pulse sm:size-2" style={{ backgroundColor: "var(--theme-secondary)" }} />
           </div>
           <div className="text-[10px] sm:text-xs truncate">
-            <span className="text-white/60 font-medium">TAE</span>
-            <span className="font-bold ml-1 sm:ml-1.5 text-white">${airtimeBalance.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</span>
+            {showAirtimeBalance ? (
+              <>
+                <span className="text-white/60 font-medium">TAE</span>
+                <span className="font-bold ml-1 sm:ml-1.5 text-white">${airtimeBalance.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</span>
+              </>
+            ) : (
+              <>
+                <span className="text-white/60 font-medium">Estado</span>
+                <span className="font-bold ml-1 sm:ml-1.5 text-white">Operando</span>
+              </>
+            )}
           </div>
         </div>
         
