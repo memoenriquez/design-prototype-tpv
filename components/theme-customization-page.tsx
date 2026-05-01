@@ -108,7 +108,7 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
         className="sticky top-0 z-20 backdrop-blur-xl border-b"
         style={{ 
           backgroundColor: "var(--theme-card)",
-          borderColor: "rgba(0,0,0,0.08)"
+          borderColor: "var(--border)"
         }}
       >
         <div className="flex items-center justify-between p-4">
@@ -150,20 +150,20 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
               borderColor: "rgba(255,255,255,0.1)"
             }}
           >
-            <p className="min-w-0 truncate text-sm font-medium text-white">Cambios sin guardar</p>
+            <p className="min-w-0 truncate text-sm font-medium text-primary-foreground">Cambios sin guardar</p>
             <div className="flex shrink-0 gap-2">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleCancel}
-                className="text-white hover:bg-white/20"
+                className="text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground"
               >
                 Cancelar
               </Button>
               <Button
                 size="sm"
                 onClick={handleSave}
-                className="bg-white text-[var(--theme-primary)] hover:bg-white/90 gap-1.5"
+                className="gap-1.5 bg-card text-primary hover:bg-card/90"
               >
                 <Check className="w-4 h-4" />
                 Guardar
@@ -176,16 +176,16 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
       {/* Content */}
       <div className="p-4 space-y-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 h-12" style={{ backgroundColor: "var(--theme-card)" }}>
-            <TabsTrigger value="presets" className="gap-2 data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-white">
+          <TabsList className="grid w-full grid-cols-3 h-12 border border-border bg-card">
+            <TabsTrigger value="presets" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <Sparkles className="w-4 h-4" />
               <span className="hidden sm:inline">Temas</span>
             </TabsTrigger>
-            <TabsTrigger value="colors" className="gap-2 data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-white">
+            <TabsTrigger value="colors" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <Palette className="w-4 h-4" />
               <span className="hidden sm:inline">Colores</span>
             </TabsTrigger>
-            <TabsTrigger value="layout" className="gap-2 data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-white">
+            <TabsTrigger value="layout" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <Layout className="w-4 h-4" />
               <span className="hidden sm:inline">Estilo</span>
             </TabsTrigger>
@@ -205,26 +205,25 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                     type="button"
                     aria-pressed={isActive}
                     onClick={() => handlePresetSelect(preset.key)}
-                    className={cn(
-                      "flex items-center gap-4 p-4 rounded-2xl border-2 transition-all text-left",
-                      isActive
-                        ? "border-[var(--theme-primary)] bg-[var(--theme-primary)]/5"
-                        : "border-gray-100 hover:border-gray-200"
-                    )}
-                    style={{ backgroundColor: isActive ? undefined : "var(--theme-card)" }}
+                    className="flex items-center gap-4 border-2 p-4 text-left transition-all hover:shadow-sm"
+                    style={{
+                      backgroundColor: isActive ? "rgba(var(--theme-primary-rgb), 0.08)" : "var(--theme-card)",
+                      borderColor: isActive ? "var(--theme-primary)" : "var(--border)",
+                      borderRadius: "var(--radius)",
+                    }}
                   >
                     {/* Color preview circles */}
                     <div className="flex">
                       <div 
-                        className="-mr-2 size-8 rounded-full border-2 border-white shadow-md"
+                        className="-mr-2 size-8 rounded-full border-2 border-card shadow-md"
                         style={{ backgroundColor: presetTheme.primaryColor }}
                       />
                       <div 
-                        className="-mr-2 size-8 rounded-full border-2 border-white shadow-md"
+                        className="-mr-2 size-8 rounded-full border-2 border-card shadow-md"
                         style={{ backgroundColor: presetTheme.secondaryColor }}
                       />
                       <div 
-                        className="size-8 rounded-full border-2 border-white shadow-md"
+                        className="size-8 rounded-full border-2 border-card shadow-md"
                         style={{ backgroundColor: presetTheme.backgroundColor }}
                       />
                     </div>
@@ -235,7 +234,7 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                           {preset.label}
                         </p>
                         {isActive && (
-                          <Badge variant="secondary" className="bg-[var(--theme-primary)] text-white text-xs">
+                          <Badge variant="secondary" className="bg-primary text-primary-foreground text-xs">
                             Activo
                           </Badge>
                         )}
@@ -246,10 +245,7 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                     </div>
                     
                     <PresetIcon 
-                      className={cn(
-                        "size-5 shrink-0",
-                        isActive ? "text-[var(--theme-primary)]" : "text-gray-400"
-                      )} 
+                      className={cn("size-5 shrink-0", isActive ? "text-primary" : "text-muted-foreground")} 
                     />
                   </button>
                 )
@@ -361,15 +357,11 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                       aria-label={`Usar radio de esquinas de ${radius} pixeles`}
                       aria-pressed={draft.borderRadius === radius}
                       onClick={() => updateDraft({ borderRadius: radius })}
-                      className={cn(
-                        "size-14 border-2 transition-all",
-                        draft.borderRadius === radius
-                          ? "border-[var(--theme-primary)] bg-[var(--theme-primary)]/10"
-                          : "border-gray-200"
-                      )}
+                      className="size-14 border-2 transition-all"
                       style={{ 
+                        borderColor: draft.borderRadius === radius ? "var(--theme-primary)" : "var(--border)",
                         borderRadius: `${radius}px`,
-                        backgroundColor: draft.borderRadius === radius ? undefined : "var(--theme-card)"
+                        backgroundColor: draft.borderRadius === radius ? "rgba(var(--theme-primary-rgb), 0.1)" : "var(--theme-card)"
                       }}
                     />
                   ))}
@@ -410,8 +402,12 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
 
                 {/* Font size preview */}
                 <div 
-                  className="p-4 rounded-xl border border-gray-100 space-y-2"
-                  style={{ backgroundColor: draft.backgroundColor }}
+                  className="p-4 border space-y-2"
+                  style={{
+                    backgroundColor: draft.backgroundColor,
+                    borderColor: "var(--border)",
+                    borderRadius: "var(--radius)",
+                  }}
                 >
                   <p 
                     className="font-semibold"
@@ -439,7 +435,7 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
         {/* Reset button */}
         <Button
           variant="outline"
-                className="h-12 w-full gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
+          className="h-12 w-full gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
           onClick={handleReset}
         >
           <RotateCcw className="w-4 h-4" />
@@ -451,11 +447,12 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
           className="overflow-hidden"
           style={{ 
             backgroundColor: draft.cardBackground,
+            borderColor: "var(--border)",
             borderRadius: `${draft.borderRadius}px`
           }}
         >
           <CardHeader className="pb-2" style={{ backgroundColor: draft.primaryColor }}>
-            <CardTitle className="text-base text-white">Vista Previa en Vivo</CardTitle>
+            <CardTitle className="text-base text-primary-foreground">Vista Previa en Vivo</CardTitle>
           </CardHeader>
           <CardContent className="p-4 space-y-3">
             <div className="flex items-center gap-3">
@@ -466,7 +463,7 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                   borderRadius: `${draft.borderRadius * 0.5}px`
                 }}
               >
-                <Check className="w-5 h-5 text-white" />
+                <Check className="w-5 h-5 text-secondary-foreground" />
               </div>
               <div>
                 <p 
@@ -491,7 +488,7 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
             <div className="flex w-full min-w-0 gap-2">
               <Button 
                 size="sm"
-                className="min-w-0 flex-1 text-white"
+                className="min-w-0 flex-1 text-primary-foreground"
                 style={{ 
                   backgroundColor: draft.primaryColor,
                   borderRadius: `${draft.borderRadius * 0.5}px`
