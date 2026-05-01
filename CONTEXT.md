@@ -22,6 +22,8 @@ Transactions can be pending when a provider accepts the request but has not conf
 
 If provider fulfillment fails after customer payment was received, the transaction enters a refund-required state. Failed transactions remain in history for auditability and can be resolved by refunding the customer outside the app or retrying with corrected details. Retries should preserve an audit trail instead of deleting the failed attempt.
 
+Transaction status must distinguish completed, provider-pending, failed, refund-required, rejected, and cancelled outcomes. History labels should make it clear whether the provider side is still pending, the provider failed after customer payment, or the operation was rejected before completion.
+
 Provider operations must reach a provider pre-validation checkpoint before customer payment is accepted. If pre-validation is not confirmed, the customer payment must not proceed. Pre-validation expires after 2 minutes for MVP; after expiry, the merchant must re-run validation before accepting payment. Failures are audited and retried from the previous stable state, not from an uncertain partial state.
 
 ### Provider Pre-Validation

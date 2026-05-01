@@ -9,7 +9,13 @@ export type TransactionType =
   | "vales"
   | "qr"
 
-export type TransactionStatus = "completed" | "pending"
+export type TransactionStatus =
+  | "completed"
+  | "pending"
+  | "failed"
+  | "refund-required"
+  | "cancelled"
+  | "rejected"
 
 export interface AppTransaction {
   id: string
@@ -85,6 +91,24 @@ export const seedTransactions: AppTransaction[] = [
     amount: 125,
     time: "Hace 3 horas",
     status: "completed",
+  },
+  {
+    id: "seed-8",
+    type: "servicio",
+    description: "Pago Telmex - requiere reembolso",
+    amount: 389,
+    time: "Hace 4 horas",
+    status: "refund-required",
+    reference: "SRV-84210931",
+  },
+  {
+    id: "seed-9",
+    type: "tiempo-aire",
+    description: "Telcel - recarga rechazada",
+    amount: 150,
+    time: "Ayer",
+    status: "failed",
+    reference: "TAE-19408231",
   },
 ]
 
