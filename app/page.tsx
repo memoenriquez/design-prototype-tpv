@@ -90,7 +90,7 @@ export default function POSApp() {
   // Theme customization page has its own full-screen layout
   if (activePanel === "personalizar") {
     return (
-      <div className="min-h-screen w-full sm:max-w-[430px] mx-auto relative" style={{ backgroundColor: "var(--theme-background, #F8FAFC)" }}>
+      <div className="min-h-screen w-full sm:max-w-[430px] mx-auto relative" style={{ backgroundColor: "var(--theme-background)" }}>
         <ThemeCustomizationPage onBack={handleBackToProfile} />
         <BottomNavigation 
           activeTab="perfil" 
@@ -103,7 +103,7 @@ export default function POSApp() {
   // Profile page has its own layout
   if (activePanel === "perfil") {
     return (
-      <div className="min-h-screen w-full sm:max-w-[430px] mx-auto relative" style={{ backgroundColor: "var(--theme-background, #F8FAFC)" }}>
+      <div className="min-h-screen w-full sm:max-w-[430px] mx-auto relative" style={{ backgroundColor: "var(--theme-background)" }}>
         <ProfilePage onBack={handleBack} onOpenThemeCustomization={handleOpenThemeCustomization} />
         <BottomNavigation 
           activeTab="perfil" 
@@ -116,14 +116,13 @@ export default function POSApp() {
   return (
     <div 
       className="relative mx-auto flex h-screen h-[100dvh] w-full min-w-0 flex-col overflow-x-hidden sm:max-w-[430px]"
-      style={{ backgroundColor: "var(--theme-background, #F8FAFC)" }}
+      style={{ backgroundColor: "var(--theme-background)" }}
     >
       {/* Background decorative elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-40 -right-20 w-64 h-64 rounded-full blur-3xl" style={{ backgroundColor: "rgba(var(--theme-secondary-rgb, 11, 189, 51), 0.05)" }} />
-        <div className="absolute top-96 -left-20 w-48 h-48 rounded-full blur-3xl" style={{ backgroundColor: "rgba(var(--theme-primary-rgb, 0, 13, 148), 0.05)" }} />
-        <div className="absolute bottom-60 right-10 w-32 h-32 rounded-full blur-2xl" style={{ backgroundColor: "rgba(var(--theme-accent-rgb, 22, 232, 255), 0.1)" }} />
-        <div className="absolute top-20 left-1/2 w-72 h-72 rounded-full blur-3xl -translate-x-1/2" style={{ background: "linear-gradient(135deg, rgba(11, 189, 51, 0.03), rgba(0, 13, 148, 0.03))" }} />
+        <div className="absolute top-40 -right-20 size-64 rounded-full blur-3xl" style={{ backgroundColor: "rgba(var(--theme-secondary-rgb), 0.05)" }} />
+        <div className="absolute top-96 -left-20 size-48 rounded-full blur-3xl" style={{ backgroundColor: "rgba(var(--theme-primary-rgb), 0.05)" }} />
+        <div className="absolute top-20 left-1/2 size-72 -translate-x-1/2 rounded-full blur-3xl" style={{ background: "linear-gradient(135deg, rgba(var(--theme-secondary-rgb), 0.03), rgba(var(--theme-primary-rgb), 0.03))" }} />
       </div>
 
       {/* Header with persistent airtime balance */}
@@ -137,15 +136,15 @@ export default function POSApp() {
               {/* Welcome message */}
               <div className="flex items-center justify-between animate-slide-up">
                 <div>
-                  <p className="text-sm font-medium" style={{ color: "var(--theme-text-secondary, #64748B)" }}>Bienvenido de nuevo</p>
-                  <h1 className="text-xl font-bold flex items-center gap-2" style={{ color: "var(--theme-text-primary, #0A1628)" }}>
+                  <p className="text-sm font-medium" style={{ color: "var(--theme-text-secondary)" }}>Bienvenido de nuevo</p>
+                  <h1 className="text-xl font-bold flex items-center gap-2" style={{ color: "var(--theme-text-primary)" }}>
                     Mi Negocio
-                    <Sparkles className="h-4 w-4" style={{ color: "var(--theme-secondary, #0BBD33)" }} />
+                    <Sparkles className="size-4" style={{ color: "var(--theme-secondary)" }} />
                   </h1>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs" style={{ color: "var(--theme-text-secondary, #64748B)" }}>Hoy</p>
-                  <p className="text-sm font-semibold" style={{ color: "var(--theme-primary, #000D94)" }}>
+                  <p className="text-xs" style={{ color: "var(--theme-text-secondary)" }}>Hoy</p>
+                  <p className="text-sm font-semibold" style={{ color: "var(--theme-primary)" }}>
                     {currentDate || "---"}
                   </p>
                 </div>
@@ -172,14 +171,14 @@ export default function POSApp() {
                   onAction={handleBack}
                   className="rounded-xl shadow-lg hover:shadow-xl"
                   style={{ 
-                    backgroundColor: "var(--theme-card, #FFFFFF)",
+                    backgroundColor: "var(--theme-card)",
                     borderColor: "rgba(0,0,0,0.05)",
-                    color: "var(--theme-primary, #000D94)"
+                    color: "var(--theme-primary)"
                   }}
                 />
                 <div>
-                  <p className="text-xs font-medium" style={{ color: "var(--theme-text-secondary, #64748B)" }}>Volver</p>
-                  <h2 className="text-lg font-bold" style={{ color: "var(--theme-text-primary, #0A1628)" }}>{panelTitles[activePanel]}</h2>
+                  <p className="text-xs font-medium" style={{ color: "var(--theme-text-secondary)" }}>Volver</p>
+                  <h2 className="text-lg font-bold" style={{ color: "var(--theme-text-primary)" }}>{panelTitles[activePanel]}</h2>
                 </div>
               </div>
 
@@ -191,7 +190,7 @@ export default function POSApp() {
                 <button 
                   onClick={handleBack}
                   className="text-sm font-semibold flex items-center gap-2 mx-auto py-3 px-5 rounded-xl transition-all duration-200 group mt-2"
-                  style={{ color: "var(--theme-primary, #000D94)" }}
+                  style={{ color: "var(--theme-primary)" }}
                 >
                   <Home className="h-4 w-4 transition-transform group-hover:scale-110" />
                   Volver al inicio

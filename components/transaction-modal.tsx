@@ -39,15 +39,15 @@ interface TransactionModalProps {
 const statusConfig = {
   processing: {
     icon: Loader2,
-    iconClass: "text-ctcpay-blue animate-spin",
-    bgClass: "bg-ctcpay-blue/10",
+    iconClass: "text-[var(--theme-primary)] animate-spin",
+    bgClass: "bg-[rgba(var(--theme-primary-rgb),0.1)]",
     title: "Procesando...",
     message: "Por favor espere mientras procesamos su transaccion",
   },
   success: {
     icon: CheckCircle2,
-    iconClass: "text-ctcpay-green",
-    bgClass: "bg-ctcpay-green/10",
+    iconClass: "text-[var(--theme-secondary)]",
+    bgClass: "bg-[rgba(var(--theme-secondary-rgb),0.1)]",
     title: "Transaccion Exitosa",
     message: "Su transaccion ha sido completada correctamente",
   },
@@ -60,8 +60,8 @@ const statusConfig = {
   },
   warning: {
     icon: AlertCircle,
-    iconClass: "text-amber-500",
-    bgClass: "bg-amber-500/10",
+    iconClass: "text-muted-foreground",
+    bgClass: "bg-muted",
     title: "Atencion",
     message: "La transaccion requiere su atencion",
   },
@@ -94,7 +94,7 @@ export function TransactionModal({
 
           {/* Title */}
           <DialogHeader className="min-w-0 text-center">
-            <DialogTitle className="text-xl font-bold text-ctcpay-dark">
+            <DialogTitle className="text-xl font-bold text-foreground">
               {title || config.title}
             </DialogTitle>
             <DialogDescription className="text-gray-500 mt-2">
@@ -107,17 +107,17 @@ export function TransactionModal({
             <div className="mt-6 flex w-full min-w-0 flex-col gap-3 rounded-2xl bg-gray-50 p-4">
               <div className="flex min-w-0 items-center justify-between gap-3">
                 <span className="shrink-0 text-sm text-gray-500">Tipo</span>
-                <span className="min-w-0 truncate text-sm font-medium text-ctcpay-dark">{details.type}</span>
+                <span className="min-w-0 truncate text-sm font-medium text-foreground">{details.type}</span>
               </div>
               {details.recipient && (
                 <div className="flex min-w-0 items-center justify-between gap-3">
                   <span className="shrink-0 text-sm text-gray-500">Destinatario</span>
-                  <span className="min-w-0 truncate text-sm font-medium text-ctcpay-dark">{details.recipient}</span>
+                  <span className="min-w-0 truncate text-sm font-medium text-foreground">{details.recipient}</span>
                 </div>
               )}
               <div className="flex min-w-0 items-center justify-between gap-3">
                 <span className="shrink-0 text-sm text-gray-500">Monto</span>
-                <span className="min-w-0 truncate text-sm font-bold text-ctcpay-dark">{details.amount}</span>
+                <span className="min-w-0 truncate text-sm font-bold text-foreground">{details.amount}</span>
               </div>
               {details.commission && (
                 <div className="flex min-w-0 items-center justify-between gap-3">
@@ -130,7 +130,7 @@ export function TransactionModal({
                   <Separator />
                   <div className="flex min-w-0 items-center justify-between gap-3 pt-2">
                     <span className="shrink-0 text-sm text-gray-500">Referencia</span>
-                    <span className="min-w-0 truncate text-xs font-mono text-ctcpay-blue">{details.reference}</span>
+                    <span className="min-w-0 truncate text-xs font-mono text-[var(--theme-primary)]">{details.reference}</span>
                   </div>
                 </>
               )}
@@ -169,7 +169,7 @@ export function TransactionModal({
               
               {status === "error" && onRetry && (
                 <Button
-                  className="w-full bg-ctcpay-blue hover:bg-ctcpay-blue/90 rounded-xl h-12"
+                  className="h-12 w-full rounded-xl bg-[var(--theme-primary)] hover:opacity-95"
                   onClick={onRetry}
                 >
                   Reintentar
@@ -181,7 +181,7 @@ export function TransactionModal({
                 className={cn(
                   "w-full rounded-xl h-12",
                   status === "success" 
-                    ? "bg-ctcpay-green hover:bg-ctcpay-green/90 text-white"
+                    ? "bg-[var(--theme-secondary)] text-white hover:opacity-95"
                     : "border-gray-200"
                 )}
                 onClick={onNewTransaction || onClose}
@@ -218,7 +218,7 @@ export function ConfirmTransactionModal({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="w-[calc(100%-2rem)] max-w-md rounded-3xl border-0 bg-white shadow-2xl">
         <DialogHeader className="text-center pb-4">
-          <DialogTitle className="text-xl font-bold text-ctcpay-dark">
+          <DialogTitle className="text-xl font-bold text-foreground">
             {title}
           </DialogTitle>
           <DialogDescription className="text-gray-500">
@@ -230,17 +230,17 @@ export function ConfirmTransactionModal({
         <div className="flex w-full min-w-0 flex-col gap-3 rounded-2xl bg-gray-50 p-4">
           <div className="flex min-w-0 items-center justify-between gap-3">
             <span className="shrink-0 text-sm text-gray-500">Tipo</span>
-            <span className="min-w-0 truncate text-sm font-medium text-ctcpay-dark">{details.type}</span>
+            <span className="min-w-0 truncate text-sm font-medium text-foreground">{details.type}</span>
           </div>
           {details.recipient && (
             <div className="flex min-w-0 items-center justify-between gap-3">
               <span className="shrink-0 text-sm text-gray-500">Destinatario</span>
-              <span className="min-w-0 truncate text-sm font-medium text-ctcpay-dark">{details.recipient}</span>
+              <span className="min-w-0 truncate text-sm font-medium text-foreground">{details.recipient}</span>
             </div>
           )}
           <div className="flex min-w-0 items-center justify-between gap-3">
             <span className="shrink-0 text-sm text-gray-500">Monto</span>
-            <span className="min-w-0 truncate text-lg font-bold text-ctcpay-dark">{details.amount}</span>
+            <span className="min-w-0 truncate text-lg font-bold text-foreground">{details.amount}</span>
           </div>
           {details.commission && (
             <div className="flex min-w-0 items-center justify-between gap-3">
@@ -251,7 +251,7 @@ export function ConfirmTransactionModal({
           <Separator />
           <div className="flex min-w-0 items-center justify-between gap-3 pt-2">
             <span className="shrink-0 text-sm font-medium text-gray-700">Total</span>
-            <span className="min-w-0 truncate text-lg font-bold text-ctcpay-green">
+            <span className="min-w-0 truncate text-lg font-bold text-[var(--theme-secondary)]">
               {details.amount}
             </span>
           </div>
@@ -268,7 +268,7 @@ export function ConfirmTransactionModal({
             Cancelar
           </Button>
           <Button
-            className="h-12 w-full rounded-xl bg-ctcpay-green text-white hover:bg-ctcpay-green/90 sm:flex-1"
+            className="h-12 w-full rounded-xl bg-[var(--theme-secondary)] text-white hover:opacity-95 sm:flex-1"
             onClick={onConfirm}
             disabled={isLoading}
           >

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { BrandLogo } from "@/components/brand-logo"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 import { 
@@ -26,81 +27,115 @@ import {
   Shield,
   ChevronRight,
   Star,
-  Loader2,
-  CheckCircle2
+  Loader2
 } from "lucide-react"
 import { CloseButton } from "@/components/ui/close-button"
 import { TransactionModal, TransactionStatus, TransactionDetails } from "./transaction-modal"
+import { BrandLogoKey, brandLogos } from "@/lib/brand-logos"
 import { cn } from "@/lib/utils"
+
+interface ServiceProvider {
+  id: string
+  name: string
+  logoKey: BrandLogoKey
+}
 
 interface ServiceCategory {
   id: string
   name: string
   icon: React.ReactNode
-  color: string
-  services: string[]
+  services: ServiceProvider[]
   popular?: boolean
 }
+
+const serviceProvider = (id: string, name: string, logoKey: BrandLogoKey): ServiceProvider => ({
+  id,
+  name,
+  logoKey,
+})
 
 const serviceCategories: ServiceCategory[] = [
   {
     id: "cfe",
     name: "CFE Luz",
     icon: <Zap className="size-6" />,
-    color: "from-yellow-400 to-orange-500",
-    services: ["CFE Domestico", "CFE Comercial"],
+    services: [
+      serviceProvider("cfe-domestico", "CFE Domestico", "cfe"),
+      serviceProvider("cfe-comercial", "CFE Comercial", "cfe"),
+    ],
     popular: true
   },
   {
     id: "agua",
     name: "Agua",
     icon: <Droplets className="size-6" />,
-    color: "from-blue-400 to-cyan-500",
-    services: ["JMAS", "CESPE", "SIAPA"]
+    services: [
+      serviceProvider("jmas", "JMAS", "jmas"),
+      serviceProvider("cespe", "CESPE", "cespe"),
+      serviceProvider("siapa", "SIAPA", "siapa"),
+    ]
   },
   {
     id: "tv",
     name: "TV Cable",
     icon: <Tv className="size-6" />,
-    color: "from-purple-400 to-pink-500",
-    services: ["SKY", "Dish", "Izzi TV", "TotalPlay"],
+    services: [
+      serviceProvider("sky", "SKY", "sky"),
+      serviceProvider("dish", "Dish", "dish"),
+      serviceProvider("izzi-tv", "Izzi TV", "izzi"),
+      serviceProvider("totalplay-tv", "TotalPlay", "totalplay"),
+    ],
     popular: true
   },
   {
     id: "internet",
     name: "Internet",
     icon: <Wifi className="size-6" />,
-    color: "from-green-400 to-emerald-500",
-    services: ["Telmex", "Izzi", "TotalPlay", "Megacable"]
+    services: [
+      serviceProvider("telmex-internet", "Telmex", "telmex"),
+      serviceProvider("izzi-internet", "Izzi", "izzi"),
+      serviceProvider("totalplay-internet", "TotalPlay", "totalplay"),
+      serviceProvider("megacable-internet", "Megacable", "megacable"),
+    ]
   },
   {
     id: "telefono",
     name: "Telefono",
     icon: <Phone className="size-6" />,
-    color: "from-indigo-400 to-blue-500",
-    services: ["Telmex Fijo", "AT&T Fijo"]
+    services: [
+      serviceProvider("telmex-fijo", "Telmex Fijo", "telmex"),
+      serviceProvider("att-fijo", "AT&T Fijo", "att"),
+    ]
   },
   {
     id: "predial",
     name: "Predial",
     icon: <Building2 className="size-6" />,
-    color: "from-gray-400 to-slate-500",
-    services: ["Predial Municipal", "Tenencia"]
+    services: [
+      serviceProvider("predial-municipal", "Predial Municipal", "cfe"),
+      serviceProvider("tenencia", "Tenencia", "pase"),
+    ]
   },
   {
     id: "auto",
     name: "Telepeaje",
     icon: <Car className="size-6" />,
-    color: "from-teal-400 to-cyan-500",
-    services: ["TAG IAVE", "PASE", "Televia"],
+    services: [
+      serviceProvider("tag-iave", "TAG IAVE", "tag-iave"),
+      serviceProvider("pase", "PASE", "pase"),
+      serviceProvider("televia", "Televia", "televia"),
+    ],
     popular: true
   },
   {
     id: "seguros",
     name: "Seguros",
     icon: <Shield className="size-6" />,
-    color: "from-red-400 to-rose-500",
-    services: ["GNP", "AXA", "Qualitas"]
+    services: [
+      serviceProvider("gnp", "GNP", "gnp"),
+      serviceProvider("axa", "AXA", "axa"),
+      serviceProvider("qualitas", "Qualitas", "qualitas"),
+    ]
   }
 ]
 
@@ -112,7 +147,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<ServiceCategory | null>(null)
   const [showCategorySheet, setShowCategorySheet] = useState(false)
-  const [selectedService, setSelectedService] = useState<string | null>(null)
+  const [selectedService, setSelectedService] = useState<ServiceProvider | null>(null)
   
   // Payment form state
   const [showPaymentForm, setShowPaymentForm] = useState(false)
@@ -127,7 +162,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
 
   const filteredCategories = serviceCategories.filter(cat =>
     cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    cat.services.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()))
+    cat.services.some(s => s.name.toLowerCase().includes(searchQuery.toLowerCase()))
   )
 
   const handleCategorySelect = (category: ServiceCategory) => {
@@ -135,7 +170,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
     setShowCategorySheet(true)
   }
 
-  const handleServiceSelect = (service: string) => {
+  const handleServiceSelect = (service: ServiceProvider) => {
     setSelectedService(service)
     setShowCategorySheet(false)
     setShowPaymentForm(true)
@@ -168,7 +203,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
   }
 
   const transactionDetails: TransactionDetails = {
-    type: `Pago ${selectedService}`,
+    type: `Pago ${selectedService?.name || ""}`,
     amount: `$${parseFloat(paymentAmount || "0").toLocaleString('es-MX', { minimumFractionDigits: 2 })}`,
     recipient: serviceReference,
     commission: "$0.00",
@@ -191,8 +226,11 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
   return (
     <>
       <div className="flex w-full max-w-full min-w-0 flex-col gap-4 box-border animate-slide-up">
-        <Card className="w-full min-w-0 overflow-hidden border-0 shadow-xl shadow-[#000D94]/5 box-border">
-          <CardHeader className="bg-gradient-to-r from-[#000D94] to-[#1a2eb8] text-white p-3 sm:p-4 pb-4 sm:pb-6">
+        <Card className="w-full min-w-0 overflow-hidden border-0 shadow-xl box-border" style={{ boxShadow: "0 20px 40px rgba(var(--theme-primary-rgb), 0.08)" }}>
+          <CardHeader
+            className="p-3 pb-4 text-white sm:p-4 sm:pb-6"
+            style={{ background: "linear-gradient(135deg, var(--theme-primary), rgba(var(--theme-primary-rgb), 0.9))" }}
+          >
             <div className="flex items-center justify-between mb-2 sm:mb-3 gap-2">
               <div className="min-w-0 flex-1">
                 <p className="text-white/70 text-[10px] sm:text-xs font-medium">Pago de servicios</p>
@@ -220,7 +258,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
             {/* Popular Services */}
             <div className="mb-3 sm:mb-4">
               <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
-                <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-yellow-500 fill-yellow-500 shrink-0" />
+                <Star className="size-3.5 shrink-0 fill-current sm:size-4" style={{ color: "var(--theme-secondary)" }} />
                 <span className="text-xs sm:text-sm font-semibold text-foreground/80">Populares</span>
               </div>
               <div className="flex w-full max-w-full min-w-0 gap-2 overflow-x-auto pb-2 scrollbar-hide">
@@ -228,9 +266,9 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                   <button
                     key={category.id}
                     onClick={() => handleCategorySelect(category)}
-                    className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-gray-50 to-gray-100 rounded-full whitespace-nowrap text-xs sm:text-sm font-medium text-foreground/80 active:shadow-md transition-all duration-200 active:-translate-y-0.5 flex-shrink-0 touch-target"
+                    className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-foreground/80 transition-all duration-200 active:-translate-y-0.5 active:shadow-md sm:gap-2 sm:px-4 sm:py-2 sm:text-sm touch-target"
                   >
-                    <div className={cn("flex size-5 scale-75 items-center justify-center rounded-full bg-gradient-to-br text-white [&>svg]:size-3 sm:size-6 sm:[&>svg]:size-4", category.color)}>
+                    <div className="flex size-5 scale-75 items-center justify-center rounded-full bg-[rgba(var(--theme-secondary-rgb),0.12)] text-[var(--theme-secondary)] sm:size-6 [&>svg]:size-3 sm:[&>svg]:size-4">
                       {category.icon}
                     </div>
                     {category.name}
@@ -245,15 +283,15 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                 <button
                   key={category.id}
                   onClick={() => handleCategorySelect(category)}
-                  className="group p-3 sm:p-4 bg-gradient-to-br from-white to-gray-50 rounded-xl sm:rounded-2xl border border-gray-100 active:border-[#000D94]/20 active:shadow-lg transition-all duration-300 text-left relative animate-scale-in touch-target overflow-hidden min-w-0"
+                  className="group relative min-w-0 overflow-hidden rounded-xl border border-border bg-card p-3 text-left transition-all duration-300 active:border-[var(--theme-primary)] active:shadow-lg sm:rounded-2xl sm:p-4 animate-scale-in touch-target"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
-                  <div className={cn("mb-2 flex size-10 items-center justify-center rounded-lg bg-gradient-to-br text-white shadow-lg transition-transform duration-300 group-active:scale-110 sm:mb-3 sm:size-12 sm:rounded-xl [&>svg]:size-5 sm:[&>svg]:size-6", category.color)}>
+                  <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-[rgba(var(--theme-primary-rgb),0.08)] text-[var(--theme-primary)] transition-transform duration-300 group-active:scale-110 sm:mb-3 sm:size-12 sm:rounded-xl [&>svg]:size-5 sm:[&>svg]:size-6">
                     {category.icon}
                   </div>
                   <h4 className="font-semibold text-foreground text-xs sm:text-sm mb-0.5 sm:mb-1 truncate">{category.name}</h4>
                   <p className="text-[10px] sm:text-xs text-muted-foreground">{category.services.length} servicios</p>
-                  <ChevronRight className="absolute top-3 right-3 size-3 text-[#000D94] opacity-0 transition-opacity group-active:opacity-100 sm:top-4 sm:right-4 sm:size-4" />
+                  <ChevronRight className="absolute top-3 right-3 size-3 text-[var(--theme-primary)] opacity-0 transition-opacity group-active:opacity-100 sm:top-4 sm:right-4 sm:size-4" />
                 </button>
               ))}
             </div>
@@ -271,7 +309,10 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
           {selectedCategory && (
             <>
               {/* Header with gradient background */}
-              <div className={cn("-mt-6 bg-gradient-to-r px-4 pt-2 pb-4 text-white sm:px-6 sm:pb-5", selectedCategory.color)}>
+              <div
+                className="-mt-6 px-4 pt-2 pb-4 text-white sm:px-6 sm:pb-5"
+                style={{ background: "linear-gradient(135deg, var(--theme-primary), rgba(var(--theme-primary-rgb), 0.9))" }}
+              >
                 {/* Drag handle */}
                 <div className="flex justify-center mb-3">
                   <div className="h-1.5 w-12 rounded-full bg-white/30" />
@@ -304,21 +345,21 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                 <div className="flex flex-col gap-2 sm:gap-3">
                   {selectedCategory.services.map((service, index) => (
                     <button
-                      key={service}
+                      key={service.id}
                       onClick={() => handleServiceSelect(service)}
                       className="flex w-full min-w-0 items-center justify-between rounded-xl border border-gray-100 bg-white p-3.5 text-left shadow-sm transition-all duration-200 hover:border-gray-200 hover:shadow-md active:bg-gray-50 sm:rounded-2xl sm:p-4 group touch-target animate-slide-up"
                       style={{ animationDelay: `${index * 0.05}s` }}
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br opacity-20 sm:size-10 sm:rounded-xl", selectedCategory.color)}>
-                          <CheckCircle2 className="size-4 text-gray-700 sm:size-5" />
+                        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white p-1.5 shadow-sm ring-1 ring-black/5 sm:size-10 sm:rounded-xl sm:p-2">
+                          <BrandLogo logo={brandLogos[service.logoKey]} tone="primary" />
                         </div>
                         <div className="min-w-0">
-                          <span className="font-semibold text-foreground text-sm sm:text-base block truncate">{service}</span>
+                          <span className="font-semibold text-foreground text-sm sm:text-base block truncate">{service.name}</span>
                           <span className="text-[10px] sm:text-xs text-muted-foreground">Pago inmediato</span>
                         </div>
                       </div>
-                      <ChevronRight className="size-4 shrink-0 text-gray-300 transition-all group-hover:translate-x-1 group-hover:text-[#000D94] sm:size-5" />
+                      <ChevronRight className="size-4 shrink-0 text-muted-foreground/40 transition-all group-hover:translate-x-1 group-hover:text-[var(--theme-primary)] sm:size-5" />
                     </button>
                   ))}
                 </div>
@@ -337,8 +378,8 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
       <Dialog open={showPaymentForm} onOpenChange={setShowPaymentForm}>
         <DialogContent className="w-[calc(100%-2rem)] max-w-[380px] sm:max-w-md bg-white border-0 rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6">
           <DialogHeader className="text-center pb-2">
-            <DialogTitle className="text-base sm:text-xl font-bold text-[#000D94]">
-              {selectedService}
+            <DialogTitle className="text-base font-bold text-[var(--theme-primary)] sm:text-xl">
+              {selectedService?.name}
             </DialogTitle>
             <DialogDescription className="text-xs sm:text-sm text-gray-500">
               Ingresa los datos para realizar el pago
@@ -358,12 +399,12 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                     setServiceReference(e.target.value)
                     setRefFound(false)
                   }}
-                  className="h-10 min-w-0 flex-1 rounded-lg border-gray-200 text-sm focus:border-[#000D94] focus:ring-[#000D94]/20 sm:h-12 sm:rounded-xl"
+                  className="h-10 min-w-0 flex-1 rounded-lg border-border text-sm focus:border-[var(--theme-primary)] focus:ring-[rgba(var(--theme-primary-rgb),0.2)] sm:h-12 sm:rounded-xl"
                 />
                 <Button
                   onClick={handleSearchReference}
                   disabled={serviceReference.length < 8 || isSearchingRef}
-                  className="h-10 shrink-0 rounded-lg bg-[#000D94] px-3 hover:bg-[#000D94]/90 sm:h-12 sm:rounded-xl sm:px-4"
+                  className="h-10 shrink-0 rounded-lg bg-[var(--theme-primary)] px-3 hover:opacity-95 sm:h-12 sm:rounded-xl sm:px-4"
                 >
                   {isSearchingRef ? (
                     <Loader2 className="animate-spin" data-icon="inline-start" />
@@ -388,7 +429,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                 <Separator />
                 <div className="flex justify-between items-center pt-2">
                   <span className="text-xs sm:text-sm font-medium text-gray-700">Monto a pagar</span>
-                  <span className="text-lg sm:text-xl font-bold text-[#0BBD33]">
+                  <span className="text-lg font-bold text-[var(--theme-secondary)] sm:text-xl">
                     ${parseFloat(paymentAmount).toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
@@ -405,7 +446,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                 Cancelar
               </Button>
               <Button
-                className="h-10 w-full rounded-lg bg-[#0BBD33] text-xs text-white hover:bg-[#0BBD33]/90 sm:h-12 sm:flex-1 sm:rounded-xl sm:text-sm"
+                className="h-10 w-full rounded-lg bg-[var(--theme-secondary)] text-xs text-white hover:opacity-95 sm:h-12 sm:flex-1 sm:rounded-xl sm:text-sm"
                 disabled={!refFound}
                 onClick={handlePayService}
               >
@@ -427,7 +468,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
           "Procesando Pago..."
         }
         message={
-          transactionStatus === "success" ? `Pago de ${selectedService} completado` :
+          transactionStatus === "success" ? `Pago de ${selectedService?.name} completado` :
           transactionStatus === "error" ? "No se pudo procesar el pago. Intente nuevamente." :
           "Conectando con el proveedor de servicios..."
         }

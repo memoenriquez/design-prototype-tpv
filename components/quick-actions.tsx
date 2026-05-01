@@ -1,6 +1,5 @@
 "use client"
 
-import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { 
@@ -12,17 +11,17 @@ import {
   History,
   Car,
   Gift,
-  Sparkles
+  Sparkles,
+  type LucideIcon
 } from "lucide-react"
 
 interface QuickAction {
   id: string
   label: string
-  icon: React.ReactNode
-  color: string
-  bgColor: string
-  highlighted?: boolean
-  gradient?: string
+  description: string
+  icon: LucideIcon
+  priority: "primary" | "secondary"
+  tone?: "brand" | "accent"
   badge?: string
 }
 
@@ -30,66 +29,68 @@ const actions: QuickAction[] = [
   {
     id: "tiempo-aire",
     label: "Tiempo Aire",
-    icon: <Smartphone className="size-6" />,
-    color: "text-white",
-    bgColor: "bg-[#0BBD33]",
-    gradient: "from-[#0BBD33] to-[#099a2a]",
-    highlighted: true,
+    description: "Recargas al momento",
+    icon: Smartphone,
+    priority: "primary",
+    tone: "accent",
     badge: "Popular"
   },
   {
     id: "cobrar",
     label: "Cobrar",
-    icon: <CreditCard className="size-6" />,
-    color: "text-white",
-    bgColor: "bg-[#000D94]",
-    gradient: "from-[#000D94] to-[#0015b3]"
+    description: "Tarjeta o efectivo",
+    icon: CreditCard,
+    priority: "primary",
+    tone: "brand"
   },
   {
     id: "codigo-qr",
     label: "Cobro QR",
-    icon: <QrCode className="size-6" />,
-    color: "text-[#000D94]",
-    bgColor: "bg-gradient-to-br from-[#e0e7ff] to-[#c7d2fe]"
+    description: "Pago sin contacto",
+    icon: QrCode,
+    priority: "primary",
+    tone: "brand"
   },
   {
     id: "pago-servicios",
     label: "Servicios",
-    icon: <Receipt className="size-6" />,
-    color: "text-white",
-    gradient: "from-yellow-400 to-orange-500",
-    bgColor: "bg-yellow-400",
+    description: "Luz, agua y más",
+    icon: Receipt,
+    priority: "primary",
+    tone: "brand",
     badge: "+100"
   },
   {
     id: "telepeaje",
     label: "Telepeaje",
-    icon: <Car className="size-6" />,
-    color: "text-white",
-    gradient: "from-teal-500 to-cyan-500",
-    bgColor: "bg-teal-500"
+    description: "Tag y casetas",
+    icon: Car,
+    priority: "secondary",
+    tone: "brand"
   },
   {
     id: "tarjetas-regalo",
     label: "T. Regalo",
-    icon: <Gift className="size-6" />,
-    color: "text-white",
-    gradient: "from-purple-500 to-pink-500",
-    bgColor: "bg-purple-500"
+    description: "Códigos digitales",
+    icon: Gift,
+    priority: "secondary",
+    tone: "brand"
   },
   {
     id: "vales",
     label: "Vales",
-    icon: <Wallet className="size-6" />,
-    color: "text-[#000D94]",
-    bgColor: "bg-gradient-to-br from-[#e0e7ff] to-[#c7d2fe]"
+    description: "Despensa",
+    icon: Wallet,
+    priority: "secondary",
+    tone: "brand"
   },
   {
     id: "historial",
     label: "Historial",
-    icon: <History className="size-6" />,
-    color: "text-[#000D94]",
-    bgColor: "bg-gradient-to-br from-[#e0e7ff] to-[#c7d2fe]"
+    description: "Movimientos",
+    icon: History,
+    priority: "secondary",
+    tone: "brand"
   }
 ]
 
@@ -98,69 +99,124 @@ interface QuickActionsProps {
 }
 
 export function QuickActions({ onActionClick }: QuickActionsProps) {
+  const primaryActions = actions.filter((action) => action.priority === "primary")
+  const secondaryActions = actions.filter((action) => action.priority === "secondary")
+
   return (
-    <div className="flex flex-col gap-4 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-      <div className="flex items-center justify-between px-1">
-        <h3 className="text-sm font-semibold text-foreground/80 tracking-wide">Acciones rápidas</h3>
-        <Sparkles className="size-4 text-[#0BBD33]" />
+    <section className="flex flex-col gap-3 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+      <div className="flex items-end justify-between px-1">
+        <div className="min-w-0">
+          <p className="text-xs font-medium" style={{ color: "var(--theme-text-secondary)" }}>
+            Operación diaria
+          </p>
+          <h3 className="text-base font-bold tracking-tight" style={{ color: "var(--theme-text-primary)" }}>
+            Acciones rápidas
+          </h3>
+        </div>
+        <div
+          className="flex size-8 items-center justify-center rounded-full shadow-lg"
+          style={{
+            background: "linear-gradient(135deg, rgba(var(--theme-secondary-rgb), 0.14), rgba(var(--theme-primary-rgb), 0.08))",
+            color: "var(--theme-secondary)",
+          }}
+        >
+          <Sparkles className="size-4" aria-hidden="true" />
+        </div>
       </div>
-      <div className="grid grid-cols-4 gap-2 sm:gap-4">
-        {actions.map((action, index) => (
-          <button
-            key={action.id}
-            onClick={() => onActionClick?.(action.id)}
-            className="flex flex-col items-center gap-1.5 sm:gap-2.5 group animate-scale-in relative touch-target"
-            style={{ animationDelay: `${index * 0.05}s` }}
-          >
-            <div className="relative transition-all duration-300 ease-out active:scale-95 sm:group-hover:scale-110 sm:group-hover:-translate-y-1">
-              <Card 
+
+      <div className="rounded-[28px] border border-white/80 bg-white/75 p-3 shadow-xl shadow-slate-900/5 backdrop-blur">
+        <div className="grid grid-cols-2 gap-3">
+          {primaryActions.map((action, index) => {
+            const Icon = action.icon
+            const isAccent = action.tone === "accent"
+
+            return (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => onActionClick?.(action.id)}
+                aria-label={action.label}
                 className={cn(
-                  action.gradient ? `bg-gradient-to-br ${action.gradient}` : action.bgColor,
-                  action.color,
-                  "size-12 sm:size-16 flex items-center justify-center rounded-xl sm:rounded-2xl border-0 relative overflow-hidden",
-                  action.highlighted
-                    ? "shadow-xl shadow-[#0BBD33]/40 ring-2 ring-[#0BBD33]/30"
-                    : "shadow-lg shadow-[#000D94]/10 sm:group-hover:shadow-xl sm:group-hover:shadow-[#000D94]/20"
+                  "group relative flex min-h-24 overflow-hidden rounded-3xl p-3.5 text-left shadow-lg transition-all duration-300 ease-out active:scale-[0.98] sm:hover:-translate-y-0.5 sm:hover:shadow-xl",
+                  isAccent ? "text-white" : "bg-white text-[var(--theme-text-primary)]"
                 )}
+                style={{
+                  animationDelay: `${index * 0.05}s`,
+                  background: isAccent
+                    ? "linear-gradient(135deg, var(--theme-secondary), rgba(var(--theme-secondary-rgb), 0.84))"
+                    : "linear-gradient(135deg, var(--theme-card), rgba(var(--theme-primary-rgb), 0.05))",
+                  boxShadow: isAccent
+                    ? "0 18px 34px rgba(var(--theme-secondary-rgb), 0.28)"
+                    : "0 16px 28px rgba(var(--theme-primary-rgb), 0.09)",
+                }}
               >
                 <div
                   className={cn(
-                    "transition-transform duration-300 [&>svg]:size-5 sm:[&>svg]:size-6",
-                    action.highlighted ? "animate-float" : "sm:group-hover:scale-110"
+                    "absolute -right-5 -top-6 size-20 rounded-full blur-2xl transition-opacity duration-300 sm:group-hover:opacity-90",
+                    isAccent ? "bg-white/35" : "bg-[rgba(var(--theme-primary-rgb),0.12)]"
                   )}
-                >
-                  {action.icon}
+                />
+                <div className="relative flex min-h-full w-full flex-col justify-between gap-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div
+                      className={cn(
+                        "flex size-11 items-center justify-center rounded-2xl shadow-sm transition-transform duration-300 sm:group-hover:scale-105",
+                        isAccent ? "bg-white/20 text-white" : "bg-[rgba(var(--theme-primary-rgb),0.08)] text-[var(--theme-primary)]"
+                      )}
+                    >
+                      <Icon className="size-5" aria-hidden="true" />
+                    </div>
+                    {action.badge && (
+                      <Badge
+                        className={cn(
+                          "rounded-full border-0 px-2 py-0.5 text-[10px] font-bold",
+                          isAccent
+                            ? "bg-white text-[var(--theme-secondary)]"
+                            : "bg-[var(--theme-primary)] text-white"
+                        )}
+                      >
+                        {action.badge}
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <span className={cn("block text-sm font-bold leading-tight", isAccent ? "text-white" : "text-[var(--theme-text-primary)]")}>
+                      {action.label}
+                    </span>
+                    <span className={cn("mt-1 block text-[11px] font-medium leading-tight", isAccent ? "text-white/78" : "text-[var(--theme-text-secondary)]")}>
+                      {action.description}
+                    </span>
+                  </div>
                 </div>
-                {action.highlighted && (
-                  <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-white/20 animate-shimmer pointer-events-none" />
-                )}
-              </Card>
-              {action.badge && (
-                <Badge
-                  className={cn(
-                    "absolute -top-1 -right-1 z-10 rounded-full border-0 px-1 py-0.5 text-[8px] font-bold sm:-top-1.5 sm:-right-1.5 sm:px-1.5 sm:text-[9px]",
-                    action.highlighted
-                      ? "bg-yellow-400 text-yellow-900"
-                      : "bg-[#000D94] text-white"
-                  )}
-                >
-                  {action.badge}
-                </Badge>
-              )}
-            </div>
-            <span
-              className={cn(
-                "text-[10px] sm:text-xs text-center leading-tight font-medium transition-colors duration-200 line-clamp-2",
-                action.highlighted
-                  ? "text-[#0BBD33] font-semibold"
-                  : "text-foreground/70 sm:group-hover:text-foreground"
-              )}
-            >
-              {action.label}
-            </span>
-          </button>
-        ))}
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="mt-3 grid grid-cols-4 gap-2">
+          {secondaryActions.map((action, index) => {
+            const Icon = action.icon
+
+            return (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => onActionClick?.(action.id)}
+                aria-label={action.label}
+                className="group flex min-h-[78px] flex-col items-center justify-center gap-2 rounded-2xl bg-white/80 p-2 text-center shadow-sm transition-all duration-300 active:scale-95 sm:hover:-translate-y-0.5 sm:hover:bg-white sm:hover:shadow-md"
+                style={{ animationDelay: `${(index + primaryActions.length) * 0.05}s` }}
+              >
+                <div className="flex size-10 items-center justify-center rounded-2xl bg-[rgba(var(--theme-primary-rgb),0.07)] text-[var(--theme-primary)] transition-transform duration-300 sm:group-hover:scale-105">
+                  <Icon className="size-4.5" aria-hidden="true" />
+                </div>
+                <span className="line-clamp-2 text-[10px] font-semibold leading-tight text-[var(--theme-text-primary)]">
+                  {action.label}
+                </span>
+              </button>
+            )
+          })}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }

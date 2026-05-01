@@ -16,11 +16,17 @@ export function BalanceCard({ balance, salesToday, transactionsToday }: BalanceC
   const [showBalance, setShowBalance] = useState(true)
 
   return (
-    <Card className="relative overflow-hidden bg-gradient-to-br from-[#000D94] via-[#0015b3] to-[#001ACC] text-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-0 shadow-2xl shadow-[#000D94]/30 animate-scale-in">
+    <Card
+      className="relative overflow-hidden rounded-2xl border-0 p-4 text-white shadow-2xl animate-scale-in sm:rounded-3xl sm:p-6"
+      style={{
+        background: "linear-gradient(135deg, var(--theme-primary), rgba(var(--theme-primary-rgb), 0.9))",
+        boxShadow: "0 24px 50px rgba(var(--theme-primary-rgb), 0.28)",
+      }}
+    >
       {/* Decorative background elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-0 size-48 bg-gradient-to-bl from-[#0BBD33]/20 to-transparent rounded-full blur-3xl transform translate-x-10 -translate-y-10" />
-        <div className="absolute bottom-0 left-0 size-32 bg-gradient-to-tr from-[#16E8FF]/15 to-transparent rounded-full blur-2xl transform -translate-x-5 translate-y-5" />
+        <div className="absolute top-0 right-0 size-48 translate-x-10 -translate-y-10 rounded-full blur-3xl" style={{ background: "linear-gradient(225deg, rgba(var(--theme-secondary-rgb), 0.2), transparent)" }} />
+        <div className="absolute bottom-0 left-0 size-32 -translate-x-5 translate-y-5 rounded-full bg-white/10 blur-2xl" />
         <div className="absolute top-1/2 left-1/2 size-64 bg-white/5 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2" />
         {/* Pattern overlay */}
         <div className="absolute inset-0 opacity-10" style={{
@@ -34,7 +40,7 @@ export function BalanceCard({ balance, salesToday, transactionsToday }: BalanceC
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
               <p className="text-white/70 text-xs sm:text-sm font-medium">Saldo disponible</p>
-              <Sparkles className="size-3 shrink-0 text-[#0BBD33] sm:size-3.5" />
+              <Sparkles className="size-3 shrink-0 sm:size-3.5" style={{ color: "var(--theme-secondary)" }} />
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
               <h2 className="text-2xl sm:text-4xl font-bold tracking-tight truncate">
@@ -51,7 +57,13 @@ export function BalanceCard({ balance, salesToday, transactionsToday }: BalanceC
               </Button>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-[#0BBD33] to-[#099a2a] rounded-xl sm:rounded-2xl p-2.5 sm:p-3 shadow-lg shadow-[#0BBD33]/30 animate-float shrink-0">
+          <div
+            className="shrink-0 rounded-xl p-2.5 shadow-lg animate-float sm:rounded-2xl sm:p-3"
+            style={{
+              background: "linear-gradient(135deg, var(--theme-secondary), rgba(var(--theme-secondary-rgb), 0.84))",
+              boxShadow: "0 14px 26px rgba(var(--theme-secondary-rgb), 0.3)",
+            }}
+          >
             <TrendingUp className="size-5 sm:size-6" />
           </div>
         </div>
@@ -61,14 +73,14 @@ export function BalanceCard({ balance, salesToday, transactionsToday }: BalanceC
           <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 transition-all duration-200 active:bg-white/15">
             <div className="flex items-center justify-between mb-1">
               <p className="text-white/60 text-[10px] sm:text-xs font-medium">Ventas hoy</p>
-              <ArrowUpRight className="size-3 text-[#0BBD33] sm:size-3.5" />
+              <ArrowUpRight className="size-3 sm:size-3.5" style={{ color: "var(--theme-secondary)" }} />
             </div>
             <p className="text-lg sm:text-2xl font-bold">${salesToday.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</p>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 transition-all duration-200 active:bg-white/15">
             <div className="flex items-center justify-between mb-1">
               <p className="text-white/60 text-[10px] sm:text-xs font-medium">Transacciones</p>
-              <div className="size-1.5 rounded-full bg-[#0BBD33] animate-pulse sm:size-2" />
+              <div className="size-1.5 rounded-full animate-pulse sm:size-2" style={{ backgroundColor: "var(--theme-secondary)" }} />
             </div>
             <p className="text-lg sm:text-2xl font-bold">{transactionsToday}</p>
           </div>

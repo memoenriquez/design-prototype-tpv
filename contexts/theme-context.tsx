@@ -6,7 +6,7 @@ export interface ThemeSettings {
   // Brand Colors
   primaryColor: string
   secondaryColor: string
-  accentColor: string
+  accentColor?: string
   
   // UI Colors
   backgroundColor: string
@@ -25,7 +25,7 @@ export interface ThemeSettings {
 export const defaultTheme: ThemeSettings = {
   primaryColor: "#000D94",
   secondaryColor: "#0BBD33",
-  accentColor: "#16E8FF",
+  accentColor: "#000D94",
   backgroundColor: "#F8FAFC",
   cardBackground: "#FFFFFF",
   textPrimary: "#0A1628",
@@ -40,7 +40,7 @@ export const themePresets: Record<string, ThemeSettings> = {
   dark: {
     primaryColor: "#3B82F6",
     secondaryColor: "#10B981",
-    accentColor: "#8B5CF6",
+    accentColor: "#3B82F6",
     backgroundColor: "#0F172A",
     cardBackground: "#1E293B",
     textPrimary: "#F8FAFC",
@@ -50,9 +50,9 @@ export const themePresets: Record<string, ThemeSettings> = {
     presetName: "dark"
   },
   warm: {
-    primaryColor: "#DC2626",
-    secondaryColor: "#F59E0B",
-    accentColor: "#EA580C",
+    primaryColor: "#92400E",
+    secondaryColor: "#D97706",
+    accentColor: "#92400E",
     backgroundColor: "#FFFBEB",
     cardBackground: "#FFFFFF",
     textPrimary: "#78350F",
@@ -64,7 +64,7 @@ export const themePresets: Record<string, ThemeSettings> = {
   ocean: {
     primaryColor: "#0891B2",
     secondaryColor: "#06B6D4",
-    accentColor: "#2DD4BF",
+    accentColor: "#0891B2",
     backgroundColor: "#ECFEFF",
     cardBackground: "#FFFFFF",
     textPrimary: "#164E63",
@@ -76,7 +76,7 @@ export const themePresets: Record<string, ThemeSettings> = {
   corporate: {
     primaryColor: "#1E3A5F",
     secondaryColor: "#2563EB",
-    accentColor: "#3B82F6",
+    accentColor: "#1E3A5F",
     backgroundColor: "#F1F5F9",
     cardBackground: "#FFFFFF",
     textPrimary: "#1E293B",
@@ -101,19 +101,52 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 const STORAGE_KEY = "ctcpay-theme-settings"
 
+const hexToRgb = (hex: string): string => {
+  const normalizedHex = hex.replace("#", "")
+  const expandedHex = normalizedHex.length === 3
+    ? normalizedHex.split("").map((value) => value + value).join("")
+    : normalizedHex
+  const value = Number.parseInt(expandedHex, 16)
+
+  if (Number.isNaN(value)) return "0, 13, 148"
+
+  const red = (value >> 16) & 255
+  const green = (value >> 8) & 255
+  const blue = value & 255
+
+  return `${red}, ${green}, ${blue}`
+}
+
 function applyThemeToDOM(theme: ThemeSettings) {
   const root = document.documentElement
+  const accentColor = theme.primaryColor
   
   // Apply CSS variables
   root.style.setProperty("--theme-primary", theme.primaryColor)
   root.style.setProperty("--theme-secondary", theme.secondaryColor)
-  root.style.setProperty("--theme-accent", theme.accentColor)
+  root.style.setProperty("--theme-accent", accentColor)
   root.style.setProperty("--theme-background", theme.backgroundColor)
   root.style.setProperty("--theme-card", theme.cardBackground)
   root.style.setProperty("--theme-text-primary", theme.textPrimary)
   root.style.setProperty("--theme-text-secondary", theme.textSecondary)
   root.style.setProperty("--theme-radius", `${theme.borderRadius}px`)
   root.style.setProperty("--theme-font-scale", `${theme.fontSize}%`)
+  root.style.setProperty("--theme-primary-rgb", hexToRgb(theme.primaryColor))
+  root.style.setProperty("--theme-secondary-rgb", hexToRgb(theme.secondaryColor))
+  root.style.setProperty("--theme-accent-rgb", hexToRgb(accentColor))
+  root.style.setProperty("--theme-card-rgb", hexToRgb(theme.cardBackground))
+
+  root.style.setProperty("--primary", theme.primaryColor)
+  root.style.setProperty("--secondary", theme.secondaryColor)
+  root.style.setProperty("--accent", accentColor)
+  root.style.setProperty("--ring", theme.primaryColor)
+  root.style.setProperty("--background", theme.backgroundColor)
+  root.style.setProperty("--card", theme.cardBackground)
+  root.style.setProperty("--popover", theme.cardBackground)
+  root.style.setProperty("--foreground", theme.textPrimary)
+  root.style.setProperty("--card-foreground", theme.textPrimary)
+  root.style.setProperty("--popover-foreground", theme.textPrimary)
+  root.style.setProperty("--muted-foreground", theme.textSecondary)
   
   // Apply background color to body
   document.body.style.backgroundColor = theme.backgroundColor
@@ -130,8 +163,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       const saved = localStorage.getItem(STORAGE_KEY)
       if (saved) {
         const parsed = JSON.parse(saved) as ThemeSettings
-        setTheme(parsed)
-        applyThemeToDOM(parsed)
+        const normalizedTheme = { ...parsed, accentColor: parsed.primaryColor }
+        setTheme(normalizedTheme)
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizedTheme))
+        applyThemeToDOM(normalizedTheme)
       } else {
         applyThemeToDOM(defaultTheme)
       }
@@ -150,7 +185,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const updateTheme = useCallback((updates: Partial<ThemeSettings>) => {
     setTheme(prev => {
-      const newTheme = { ...prev, ...updates, presetName: null }
+      const newTheme = {
+        ...prev,
+        ...updates,
+        accentColor: updates.primaryColor || prev.primaryColor,
+        presetName: null,
+      }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newTheme))
       return newTheme
     })

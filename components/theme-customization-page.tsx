@@ -38,7 +38,7 @@ const presetInfo = [
 ]
 
 export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) {
-  const { theme, updateTheme, applyPreset, resetToDefault, previewTheme, setPreviewTheme } = useTheme()
+  const { theme, updateTheme, resetToDefault, previewTheme, setPreviewTheme } = useTheme()
   
   // Local draft state for editing
   const [draft, setDraft] = useState<ThemeSettings>(theme)
@@ -57,7 +57,10 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
   }, [draft, theme])
 
   const updateDraft = (updates: Partial<ThemeSettings>) => {
-    const newDraft = { ...draft, ...updates, presetName: null }
+    const nextUpdates = updates.primaryColor
+      ? { ...updates, accentColor: updates.primaryColor }
+      : updates
+    const newDraft = { ...draft, ...nextUpdates, presetName: null }
     setDraft(newDraft)
     // Apply preview immediately
     setPreviewTheme(newDraft)
@@ -211,13 +214,13 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                     style={{ backgroundColor: isActive ? undefined : "var(--theme-card)" }}
                   >
                     {/* Color preview circles */}
-                    <div className="flex -space-x-2">
+                    <div className="flex">
                       <div 
-                        className="size-8 rounded-full border-2 border-white shadow-md"
+                        className="-mr-2 size-8 rounded-full border-2 border-white shadow-md"
                         style={{ backgroundColor: presetTheme.primaryColor }}
                       />
                       <div 
-                        className="size-8 rounded-full border-2 border-white shadow-md"
+                        className="-mr-2 size-8 rounded-full border-2 border-white shadow-md"
                         style={{ backgroundColor: presetTheme.secondaryColor }}
                       />
                       <div 
@@ -276,11 +279,9 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                   value={draft.secondaryColor}
                   onChange={(color) => updateDraft({ secondaryColor: color })}
                 />
-                <ColorPicker
-                  label="Color de Acento"
-                  value={draft.accentColor}
-                  onChange={(color) => updateDraft({ accentColor: color })}
-                />
+                <p className="rounded-xl bg-muted px-3 py-2 text-xs text-muted-foreground">
+                  Para reducir el ruido visual, los detalles de acento se derivan del color primario.
+                </p>
               </CardContent>
             </Card>
 
@@ -438,7 +439,7 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
         {/* Reset button */}
         <Button
           variant="outline"
-          className="w-full gap-2 h-12 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                className="h-12 w-full gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
           onClick={handleReset}
         >
           <RotateCcw className="w-4 h-4" />
@@ -503,8 +504,8 @@ export function ThemeCustomizationPage({ onBack }: ThemeCustomizationPageProps) 
                 variant="outline"
                 className="min-w-0 flex-1"
                 style={{ 
-                  borderColor: draft.primaryColor,
-                  color: draft.primaryColor,
+                  borderColor: draft.secondaryColor,
+                  color: draft.secondaryColor,
                   borderRadius: `${draft.borderRadius * 0.5}px`
                 }}
               >

@@ -28,7 +28,14 @@ export function BottomNavigation({ activeTab = "inicio", onTabChange }: BottomNa
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 w-full sm:max-w-[430px] sm:left-1/2 sm:-translate-x-1/2">
       {/* Glassmorphism background */}
-      <div className="absolute inset-0 bg-white/90 backdrop-blur-xl border-t border-gray-200/50 shadow-[0_-4px_30px_rgba(0,0,0,0.08)]" />
+      <div
+        className="absolute inset-0 border-t backdrop-blur-xl"
+        style={{
+          backgroundColor: "rgba(var(--theme-card-rgb), 0.92)",
+          borderColor: "rgba(var(--theme-primary-rgb), 0.08)",
+          boxShadow: "0 -4px 30px rgba(var(--theme-primary-rgb), 0.08)",
+        }}
+      />
       
       <div className="relative flex items-center justify-around py-1.5 sm:py-2 pb-safe">
         {navItems.map((item) => {
@@ -47,10 +54,19 @@ export function BottomNavigation({ activeTab = "inicio", onTabChange }: BottomNa
               {isHighlight ? (
                 <div className="relative group">
                   {/* Pulse ring effect */}
-                  <div className="absolute inset-0 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-[#0BBD33] to-[#099a2a] rounded-xl sm:rounded-2xl opacity-30 animate-pulse-ring" />
+                  <div
+                    className="absolute inset-0 size-12 rounded-xl opacity-30 animate-pulse-ring sm:size-16 sm:rounded-2xl"
+                    style={{ background: "linear-gradient(135deg, var(--theme-secondary), rgba(var(--theme-secondary-rgb), 0.82))" }}
+                  />
                   
                   {/* Main button */}
-                  <div className="relative w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-[#0BBD33] via-[#0ec73e] to-[#0BBD33] rounded-xl sm:rounded-2xl flex items-center justify-center text-white shadow-xl shadow-[#0BBD33]/40 transition-all duration-300 active:scale-95 overflow-hidden [&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-7 sm:[&>svg]:h-7">
+                  <div
+                    className="relative flex size-12 items-center justify-center overflow-hidden rounded-xl text-white shadow-xl transition-all duration-300 active:scale-95 sm:size-16 sm:rounded-2xl [&>svg]:size-5 sm:[&>svg]:size-7"
+                    style={{
+                      background: "linear-gradient(135deg, var(--theme-secondary), rgba(var(--theme-secondary-rgb), 0.86))",
+                      boxShadow: "0 18px 30px rgba(var(--theme-secondary-rgb), 0.34)",
+                    }}
+                  >
                     {/* Shine effect */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent" />
                     <div className="absolute inset-0 animate-shimmer opacity-50" />
@@ -58,7 +74,7 @@ export function BottomNavigation({ activeTab = "inicio", onTabChange }: BottomNa
                   </div>
                   
                   {/* Label below */}
-                  <span className="text-[9px] sm:text-[10px] font-bold text-[#0BBD33] mt-0.5 sm:mt-1 block text-center">
+                  <span className="mt-0.5 block text-center text-[9px] font-bold sm:mt-1 sm:text-[10px]" style={{ color: "var(--theme-secondary)" }}>
                     {item.label}
                   </span>
                 </div>
@@ -67,19 +83,25 @@ export function BottomNavigation({ activeTab = "inicio", onTabChange }: BottomNa
                   <div className={cn(
                     "relative transition-all duration-300 p-2 sm:p-2.5 rounded-lg sm:rounded-xl [&>svg]:w-4 [&>svg]:h-4 sm:[&>svg]:w-5 sm:[&>svg]:h-5",
                     isActive 
-                      ? "text-[#000D94] bg-[#000D94]/10" 
-                      : "text-gray-400 active:text-gray-600 active:bg-gray-50"
+                      ? "bg-[rgba(var(--theme-primary-rgb),0.1)] text-[var(--theme-primary)]" 
+                      : "text-muted-foreground/70 active:bg-muted active:text-muted-foreground"
                   )}>
                     {item.icon}
                     
                     {/* Active indicator dot */}
                     {isActive && (
-                      <span className="absolute -top-0.5 -right-0.5 w-1.5 sm:w-2 h-1.5 sm:h-2 bg-[#0BBD33] rounded-full shadow-sm shadow-[#0BBD33]/50" />
+                      <span
+                        className="absolute -top-0.5 -right-0.5 size-1.5 rounded-full shadow-sm sm:size-2"
+                        style={{
+                          backgroundColor: "var(--theme-secondary)",
+                          boxShadow: "0 2px 8px rgba(var(--theme-secondary-rgb), 0.45)",
+                        }}
+                      />
                     )}
                   </div>
                   <span className={cn(
                     "text-[9px] sm:text-[10px] font-medium transition-all duration-300",
-                    isActive ? "text-[#000D94] font-semibold" : "text-gray-400"
+                    isActive ? "text-[var(--theme-primary)] font-semibold" : "text-muted-foreground/70"
                   )}>
                     {item.label}
                   </span>

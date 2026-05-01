@@ -75,23 +75,23 @@ const mockNotifications: Notification[] = [
 const typeConfig = {
   success: {
     icon: CheckCircle2,
-    bgClass: "bg-ctcpay-green/10",
-    iconClass: "text-ctcpay-green",
+    bgClass: "bg-[rgba(var(--theme-secondary-rgb),0.1)]",
+    iconClass: "text-[var(--theme-secondary)]",
   },
   warning: {
     icon: AlertCircle,
-    bgClass: "bg-amber-500/10",
-    iconClass: "text-amber-500",
+    bgClass: "bg-muted",
+    iconClass: "text-muted-foreground",
   },
   info: {
     icon: Info,
-    bgClass: "bg-ctcpay-blue/10",
-    iconClass: "text-ctcpay-blue",
+    bgClass: "bg-[rgba(var(--theme-primary-rgb),0.1)]",
+    iconClass: "text-[var(--theme-primary)]",
   },
   promo: {
     icon: Gift,
-    bgClass: "bg-pink-500/10",
-    iconClass: "text-pink-500",
+    bgClass: "bg-[rgba(var(--theme-primary-rgb),0.1)]",
+    iconClass: "text-[var(--theme-primary)]",
   },
 }
 
@@ -136,7 +136,7 @@ export function NotificationsPopover() {
         >
           <Bell className="text-white" data-icon="inline-start" />
           {unreadCount > 0 && (
-            <Badge className="absolute -top-1 -right-1 size-5 rounded-full border-0 bg-red-500 p-0 text-[10px] font-bold text-white animate-pulse">
+            <Badge className="absolute -top-1 -right-1 size-5 rounded-full border-0 bg-[var(--theme-secondary)] p-0 text-[10px] font-bold text-white animate-pulse">
               {unreadCount}
             </Badge>
           )}
@@ -149,12 +149,12 @@ export function NotificationsPopover() {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4">
-          <h3 className="font-semibold text-ctcpay-dark">Notificaciones</h3>
+          <h3 className="font-semibold text-foreground">Notificaciones</h3>
           {unreadCount > 0 && (
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs text-ctcpay-blue hover:text-ctcpay-blue/80 h-auto p-0"
+              className="h-auto p-0 text-xs text-[var(--theme-primary)] hover:opacity-80"
               onClick={markAllAsRead}
             >
               Marcar todas como leidas
@@ -191,7 +191,7 @@ export function NotificationsPopover() {
                     aria-label={`Marcar como leida: ${notification.title}`}
                     className={cn(
                       "relative p-4 hover:bg-gray-50 focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-inset focus-visible:outline-none transition-colors cursor-pointer group",
-                      !notification.read && "bg-ctcpay-blue/5"
+                      !notification.read && "bg-[rgba(var(--theme-primary-rgb),0.05)]"
                     )}
                     onClick={() => markAsRead(notification.id)}
                     onKeyDown={(event) =>
@@ -208,7 +208,7 @@ export function NotificationsPopover() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
                           <p className={cn(
-                            "text-sm text-ctcpay-dark truncate",
+                            "truncate text-sm text-foreground",
                             !notification.read && "font-semibold"
                           )}>
                             {notification.title}
@@ -235,7 +235,7 @@ export function NotificationsPopover() {
                       </div>
                     </div>
                     {!notification.read && (
-                      <div className="absolute left-1.5 top-1/2 size-2 -translate-y-1/2 rounded-full bg-ctcpay-blue" />
+                      <div className="absolute left-1.5 top-1/2 size-2 -translate-y-1/2 rounded-full bg-[var(--theme-primary)]" />
                     )}
                   </div>
                 )
@@ -249,7 +249,7 @@ export function NotificationsPopover() {
         <div className="p-3 bg-gray-50">
           <Button
             variant="ghost"
-            className="w-full text-sm text-ctcpay-blue hover:text-ctcpay-blue/80 hover:bg-ctcpay-blue/10"
+            className="w-full text-sm text-[var(--theme-primary)] hover:bg-[rgba(var(--theme-primary-rgb),0.08)] hover:opacity-80"
           >
             Ver todas las notificaciones
           </Button>

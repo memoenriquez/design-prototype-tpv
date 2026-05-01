@@ -20,10 +20,10 @@ interface CobrarPanelProps {
 }
 
 const paymentMethods = [
-  { id: "tarjeta", name: "Tarjeta", icon: <CreditCard className="size-5" />, color: "from-[#000D94] to-[#1a2eb8]" },
-  { id: "contactless", name: "Contactless", icon: <Nfc className="size-5" />, color: "from-cyan-500 to-blue-500" },
-  { id: "qr", name: "Codigo QR", icon: <QrCode className="size-5" />, color: "from-[#0BBD33] to-[#099a2a]" },
-  { id: "vales", name: "Vales", icon: <Wallet className="size-5" />, color: "from-orange-400 to-red-500" },
+  { id: "tarjeta", name: "Tarjeta", icon: <CreditCard className="size-5" /> },
+  { id: "contactless", name: "Contactless", icon: <Nfc className="size-5" /> },
+  { id: "qr", name: "Codigo QR", icon: <QrCode className="size-5" /> },
+  { id: "vales", name: "Vales", icon: <Wallet className="size-5" /> },
 ]
 
 export function CobrarPanel({ onBack }: CobrarPanelProps) {
@@ -101,8 +101,11 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
     <>
       <div className="flex w-full max-w-full min-w-0 flex-col gap-4 animate-slide-up">
         {/* Amount Display */}
-        <Card className="w-full min-w-0 overflow-hidden border-0 shadow-xl shadow-[#000D94]/10">
-          <CardHeader className="bg-gradient-to-br from-[#000D94] via-[#0015b3] to-[#1a2eb8] text-white p-4 sm:p-6 text-center relative overflow-hidden">
+        <Card className="w-full min-w-0 overflow-hidden border-0 shadow-xl" style={{ boxShadow: "0 20px 40px rgba(var(--theme-primary-rgb), 0.1)" }}>
+          <CardHeader
+            className="relative overflow-hidden p-4 text-center text-white sm:p-6"
+            style={{ background: "linear-gradient(135deg, var(--theme-primary), rgba(var(--theme-primary-rgb), 0.9))" }}
+          >
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 size-24 -translate-y-1/2 translate-x-1/2 rounded-full bg-white/5 sm:size-32" />
             <div className="absolute bottom-0 left-0 size-16 -translate-x-1/2 translate-y-1/2 rounded-full bg-white/5 sm:size-24" />
@@ -131,8 +134,8 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
                     className={cn(
                       "flex min-w-0 flex-col items-center gap-1 rounded-lg p-2 transition-all duration-300 sm:gap-2 sm:rounded-xl sm:p-3 touch-target",
                       selectedMethod === method.id
-                        ? `scale-[1.02] bg-gradient-to-br ${method.color} text-white shadow-lg sm:scale-105`
-                        : "bg-gray-50 text-foreground/70 active:bg-gray-100"
+                        ? "scale-[1.02] bg-[var(--theme-primary)] text-white shadow-lg sm:scale-105"
+                        : "bg-muted text-foreground/70 active:bg-muted/80"
                     )}
                   >
                     <div className="[&>svg]:size-4 sm:[&>svg]:size-5">
@@ -173,7 +176,7 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
               key={quickAmount}
               type="button"
               onClick={() => setAmount(quickAmount.toString())}
-              className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white border border-gray-200 rounded-full text-xs sm:text-sm font-semibold text-[#000D94] active:bg-[#000D94] active:text-white active:border-[#000D94] transition-all duration-200 whitespace-nowrap flex-shrink-0 touch-target"
+              className="shrink-0 whitespace-nowrap rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold text-[var(--theme-primary)] transition-all duration-200 active:border-[var(--theme-primary)] active:bg-[var(--theme-primary)] active:text-white sm:px-4 sm:py-2 sm:text-sm touch-target"
             >
               ${quickAmount}
             </button>
@@ -182,7 +185,7 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
 
         {/* Charge Button */}
         <Button 
-          className="w-full h-12 sm:h-14 bg-gradient-to-r from-[#0BBD33] to-[#099a2a] hover:from-[#099a2a] hover:to-[#078523] text-white font-bold text-base sm:text-lg rounded-xl sm:rounded-2xl shadow-xl shadow-[#0BBD33]/30 transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="h-12 w-full rounded-xl bg-[var(--theme-secondary)] text-base font-bold text-white shadow-xl transition-all duration-300 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 hover:opacity-95 sm:h-14 sm:rounded-2xl sm:text-lg"
           disabled={!amount || parseFloat(amount) <= 0}
           onClick={handleCharge}
         >
@@ -195,11 +198,11 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
         {/* Payment Info */}
         <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
-            <Check className="size-3 text-[#0BBD33]" />
+            <Check className="size-3" style={{ color: "var(--theme-secondary)" }} />
             <span>Pago seguro</span>
           </div>
           <div className="flex items-center gap-1">
-            <Check className="size-3 text-[#0BBD33]" />
+            <Check className="size-3" style={{ color: "var(--theme-secondary)" }} />
             <span>Comprobante digital</span>
           </div>
         </div>

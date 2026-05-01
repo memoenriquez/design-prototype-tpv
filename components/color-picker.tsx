@@ -17,9 +17,8 @@ interface ColorPickerProps {
 }
 
 const defaultPresets = [
-  "#000D94", "#0BBD33", "#16E8FF", "#DC2626", "#F59E0B",
-  "#10B981", "#8B5CF6", "#EC4899", "#0891B2", "#1E3A5F",
-  "#F8FAFC", "#FFFFFF", "#0F172A", "#1E293B", "#64748B"
+  "#000D94", "#0BBD33", "#1E3A5F", "#0891B2", "#2563EB",
+  "#F8FAFC", "#FFFFFF", "#F1F5F9", "#0F172A", "#64748B"
 ]
 
 function isValidHex(hex: string): boolean {
@@ -96,7 +95,7 @@ export function ColorPicker({
   const hasContrastIssue = contrastRatio !== null && contrastRatio < 4.5
 
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col gap-2">
       {label && (
         <label className="text-sm font-medium text-[var(--theme-text-primary)]">
           {label}
@@ -106,10 +105,10 @@ export function ColorPicker({
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="w-full justify-start gap-3 h-12 px-3 border-gray-200 hover:border-gray-300"
+            className="h-12 w-full justify-start gap-3 border-border px-3 hover:border-muted-foreground/40"
           >
             <div
-              className="w-8 h-8 rounded-lg border-2 border-gray-200 shadow-inner"
+              className="size-8 rounded-lg border-2 border-border shadow-inner"
               style={{ backgroundColor: isValid ? value : "#ccc" }}
             />
             <span className="font-mono text-sm uppercase">{value}</span>
@@ -119,11 +118,11 @@ export function ColorPicker({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-64 p-4" align="start">
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {/* Native color picker */}
             <div className="flex items-center gap-3">
               <div
-                className="relative w-12 h-12 rounded-xl overflow-hidden cursor-pointer border-2 border-gray-200 shadow-lg"
+                className="relative size-12 cursor-pointer overflow-hidden rounded-xl border-2 border-border shadow-lg"
                 onClick={() => colorInputRef.current?.click()}
               >
                 <div
@@ -145,7 +144,7 @@ export function ColorPicker({
                   placeholder="#000000"
                   className={cn(
                     "font-mono uppercase text-sm",
-                    !isValid && inputValue.length >= 7 && "border-red-500 focus-visible:ring-red-500"
+                    !isValid && inputValue.length >= 7 && "border-destructive focus-visible:ring-destructive"
                   )}
                 />
               </div>
@@ -153,7 +152,7 @@ export function ColorPicker({
 
             {/* Validation message */}
             {!isValid && inputValue.length >= 7 && (
-              <p className="text-xs text-red-500">
+              <p className="text-xs text-destructive">
                 Formato invalido. Usa formato HEX (#RRGGBB)
               </p>
             )}
@@ -169,8 +168,8 @@ export function ColorPicker({
             )}
 
             {/* Preset colors */}
-            <div className="space-y-2">
-              <p className="text-xs font-medium text-gray-500">Colores rapidos</p>
+            <div className="flex flex-col gap-2">
+              <p className="text-xs font-medium text-muted-foreground">Colores rapidos</p>
               <div className="grid grid-cols-5 gap-2">
                 {presetColors.map((color) => (
                   <button
@@ -180,10 +179,10 @@ export function ColorPicker({
                       setOpen(false)
                     }}
                     className={cn(
-                      "w-9 h-9 rounded-lg border-2 transition-all hover:scale-110",
+                      "size-9 rounded-lg border-2 transition-all hover:scale-110",
                       value === color
                         ? "border-[var(--theme-primary)] ring-2 ring-[var(--theme-primary)]/30"
-                        : "border-gray-200 hover:border-gray-300"
+                        : "border-border hover:border-muted-foreground/40"
                     )}
                     style={{ backgroundColor: color }}
                   >

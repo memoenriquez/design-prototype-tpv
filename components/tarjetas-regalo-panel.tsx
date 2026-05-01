@@ -22,6 +22,8 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
+import { BrandLogo } from "@/components/brand-logo"
+import { BrandLogoKey, brandLogos } from "@/lib/brand-logos"
 import { cn } from "@/lib/utils"
 import { 
   Gift,
@@ -39,22 +41,21 @@ import { TransactionModal, ConfirmTransactionModal, TransactionStatus, Transacti
 interface GiftCard {
   id: string
   name: string
-  logo: string
+  logoKey: BrandLogoKey
   category: string
   amounts: number[]
-  color: string
   popular?: boolean
 }
 
 const giftCards: GiftCard[] = [
-  { id: "xbox", name: "Xbox", logo: "X", category: "gaming", amounts: [200, 400, 600, 1000], color: "from-green-500 to-green-600", popular: true },
-  { id: "playstation", name: "PlayStation", logo: "PS", category: "gaming", amounts: [300, 500, 750, 1500], color: "from-blue-600 to-indigo-600", popular: true },
-  { id: "nintendo", name: "Nintendo", logo: "N", category: "gaming", amounts: [200, 350, 500], color: "from-red-500 to-red-600" },
-  { id: "spotify", name: "Spotify", logo: "S", category: "music", amounts: [99, 149, 299], color: "from-green-400 to-green-500", popular: true },
-  { id: "netflix", name: "Netflix", logo: "N", category: "streaming", amounts: [199, 299, 399], color: "from-red-600 to-red-700" },
-  { id: "amazon", name: "Amazon", logo: "A", category: "shopping", amounts: [300, 500, 1000, 2000], color: "from-orange-400 to-orange-500", popular: true },
-  { id: "steam", name: "Steam", logo: "St", category: "gaming", amounts: [200, 400, 600, 1000], color: "from-slate-600 to-slate-700" },
-  { id: "google", name: "Google Play", logo: "G", category: "apps", amounts: [50, 100, 200, 500], color: "from-blue-500 to-green-500" },
+  { id: "xbox", name: "Xbox", logoKey: "xbox", category: "gaming", amounts: [200, 400, 600, 1000], popular: true },
+  { id: "playstation", name: "PlayStation", logoKey: "playstation", category: "gaming", amounts: [300, 500, 750, 1500], popular: true },
+  { id: "nintendo", name: "Nintendo", logoKey: "nintendo", category: "gaming", amounts: [200, 350, 500] },
+  { id: "spotify", name: "Spotify", logoKey: "spotify", category: "music", amounts: [99, 149, 299], popular: true },
+  { id: "netflix", name: "Netflix", logoKey: "netflix", category: "streaming", amounts: [199, 299, 399] },
+  { id: "amazon", name: "Amazon", logoKey: "amazon", category: "shopping", amounts: [300, 500, 1000, 2000], popular: true },
+  { id: "steam", name: "Steam", logoKey: "steam", category: "gaming", amounts: [200, 400, 600, 1000] },
+  { id: "google", name: "Google Play", logoKey: "google-play", category: "apps", amounts: [50, 100, 200, 500] },
 ]
 
 const categories = [
@@ -159,9 +160,12 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
     <>
       <div className="flex w-full max-w-full min-w-0 flex-col gap-4 box-border animate-slide-up">
         {/* Main Card */}
-        <Card className="w-full min-w-0 overflow-hidden border-0 shadow-xl shadow-[#000D94]/5">
+        <Card className="w-full min-w-0 overflow-hidden border-0 shadow-xl" style={{ boxShadow: "0 20px 40px rgba(var(--theme-primary-rgb), 0.08)" }}>
           {/* Header */}
-          <CardHeader className="relative overflow-hidden bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 p-3 pb-4 text-white sm:p-4 sm:pb-6">
+          <CardHeader
+            className="relative overflow-hidden p-3 pb-4 text-white sm:p-4 sm:pb-6"
+            style={{ background: "linear-gradient(135deg, var(--theme-primary), rgba(var(--theme-primary-rgb), 0.9))" }}
+          >
             {/* Decorative elements */}
             <div className="pointer-events-none absolute inset-0 opacity-10" aria-hidden="true">
               <div className="absolute -top-8 -right-8 size-24 rounded-full bg-white blur-2xl" />
@@ -208,8 +212,8 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                   className={cn(
                     "flex min-h-[40px] shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 touch-target",
                     selectedCategory === category.id
-                      ? "bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg shadow-purple-500/25"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200 active:scale-95"
+                      ? "bg-[var(--theme-primary)] text-white shadow-lg"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80 active:scale-95"
                   )}
                 >
                   <span className="[&>svg]:size-4">{category.icon}</span>
@@ -221,7 +225,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
             {/* Popular Cards */}
             <div>
               <div className="mb-2 flex items-center gap-1.5 sm:mb-3 sm:gap-2">
-                <Star className="size-3.5 shrink-0 fill-yellow-500 text-yellow-500 sm:size-4" />
+                <Star className="size-3.5 shrink-0 fill-current sm:size-4" style={{ color: "var(--theme-secondary)" }} />
                 <span className="text-xs font-semibold text-foreground/80 sm:text-sm">Populares</span>
               </div>
               <div className="flex w-full max-w-full min-w-0 gap-2 overflow-x-auto pb-2 scrollbar-hide">
@@ -231,10 +235,10 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                     type="button"
                     aria-pressed={selectedCard?.id === card.id}
                     onClick={() => handleCardSelect(card)}
-                    className="flex flex-shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-gray-50 to-gray-100 px-3 py-1.5 text-xs font-medium text-foreground/80 transition-all duration-200 active:-translate-y-0.5 active:shadow-md sm:px-4 sm:py-2 sm:text-sm touch-target"
+                    className="flex shrink-0 items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-foreground/80 transition-all duration-200 active:-translate-y-0.5 active:shadow-md sm:px-4 sm:py-2 sm:text-sm touch-target"
                   >
-                    <div className={cn("flex size-5 scale-75 items-center justify-center rounded-full bg-gradient-to-br text-[10px] font-bold text-white sm:size-6 sm:text-xs", card.color)}>
-                      {card.logo}
+                    <div className="flex size-5 scale-75 items-center justify-center rounded-full bg-white p-0.5 shadow-sm sm:size-6">
+                      <BrandLogo logo={brandLogos[card.logoKey]} tone="secondary" />
                     </div>
                     {card.name}
                   </button>
@@ -244,7 +248,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
 
             {/* Section header */}
             <div className="flex items-center gap-2">
-              <Gift className="size-4 shrink-0 text-purple-500" />
+              <Gift className="size-4 shrink-0" style={{ color: "var(--theme-primary)" }} />
               <span className="text-sm font-semibold text-foreground/80">
                 {searchQuery || selectedCategory !== "all" ? "Resultados" : "Todas las tarjetas"}
               </span>
@@ -261,19 +265,14 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                   className={cn(
                     "group relative flex min-h-[120px] min-w-0 flex-col overflow-hidden rounded-xl border p-3 text-left transition-all duration-200 sm:rounded-2xl sm:p-4",
                     selectedCard?.id === card.id
-                      ? "border-purple-500 bg-purple-50 shadow-lg shadow-purple-500/20"
-                      : "border-gray-100 bg-gradient-to-br from-white to-gray-50 shadow-sm hover:shadow-md active:scale-[0.98]"
+                      ? "border-[var(--theme-primary)] bg-[rgba(var(--theme-primary-rgb),0.05)] shadow-lg"
+                      : "border-border bg-card shadow-sm hover:shadow-md active:scale-[0.98]"
                   )}
                   style={{ animationDelay: `${index * 0.03}s` }}
                 >
                   {/* Logo */}
-                  <div 
-                    className={cn(
-                      "mb-2 flex size-12 items-center justify-center rounded-xl bg-gradient-to-br text-base font-bold text-white shadow-md transition-transform duration-200 group-hover:scale-105 group-active:scale-100",
-                      card.color
-                    )}
-                  >
-                    {card.logo}
+                  <div className="mb-2 flex size-12 items-center justify-center rounded-xl bg-white p-2 shadow-sm ring-1 ring-black/5 transition-transform duration-200 group-hover:scale-105 group-active:scale-100">
+                    <BrandLogo logo={brandLogos[card.logoKey]} tone="secondary" />
                   </div>
                   
                   {/* Info */}
@@ -284,7 +283,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                   
                   {/* Badge */}
                   {card.popular && (
-                    <Badge className="mt-2 w-fit border-0 bg-yellow-100 px-2 py-0.5 text-[10px] font-medium text-yellow-700">
+                    <Badge className="mt-2 w-fit border-0 bg-[rgba(var(--theme-secondary-rgb),0.1)] px-2 py-0.5 text-[10px] font-medium text-[var(--theme-secondary)]">
                       Popular
                     </Badge>
                   )}
@@ -307,7 +306,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                 <EmptyContent>
                   <Button
                     variant="link"
-                    className="text-sm text-purple-600"
+                    className="text-sm text-[var(--theme-primary)]"
                     onClick={() => {
                       setSearchQuery("")
                       setSelectedCategory("all")
@@ -332,15 +331,18 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
         >
           {selectedCard && (
             <>
-              <div className={cn("-mt-6 bg-gradient-to-r px-4 pt-2 pb-4 text-white sm:px-6 sm:pb-5", selectedCard.color)}>
+              <div
+                className="-mt-6 px-4 pt-2 pb-4 text-white sm:px-6 sm:pb-5"
+                style={{ background: "linear-gradient(135deg, var(--theme-primary), rgba(var(--theme-primary-rgb), 0.9))" }}
+              >
                 <div className="mb-3 flex justify-center">
                   <div className="h-1.5 w-12 rounded-full bg-white/30" />
                 </div>
 
                 <SheetHeader className="text-left">
                   <div className="flex items-center gap-3">
-                    <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/20 text-lg font-bold shadow-lg backdrop-blur-sm sm:size-14 sm:rounded-2xl sm:text-xl">
-                      {selectedCard.logo}
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white p-2 shadow-lg sm:size-14 sm:rounded-2xl">
+                      <BrandLogo logo={brandLogos[selectedCard.logoKey]} tone="secondary" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <SheetTitle className="truncate text-lg font-bold text-white sm:text-xl">
@@ -376,20 +378,20 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                         className={cn(
                           "flex min-h-[56px] min-w-0 items-center justify-center gap-2 rounded-xl border-2 p-4 text-lg font-bold transition-all duration-200 touch-target",
                           selectedAmount === amt
-                            ? "border-purple-500 bg-purple-50 text-purple-700 shadow-md"
-                            : "border-gray-200 bg-white text-foreground hover:border-purple-300 active:scale-[0.98]"
+                            ? "border-[var(--theme-secondary)] bg-[rgba(var(--theme-secondary-rgb),0.08)] text-[var(--theme-secondary)] shadow-md"
+                            : "border-border bg-card text-foreground hover:border-[var(--theme-secondary)] active:scale-[0.98]"
                         )}
                       >
                         <span>${amt}</span>
                         {selectedAmount === amt && (
-                          <Check className="size-4 shrink-0 text-purple-500" />
+                          <Check className="size-4 shrink-0 text-[var(--theme-secondary)]" />
                         )}
                       </button>
                     ))}
                   </div>
 
                   <Button
-                    className="h-12 w-full rounded-xl bg-gradient-to-r from-[#0BBD33] to-[#099a2a] text-base font-bold text-white shadow-lg shadow-[#0BBD33]/25 transition-all duration-200 hover:from-[#099a2a] hover:to-[#078523] disabled:opacity-50 disabled:shadow-none"
+                    className="h-12 w-full rounded-xl bg-[var(--theme-secondary)] text-base font-bold text-white shadow-lg transition-all duration-200 hover:opacity-95 disabled:shadow-none disabled:opacity-50"
                     disabled={!selectedAmount}
                     onClick={handlePurchase}
                   >
@@ -446,10 +448,10 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
       <Dialog open={showCodeModal} onOpenChange={setShowCodeModal}>
         <DialogContent className="w-[calc(100%-2rem)] max-w-md bg-white border-0 rounded-2xl shadow-2xl p-5">
           <DialogHeader className="text-center pb-4">
-            <div className={cn("mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br text-xl font-bold text-white shadow-lg", selectedCard?.color || "from-purple-500 to-pink-500")}>
-              {selectedCard?.logo}
+            <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-white p-2 shadow-sm ring-1 ring-black/5">
+              {selectedCard && <BrandLogo logo={brandLogos[selectedCard.logoKey]} tone="secondary" />}
             </div>
-            <DialogTitle className="text-lg font-bold text-gray-900">
+              <DialogTitle className="text-lg font-bold text-foreground">
               Tarjeta {selectedCard?.name}
             </DialogTitle>
             <DialogDescription className="text-sm text-gray-500">
@@ -473,14 +475,14 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                   aria-label="Copiar codigo de tarjeta"
                 >
                   {codeCopied ? (
-                    <Check className="text-green-500" data-icon="inline-start" />
+                    <Check className="text-[var(--theme-secondary)]" data-icon="inline-start" />
                   ) : (
                     <Copy className="text-gray-500" data-icon="inline-start" />
                   )}
                 </Button>
               </div>
               {codeCopied && (
-                <p className="text-xs text-green-600 text-center mt-2 font-medium">Codigo copiado al portapapeles</p>
+                <p className="mt-2 text-center text-xs font-medium text-[var(--theme-secondary)]">Codigo copiado al portapapeles</p>
               )}
             </div>
 
@@ -501,7 +503,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                 Copiar
               </Button>
               <Button
-                className="h-12 w-full rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-sm font-medium text-white shadow-lg shadow-purple-500/25 hover:from-purple-700 hover:to-pink-600 sm:flex-1"
+                className="h-12 w-full rounded-xl bg-[var(--theme-secondary)] text-sm font-medium text-white shadow-lg hover:opacity-95 sm:flex-1"
                 onClick={handleNewTransaction}
               >
                 Nueva Compra

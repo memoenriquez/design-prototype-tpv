@@ -1,0 +1,198 @@
+{
+  "xbox": {
+    "name": "Xbox",
+    "file": "/logos/xbox.svg",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/xbox.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "playstation": {
+    "name": "PlayStation",
+    "file": "/logos/playstation.svg",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/playstation.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "nintendo": {
+    "name": "Nintendo",
+    "file": "/logos/nintendo.svg",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nintendo.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "spotify": {
+    "name": "Spotify",
+    "file": "/logos/spotify.svg",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/spotify.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "netflix": {
+    "name": "Netflix",
+    "file": "/logos/netflix.svg",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/netflix.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "amazon": {
+    "name": "Amazon",
+    "file": "/logos/amazon.svg",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/amazon.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "steam": {
+    "name": "Steam",
+    "file": "/logos/steam.svg",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/steam.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "google-play": {
+    "name": "Google Play",
+    "file": "/logos/google-play.svg",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/googleplay.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "telcel": {
+    "name": "Telcel",
+    "file": "/logos/telcel.svg",
+    "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Telcel_logo.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "att": {
+    "name": "AT&T",
+    "file": "/logos/att.svg",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/atandt.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "movistar": {
+    "name": "Movistar",
+    "file": "/logos/movistar.svg",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/movistar.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "unefon": {
+    "name": "Unefon",
+    "file": "/logos/unefon.svg",
+    "source": "Generated local SVG fallback from brand name after no stable direct asset was available during implementation.",
+    "status": "generated-fallback",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "cfe": {
+    "name": "CFE",
+    "file": "/logos/cfe.svg",
+    "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Comisi%C3%B3n_Federal_de_Electricidad_(logo)_.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "jmas": {
+    "name": "JMAS",
+    "file": "/logos/jmas.svg",
+    "source": "Generated local SVG fallback from brand name after no stable direct asset was available during implementation.",
+    "status": "generated-fallback",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "cespe": {
+    "name": "CESPE",
+    "file": "/logos/cespe.svg",
+    "source": "Generated local SVG fallback from brand name after no stable direct asset was available during implementation.",
+    "status": "generated-fallback",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "siapa": {
+    "name": "SIAPA",
+    "file": "/logos/siapa.svg",
+    "source": "Generated local SVG fallback from brand name after no stable direct asset was available during implementation.",
+    "status": "generated-fallback",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "sky": {
+    "name": "SKY",
+    "file": "/logos/sky.svg",
+    "source": "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/sky.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "dish": {
+    "name": "Dish",
+    "file": "/logos/dish.svg",
+    "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dish_Mexico_logo_2008.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "izzi": {
+    "name": "Izzi",
+    "file": "/logos/izzi.svg",
+    "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_Izzi.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "totalplay": {
+    "name": "TotalPlay",
+    "file": "/logos/totalplay.svg",
+    "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_TotalPlay.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "telmex": {
+    "name": "Telmex",
+    "file": "/logos/telmex.svg",
+    "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Telmex_Logo.svg",
+    "status": "fetched",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "megacable": {
+    "name": "Megacable",
+    "file": "/logos/megacable.svg",
+    "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Megacable_logo.svg",
+    "status": "generated-fallback",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "tag-iave": {
+    "name": "TAG IAVE",
+    "file": "/logos/tag-iave.svg",
+    "source": "Generated local SVG fallback from brand name after no stable direct asset was available during implementation.",
+    "status": "generated-fallback",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "pase": {
+    "name": "PASE",
+    "file": "/logos/pase.svg",
+    "source": "Generated local SVG fallback from brand name after no stable direct asset was available during implementation.",
+    "status": "generated-fallback",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "televia": {
+    "name": "TeleV?a",
+    "file": "/logos/televia.svg",
+    "source": "Generated local SVG fallback from brand name after no stable direct asset was available during implementation.",
+    "status": "generated-fallback",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "gnp": {
+    "name": "GNP",
+    "file": "/logos/gnp.svg",
+    "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/GNP_Seguros_logo.svg",
+    "status": "generated-fallback",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "axa": {
+    "name": "AXA",
+    "file": "/logos/axa.svg",
+    "source": "https://commons.wikimedia.org/wiki/Special:Redirect/file/AXA_Logo.svg",
+    "status": "generated-fallback",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  },
+  "qualitas": {
+    "name": "Qu?litas",
+    "file": "/logos/qualitas.svg",
+    "source": "Generated local SVG fallback from brand name after no stable direct asset was available during implementation.",
+    "status": "generated-fallback",
+    "note": "Brand logo use may be subject to trademark restrictions. Review official brand guidelines before production use."
+  }
+}

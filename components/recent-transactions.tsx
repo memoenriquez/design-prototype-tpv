@@ -93,29 +93,29 @@ const typeIcons = {
 
 const typeColors = {
   "tiempo-aire": {
-    bg: "bg-gradient-to-br from-[#0BBD33]/15 to-[#0BBD33]/5",
-    text: "text-[#0BBD33]",
-    shadow: "shadow-[#0BBD33]/10"
+    bg: "bg-[rgba(var(--theme-secondary-rgb),0.1)]",
+    text: "text-[var(--theme-secondary)]",
+    shadow: "shadow-none"
   },
   "cobro": {
-    bg: "bg-gradient-to-br from-[#000D94]/15 to-[#000D94]/5",
-    text: "text-[#000D94]",
-    shadow: "shadow-[#000D94]/10"
+    bg: "bg-[rgba(var(--theme-primary-rgb),0.1)]",
+    text: "text-[var(--theme-primary)]",
+    shadow: "shadow-none"
   },
   "servicio": {
-    bg: "bg-gradient-to-br from-amber-500/15 to-amber-500/5",
-    text: "text-amber-600",
-    shadow: "shadow-amber-500/10"
+    bg: "bg-muted",
+    text: "text-muted-foreground",
+    shadow: "shadow-none"
   },
   "telepeaje": {
-    bg: "bg-gradient-to-br from-teal-500/15 to-teal-500/5",
-    text: "text-teal-600",
-    shadow: "shadow-teal-500/10"
+    bg: "bg-muted",
+    text: "text-muted-foreground",
+    shadow: "shadow-none"
   },
   "regalo": {
-    bg: "bg-gradient-to-br from-purple-500/15 to-purple-500/5",
-    text: "text-purple-600",
-    shadow: "shadow-purple-500/10"
+    bg: "bg-muted",
+    text: "text-muted-foreground",
+    shadow: "shadow-none"
   }
 }
 
@@ -133,10 +133,10 @@ export function RecentTransactions({ expanded = false }: RecentTransactionsProps
           <h3 className="truncate text-sm font-semibold text-foreground/80">
             {expanded ? "Historial de transacciones" : "Transacciones recientes"}
           </h3>
-          <TrendingUp className="size-4 shrink-0 text-[#0BBD33]" />
+          <TrendingUp className="size-4 shrink-0" style={{ color: "var(--theme-secondary)" }} />
         </div>
         {!expanded && (
-          <button type="button" className="flex shrink-0 items-center gap-1 text-xs font-semibold text-[#000D94] transition-colors hover:text-[#0015b3] hover:underline">
+          <button type="button" className="flex shrink-0 items-center gap-1 text-xs font-semibold text-[var(--theme-primary)] transition-colors hover:underline">
             Ver todas
             <ChevronRight className="size-3.5" />
           </button>
@@ -153,8 +153,8 @@ export function RecentTransactions({ expanded = false }: RecentTransactionsProps
               className={cn(
                 "shrink-0 rounded-full px-4 py-2 text-xs font-medium whitespace-nowrap transition-all duration-200",
                 i === 0
-                  ? "bg-[#000D94] text-white shadow-md"
-                  : "bg-gray-100 text-foreground/70 hover:bg-gray-200"
+                  ? "bg-[var(--theme-primary)] text-white shadow-md"
+                  : "bg-muted text-foreground/70 hover:bg-muted/80"
               )}
             >
               {filter}
@@ -186,12 +186,12 @@ export function RecentTransactions({ expanded = false }: RecentTransactionsProps
                   <p className="truncate text-sm font-semibold text-foreground">{transaction.description}</p>
                   <div className="mt-0.5 flex min-w-0 items-center gap-2">
                     {transaction.status === "completed" ? (
-                      <Badge className="border-0 bg-[#0BBD33]/10 text-[#0BBD33]">
+                      <Badge className="border-0 bg-[rgba(var(--theme-secondary-rgb),0.1)] text-[var(--theme-secondary)]">
                         <CheckCircle2 className="size-3.5" />
                         Completada
                       </Badge>
                     ) : (
-                      <Badge className="border-0 bg-amber-500/10 text-amber-500">
+                      <Badge variant="outline" className="border-border bg-muted text-muted-foreground">
                         <Clock className="size-3.5 animate-pulse" />
                         Pendiente
                       </Badge>
@@ -201,7 +201,7 @@ export function RecentTransactions({ expanded = false }: RecentTransactionsProps
                 </div>
               </div>
               <div className="shrink-0 text-right">
-                <p className={cn("font-bold text-base", transaction.type === "cobro" ? "text-[#0BBD33]" : "text-foreground")}>
+                <p className={cn("font-bold text-base", transaction.type === "cobro" ? "text-[var(--theme-secondary)]" : "text-foreground")}>
                   {transaction.type === "cobro" ? "+" : "-"}${transaction.amount.toLocaleString('es-MX')}
                 </p>
               </div>
