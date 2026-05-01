@@ -10,17 +10,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty"
 import { cn } from "@/lib/utils"
-import {
-  AlertCircle,
-  Ban,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
-  Receipt,
-  RotateCcw,
-  TrendingUp,
-  type LucideIcon,
-} from "lucide-react"
+import { CheckCircle2, ChevronRight, Receipt, TrendingUp } from "lucide-react"
 import { useState } from "react"
 import { useTransactions } from "@/contexts/transactions-context"
 import { formatMoney } from "@/lib/formatters"
@@ -29,7 +19,7 @@ import {
   isIncomeTransaction,
   transactionDisplay,
 } from "@/lib/transaction-display"
-import type { TransactionStatus, TransactionType } from "@/lib/transactions"
+import type { TransactionType } from "@/lib/transactions"
 
 const transactionFilters: Array<{ label: string; type?: TransactionType }> = [
   { label: "Todas" },
@@ -41,47 +31,6 @@ const transactionFilters: Array<{ label: string; type?: TransactionType }> = [
   { label: "Vales", type: "vales" },
   { label: "QR", type: "qr" },
 ]
-
-interface TransactionStatusDisplay {
-  label: string
-  icon: LucideIcon
-  className: string
-  pulse?: boolean
-}
-
-const transactionStatusDisplay: Record<TransactionStatus, TransactionStatusDisplay> = {
-  completed: {
-    label: "Completada",
-    icon: CheckCircle2,
-    className: "border-0 bg-[rgba(var(--theme-secondary-rgb),0.1)] text-[var(--theme-secondary)]",
-  },
-  pending: {
-    label: "Pendiente proveedor",
-    icon: Clock,
-    className: "border-border bg-muted text-muted-foreground",
-    pulse: true,
-  },
-  failed: {
-    label: "Fallida",
-    icon: AlertCircle,
-    className: "border-destructive/20 bg-destructive/10 text-destructive",
-  },
-  "refund-required": {
-    label: "Requiere reembolso",
-    icon: RotateCcw,
-    className: "border-[rgba(var(--theme-primary-rgb),0.2)] bg-[rgba(var(--theme-primary-rgb),0.08)] text-[var(--theme-primary)]",
-  },
-  rejected: {
-    label: "Rechazada",
-    icon: Ban,
-    className: "border-border bg-muted text-muted-foreground",
-  },
-  cancelled: {
-    label: "Cancelada",
-    icon: Ban,
-    className: "border-border bg-muted text-muted-foreground",
-  },
-}
 
 interface RecentTransactionsProps {
   expanded?: boolean
@@ -148,8 +97,6 @@ export function RecentTransactions({ expanded = false, onViewAll }: RecentTransa
           (() => {
             const Icon = transactionDisplay[transaction.type].icon
             const isIncome = isIncomeTransaction(transaction.type)
-            const statusDisplay = transactionStatusDisplay[transaction.status]
-            const StatusIcon = statusDisplay.icon
 
             return (
           <Card 
@@ -170,12 +117,9 @@ export function RecentTransactions({ expanded = false, onViewAll }: RecentTransa
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-foreground">{transaction.description}</p>
                   <div className="mt-0.5 flex min-w-0 items-center gap-2">
-                    <Badge variant="outline" className={cn("shrink-0", statusDisplay.className)}>
-                      <StatusIcon
-                        data-icon="inline-start"
-                        className={cn(statusDisplay.pulse && "animate-pulse")}
-                      />
-                      {statusDisplay.label}
+                    <Badge className="shrink-0 border-0 bg-[rgba(var(--theme-secondary-rgb),0.1)] text-[var(--theme-secondary)]">
+                      <CheckCircle2 data-icon="inline-start" />
+                      Completada
                     </Badge>
                     <span className="truncate text-xs text-muted-foreground">- {transaction.time}</span>
                   </div>

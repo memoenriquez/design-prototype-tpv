@@ -18,11 +18,11 @@ A merchant-initiated action in CTC Pay, such as selling airtime, charging a cust
 
 The persisted financial or provider record created after customer payment succeeds and balance is reserved. Pre-validation attempts are audit events, not Transactions, because no customer payment or balance movement has occurred yet.
 
-Transactions can be pending when a provider accepts the request but has not confirmed final success. Pending transactions appear in history with their provider reference and should not be retried unless rejected or timed out.
+Transactions represent completed amount-affecting operations in the normal merchant history UI. If a payment is not completed, customer-facing amounts are not modified and the attempt should not appear as a regular Movement.
 
-If provider fulfillment fails after customer payment was received, the transaction enters a refund-required state. Failed transactions remain in history for auditability and can be resolved by refunding the customer outside the app or retrying with corrected details. Retries should preserve an audit trail instead of deleting the failed attempt.
+Provider Pre-Validation exists to prevent normal pending or refund-required merchant scenarios. Rejected, expired, failed, or cancelled attempts before completion are audit events, not regular Transactions or Movements.
 
-Transaction status must distinguish completed, provider-pending, failed, refund-required, rejected, and cancelled outcomes. History labels should make it clear whether the provider side is still pending, the provider failed after customer payment, or the operation was rejected before completion.
+If an exceptional provider failure happens after customer payment despite pre-validation, it should be handled through support or audit tooling instead of being modeled as a normal history state in the MVP UI.
 
 Provider operations must reach a provider pre-validation checkpoint before customer payment is accepted. If pre-validation is not confirmed, the customer payment must not proceed. Pre-validation expires after 2 minutes for MVP; after expiry, the merchant must re-run validation before accepting payment. Failures are audited and retried from the previous stable state, not from an uncertain partial state.
 
