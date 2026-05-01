@@ -24,6 +24,11 @@ If provider fulfillment fails after customer payment was received, the transacti
 
 Provider operations must reach a provider pre-validation checkpoint before customer payment is accepted. If pre-validation is not confirmed, the customer payment must not proceed. Pre-validation expires after 2 minutes for MVP; after expiry, the merchant must re-run validation before accepting payment. Failures are audited and retried from the previous stable state, not from an uncertain partial state.
 
+### Provider Pre-Validation
+
+The provider confirmation that a referenced bill or product is currently payable before the merchant accepts customer payment.
+_Avoid_: Lookup, search, reference found.
+
 ### Movement
 
 User-facing copy for items shown in history. Movement is not a separate domain object from Transaction. The history should use one unified feed by default, with filters and clear labels for operation family, product, customer payment method, balance impact, merchant earning, and status. Top-Up requests appear in the feed with requested, approved/credited, or rejected/cancelled status. Pre-validation audit events are not shown as regular movements unless needed for audit review.
