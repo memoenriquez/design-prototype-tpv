@@ -29,6 +29,7 @@ Provider operations must reach a provider pre-validation checkpoint before custo
 ### Provider Pre-Validation
 
 The provider confirmation that a referenced bill or product is currently payable before the merchant accepts customer payment.
+Provider Pre-Validation is required for Service Bills, where the provider returns a payable bill amount and CTC Pay adds the configured Service Fee to show the final customer total before payment.
 _Avoid_: Lookup, search, reference found.
 
 ### Movement
@@ -73,6 +74,8 @@ _Avoid_: Treating accepted vales as provider-backed voucher issuance or Services
 ### Services Balance
 
 Ledger-backed prepaid balance the merchant must have available to fulfill provider-backed operations other than TAE, including service bills, telepeaje, and gift cards. Services Balance top-ups credit 1:1 with no bonus; service earnings happen later through Merchant Spread. When the customer pays cash, the merchant keeps the cash and CTC Pay debits Services Balance immediately. When the customer pays by credit or debit card, CTC Pay still debits Services Balance immediately and the card processor settles the customer payment to the merchant's bank account later, minus applicable card processing fees.
+
+Services Balance funds three MVP product families with different validation shapes: Service Bills use Provider Pre-Validation with bill amount, Service Fee, and customer total; Telepeaje uses lightweight account or tag validation before payment; Gift Cards use fixed-denomination product availability validation before payment. Telepeaje and Gift Cards do not use the 2-minute bill pre-validation flow unless a provider explicitly requires it.
 
 For in-flight provider operations, Services Balance is reserved immediately after customer payment succeeds and before final provider submission. The reserved debit prevents double-spending available balance. If the provider confirms success or accepted pending, the reserve becomes final. If the provider fails immediately, the reserve is released or reversed and the operation returns to the last stable audited state.
 

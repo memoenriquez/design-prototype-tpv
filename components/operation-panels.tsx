@@ -381,9 +381,9 @@ export function TelepeajePanel() {
             </FieldGroup>
             <Alert className="rounded-2xl border-0 bg-muted">
               <Car className="size-4" aria-hidden="true" />
-              <AlertTitle>Confirmación del proveedor</AlertTitle>
+              <AlertTitle>Validación de TAG</AlertTitle>
               <AlertDescription>
-                La recarga puede quedar pendiente si el proveedor no responde de inmediato.
+                Valida que el TAG y el monto estén disponibles antes de aceptar el pago del cliente.
               </AlertDescription>
             </Alert>
             <Button
@@ -414,14 +414,14 @@ export function TelepeajePanel() {
           transactionStatus === "success"
             ? "Recarga Exitosa"
             : transactionStatus === "error"
-              ? "Recarga No Confirmada"
+              ? "TAG No Validado"
               : "Procesando Recarga..."
         }
         message={
           transactionStatus === "success"
             ? "El saldo del TAG fue actualizado"
             : transactionStatus === "error"
-              ? "El proveedor no confirmó la recarga. Revisa el TAG e intenta de nuevo."
+              ? "No se pudo validar el TAG o el monto. Revisa los datos e intenta de nuevo."
               : "Validando la referencia con el proveedor"
         }
         details={transactionStatus !== "processing" ? transactionDetails : undefined}

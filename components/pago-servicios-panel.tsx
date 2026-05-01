@@ -302,7 +302,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                 <h3 className="text-base sm:text-lg font-bold">+100 Servicios</h3>
               </div>
               <Badge className="bg-white/20 text-white border-0 text-[10px] sm:text-xs shrink-0">
-                Sin comisión
+                Pre-validación
               </Badge>
             </div>
             
