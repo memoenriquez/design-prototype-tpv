@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Poppins } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/contexts/theme-context'
+import { TransactionsProvider } from '@/contexts/transactions-context'
 import './globals.css'
 
 const poppins = Poppins({ 
@@ -50,7 +51,9 @@ export default function RootLayout({
     <html lang="es" className="bg-background">
       <body className={`${poppins.className} font-sans antialiased`}>
         <ThemeProvider>
-          {children}
+          <TransactionsProvider>
+            {children}
+          </TransactionsProvider>
         </ThemeProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

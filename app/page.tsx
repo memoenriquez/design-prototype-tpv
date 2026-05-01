@@ -8,14 +8,17 @@ import { TiempoAirePanel } from "@/components/tiempo-aire-panel"
 import { CobrarPanel } from "@/components/cobrar-panel"
 import { PagoServiciosPanel } from "@/components/pago-servicios-panel"
 import { TarjetasRegaloPanel } from "@/components/tarjetas-regalo-panel"
+import { CodigoQrPanel, TelepeajePanel, ValesPanel } from "@/components/operation-panels"
 import { RecentTransactions } from "@/components/recent-transactions"
 import { ProfilePage } from "@/components/profile-page"
 import { ThemeCustomizationPage } from "@/components/theme-customization-page"
+import { BackendStrategyPage } from "@/components/backend-strategy-page"
 import { BottomNavigation } from "@/components/bottom-navigation"
 import { CloseButton } from "@/components/ui/close-button"
+import { useTransactions } from "@/contexts/transactions-context"
 import { Sparkles, Home } from "lucide-react"
 
-type ActivePanel = "inicio" | "tiempo-aire" | "cobrar" | "pago-servicios" | "tarjetas-regalo" | "telepeaje" | "codigo-qr" | "vales" | "historial" | "perfil" | "personalizar"
+type ActivePanel = "inicio" | "tiempo-aire" | "cobrar" | "pago-servicios" | "tarjetas-regalo" | "telepeaje" | "codigo-qr" | "vales" | "historial" | "perfil" | "personalizar" | "integraciones"
 
 const panelTitles: Record<ActivePanel, string> = {
   "inicio": "Inicio",
@@ -28,10 +31,12 @@ const panelTitles: Record<ActivePanel, string> = {
   "vales": "Vales de Despensa",
   "historial": "Historial",
   "perfil": "Mi Perfil",
-  "personalizar": "Personalizar Apariencia"
+  "personalizar": "Personalizar Apariencia",
+  "integraciones": "Integraciones"
 }
 
 export default function POSApp() {
+  const { transactions } = useTransactions()
   const [activePanel, setActivePanel] = useState<ActivePanel>("inicio")
   const [currentDate, setCurrentDate] = useState<string>("")
 
@@ -43,8 +48,10 @@ export default function POSApp() {
   // Mock data
   const airtimeBalance = 2850.50
   const accountBalance = 4850.00
-  const salesToday = 1250.00
-  const transactionsToday = 8
+  const salesToday = transactions
+    .filter((transaction) => ["cobro", "qr", "vales"].includes(transaction.type))
+    .reduce((total, transaction) => total + transaction.amount, 0)
+  const transactionsToday = transactions.length
 
   const handleActionClick = (actionId: string) => {
     setActivePanel(actionId as ActivePanel)
@@ -62,6 +69,10 @@ export default function POSApp() {
     setActivePanel("personalizar")
   }
 
+  const handleOpenBackendStrategy = () => {
+    setActivePanel("integraciones")
+  }
+
   const handleNavChange = (tabId: string) => {
     setActivePanel(tabId as ActivePanel)
   }
@@ -76,12 +87,20 @@ export default function POSApp() {
         return <PagoServiciosPanel onBack={handleBack} />
       case "tarjetas-regalo":
         return <TarjetasRegaloPanel onBack={handleBack} />
+      case "telepeaje":
+        return <TelepeajePanel />
+      case "codigo-qr":
+        return <CodigoQrPanel />
+      case "vales":
+        return <ValesPanel />
       case "historial":
         return <RecentTransactions expanded />
       case "perfil":
-        return <ProfilePage onBack={handleBack} onOpenThemeCustomization={handleOpenThemeCustomization} />
+        return <ProfilePage onBack={handleBack} onOpenThemeCustomization={handleOpenThemeCustomization} onOpenBackendStrategy={handleOpenBackendStrategy} />
       case "personalizar":
         return <ThemeCustomizationPage onBack={handleBackToProfile} />
+      case "integraciones":
+        return <BackendStrategyPage onBack={handleBackToProfile} />
       default:
         return null
     }
@@ -100,11 +119,23 @@ export default function POSApp() {
     )
   }
 
+  if (activePanel === "integraciones") {
+    return (
+      <div className="min-h-screen w-full sm:max-w-[430px] mx-auto relative" style={{ backgroundColor: "var(--theme-background)" }}>
+        <BackendStrategyPage onBack={handleBackToProfile} />
+        <BottomNavigation
+          activeTab="perfil"
+          onTabChange={handleNavChange}
+        />
+      </div>
+    )
+  }
+
   // Profile page has its own layout
   if (activePanel === "perfil") {
     return (
       <div className="min-h-screen w-full sm:max-w-[430px] mx-auto relative" style={{ backgroundColor: "var(--theme-background)" }}>
-        <ProfilePage onBack={handleBack} onOpenThemeCustomization={handleOpenThemeCustomization} />
+        <ProfilePage onBack={handleBack} onOpenThemeCustomization={handleOpenThemeCustomization} onOpenBackendStrategy={handleOpenBackendStrategy} />
         <BottomNavigation 
           activeTab="perfil" 
           onTabChange={handleNavChange} 

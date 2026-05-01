@@ -79,6 +79,50 @@ export function TransactionModal({
 }: TransactionModalProps) {
   const config = statusConfig[status]
   const Icon = config.icon
+  const [shareCopied, setShareCopied] = useState(false)
+
+  const receiptText = details
+    ? [
+        "CTC Pay - Comprobante",
+        `Tipo: ${details.type}`,
+        details.recipient ? `Destinatario: ${details.recipient}` : null,
+        `Monto: ${details.amount}`,
+        details.commission ? `Comision: ${details.commission}` : null,
+        details.reference ? `Referencia: ${details.reference}` : null,
+        details.date ? `Fecha: ${details.date}` : null,
+      ].filter(Boolean).join("\n")
+    : ""
+
+  const handleDownloadReceipt = () => {
+    if (!receiptText) return
+
+    const blob = new Blob([receiptText], { type: "text/plain;charset=utf-8" })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement("a")
+
+    link.href = url
+    link.download = `ctcpay-recibo-${details?.reference || Date.now()}.txt`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
+
+  const handleShareReceipt = async () => {
+    if (!receiptText) return
+
+    if (navigator.share) {
+      await navigator.share({
+        title: "CTC Pay - Comprobante",
+        text: receiptText,
+      })
+      return
+    }
+
+    await navigator.clipboard.writeText(receiptText)
+    setShareCopied(true)
+    window.setTimeout(() => setShareCopied(false), 2000)
+  }
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -151,7 +195,8 @@ export function TransactionModal({
                   <Button
                     variant="outline"
                     className="min-w-0 flex-1 rounded-xl border-gray-200"
-                    onClick={() => {}}
+                    onClick={handleDownloadReceipt}
+                    disabled={!details}
                   >
                     <Receipt data-icon="inline-start" />
                     Recibo
@@ -159,10 +204,11 @@ export function TransactionModal({
                   <Button
                     variant="outline"
                     className="min-w-0 flex-1 rounded-xl border-gray-200"
-                    onClick={() => {}}
+                    onClick={handleShareReceipt}
+                    disabled={!details}
                   >
                     <Share2 data-icon="inline-start" />
-                    Compartir
+                    {shareCopied ? "Copiado" : "Compartir"}
                   </Button>
                 </div>
               )}

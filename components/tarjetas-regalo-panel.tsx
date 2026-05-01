@@ -37,6 +37,7 @@ import {
   Copy
 } from "lucide-react"
 import { TransactionModal, ConfirmTransactionModal, TransactionStatus, TransactionDetails } from "./transaction-modal"
+import { useTransactions } from "@/contexts/transactions-context"
 
 interface GiftCard {
   id: string
@@ -71,6 +72,7 @@ interface TarjetasRegaloPanelProps {
 }
 
 export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
+  const { addTransaction } = useTransactions()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [selectedCard, setSelectedCard] = useState<GiftCard | null>(null)
@@ -132,6 +134,12 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
         // Generate a mock code
         const code = `${selectedCard?.id.toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`
         setGeneratedCode(code)
+        addTransaction({
+          type: "regalo",
+          description: `${selectedCard?.name || "Tarjeta"} Gift Card`,
+          amount: selectedAmount || 0,
+          reference: transactionDetails.reference,
+        })
       }
     }, 2500)
   }
@@ -439,6 +447,12 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
           setTimeout(() => {
             setTransactionStatus("success")
             setGeneratedCode(`${selectedCard?.id.toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`)
+            addTransaction({
+              type: "regalo",
+              description: `${selectedCard?.name || "Tarjeta"} Gift Card`,
+              amount: selectedAmount || 0,
+              reference: transactionDetails.reference,
+            })
           }, 2000)
         }}
         onNewTransaction={transactionStatus === "success" ? handleShowCode : handleNewTransaction}

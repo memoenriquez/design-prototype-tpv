@@ -8,6 +8,7 @@ import { Smartphone, Sparkles, Phone, CheckCircle2 } from "lucide-react"
 import { useState } from "react"
 import { TransactionModal, ConfirmTransactionModal, TransactionStatus, TransactionDetails } from "./transaction-modal"
 import { BrandLogoKey, brandLogos } from "@/lib/brand-logos"
+import { useTransactions } from "@/contexts/transactions-context"
 import { cn } from "@/lib/utils"
 
 interface Carrier {
@@ -30,6 +31,7 @@ interface TiempoAirePanelProps {
 }
 
 export function TiempoAirePanel({ airtimeBalance }: TiempoAirePanelProps) {
+  const { addTransaction } = useTransactions()
   const [selectedCarrier, setSelectedCarrier] = useState<string | null>(null)
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null)
   const [phoneNumber, setPhoneNumber] = useState("")
@@ -67,6 +69,14 @@ export function TiempoAirePanel({ airtimeBalance }: TiempoAirePanelProps) {
       // Randomly succeed or fail for demo (90% success rate)
       const success = Math.random() > 0.1
       setTransactionStatus(success ? "success" : "error")
+      if (success) {
+        addTransaction({
+          type: "tiempo-aire",
+          description: `${selectedCarrierData?.name || "Operador"} - ${phoneNumber}`,
+          amount: selectedAmount || 0,
+          reference: transactionDetails.reference,
+        })
+      }
     }, 2500)
   }
 
@@ -81,6 +91,12 @@ export function TiempoAirePanel({ airtimeBalance }: TiempoAirePanelProps) {
     setTransactionStatus("processing")
     setTimeout(() => {
       setTransactionStatus("success")
+      addTransaction({
+        type: "tiempo-aire",
+        description: `${selectedCarrierData?.name || "Operador"} - ${phoneNumber}`,
+        amount: selectedAmount || 0,
+        reference: transactionDetails.reference,
+      })
     }, 2000)
   }
 

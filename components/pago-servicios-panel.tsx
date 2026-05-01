@@ -32,6 +32,7 @@ import {
 import { CloseButton } from "@/components/ui/close-button"
 import { TransactionModal, TransactionStatus, TransactionDetails } from "./transaction-modal"
 import { BrandLogoKey, brandLogos } from "@/lib/brand-logos"
+import { useTransactions } from "@/contexts/transactions-context"
 import { cn } from "@/lib/utils"
 
 interface ServiceProvider {
@@ -144,6 +145,7 @@ interface PagoServiciosPanelProps {
 }
 
 export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
+  const { addTransaction } = useTransactions()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<ServiceCategory | null>(null)
   const [showCategorySheet, setShowCategorySheet] = useState(false)
@@ -199,6 +201,14 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
     setTimeout(() => {
       const success = Math.random() > 0.1
       setTransactionStatus(success ? "success" : "error")
+      if (success) {
+        addTransaction({
+          type: selectedCategory?.id === "auto" ? "telepeaje" : "servicio",
+          description: `Pago ${selectedService?.name || "servicio"}`,
+          amount: parseFloat(paymentAmount || "0"),
+          reference: transactionDetails.reference,
+        })
+      }
     }, 2500)
   }
 
@@ -475,7 +485,15 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
         details={transactionStatus !== "processing" ? transactionDetails : undefined}
         onRetry={() => {
           setTransactionStatus("processing")
-          setTimeout(() => setTransactionStatus("success"), 2000)
+          setTimeout(() => {
+            setTransactionStatus("success")
+            addTransaction({
+              type: selectedCategory?.id === "auto" ? "telepeaje" : "servicio",
+              description: `Pago ${selectedService?.name || "servicio"}`,
+              amount: parseFloat(paymentAmount || "0"),
+              reference: transactionDetails.reference,
+            })
+          }, 2000)
         }}
         onNewTransaction={handleNewTransaction}
       />

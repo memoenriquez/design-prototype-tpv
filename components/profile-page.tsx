@@ -2,6 +2,15 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
 import { CloseButton } from "@/components/ui/close-button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -22,32 +31,52 @@ import {
   MapPin,
   Edit2,
   Camera,
-  Palette
+  Palette,
+  ServerCog,
+  type LucideIcon
 } from "lucide-react"
 import { CTCPayLogo } from "./ctcpay-logo"
 
 interface ProfilePageProps {
   onBack: () => void
   onOpenThemeCustomization?: () => void
+  onOpenBackendStrategy?: () => void
 }
 
-export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePageProps) {
+interface ProfileMenuItem {
+  icon: LucideIcon
+  label: string
+  description: string
+  toggle?: boolean
+  value?: boolean
+  onChange?: (value: boolean) => void
+  action?: () => void
+  status?: string
+}
+
+interface ProfileMenuSection {
+  section: string
+  items: ProfileMenuItem[]
+}
+
+export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStrategy }: ProfilePageProps) {
   const [notifications, setNotifications] = useState(true)
   const [biometric, setBiometric] = useState(true)
+  const [dialogMessage, setDialogMessage] = useState<string | null>(null)
 
-  const menuItems = [
+  const menuItems: ProfileMenuSection[] = [
     {
       section: "Cuenta",
       items: [
-        { icon: User, label: "Datos personales", description: "Nombre, correo, telefono" },
-        { icon: Building2, label: "Datos del negocio", description: "RFC, direccion fiscal" },
-        { icon: CreditCard, label: "Metodos de pago", description: "Tarjetas y cuentas bancarias" },
+        { icon: User, label: "Datos personales", description: "Nombre, correo, telefono", status: "Proximamente" },
+        { icon: Building2, label: "Datos del negocio", description: "RFC, direccion fiscal", status: "Proximamente" },
+        { icon: CreditCard, label: "Metodos de pago", description: "Tarjetas y cuentas bancarias", status: "Proximamente" },
       ]
     },
     {
       section: "Seguridad",
       items: [
-        { icon: Shield, label: "Cambiar contrasena", description: "Actualiza tu contrasena" },
+        { icon: Shield, label: "Cambiar contrasena", description: "Actualiza tu contrasena", status: "Requiere auth" },
         { icon: Smartphone, label: "Autenticacion biometrica", description: "Face ID / Huella", toggle: true, value: biometric, onChange: setBiometric },
       ]
     },
@@ -56,13 +85,14 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
       items: [
         { icon: Bell, label: "Notificaciones", description: "Alertas y avisos", toggle: true, value: notifications, onChange: setNotifications },
         { icon: Palette, label: "Personalizar apariencia", description: "Colores, fuentes y estilos", action: onOpenThemeCustomization },
+        { icon: ServerCog, label: "Estado de integraciones", description: "Backend, auth y proveedores", action: onOpenBackendStrategy },
       ]
     },
     {
       section: "Soporte",
       items: [
-        { icon: HelpCircle, label: "Centro de ayuda", description: "Preguntas frecuentes" },
-        { icon: FileText, label: "Terminos y condiciones", description: "Documentos legales" },
+        { icon: HelpCircle, label: "Centro de ayuda", description: "Preguntas frecuentes", status: "Proximamente" },
+        { icon: FileText, label: "Terminos y condiciones", description: "Documentos legales", status: "Proximamente" },
       ]
     },
   ]
@@ -85,6 +115,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
               size="icon"
               className="size-10 rounded-full bg-white/10 hover:bg-white/20"
               aria-label="Editar perfil"
+              onClick={() => setDialogMessage("La edicion de perfil esta marcada como pendiente hasta conectar autenticacion y base de datos.")}
             >
               <Edit2 className="text-white" data-icon="inline-start" />
             </Button>
@@ -114,6 +145,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
                 className="absolute right-0 bottom-0 flex size-8 items-center justify-center rounded-full shadow-lg"
                 style={{ backgroundColor: "var(--theme-secondary)" }}
                 aria-label="Cambiar foto de perfil"
+                onClick={() => setDialogMessage("La foto de perfil se habilitara cuando el perfil tenga almacenamiento persistente.")}
               >
                 <Camera className="size-4 text-white" />
               </button>
@@ -228,7 +260,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
                         </div>
                       </div>
                       <Switch
-                        checked={item.value}
+                        checked={item.value ?? false}
                         onCheckedChange={item.onChange}
                         className="data-[state=checked]:bg-[var(--theme-secondary)]"
                       />
@@ -261,7 +293,13 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
                         <p className="text-xs" style={{ color: "var(--theme-text-secondary)" }}>{item.description}</p>
                       </div>
                     </div>
-                    <ChevronRight className="size-5" style={{ color: "var(--theme-text-secondary)", opacity: 0.5 }} />
+                    {item.status ? (
+                      <Badge variant="outline" className="shrink-0 rounded-full text-[10px]">
+                        {item.status}
+                      </Badge>
+                    ) : (
+                      <ChevronRight className="size-5" style={{ color: "var(--theme-text-secondary)", opacity: 0.5 }} />
+                    )}
                   </>
                 )
 
@@ -281,7 +319,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
                 return (
                   <div
                     key={item.label}
-                    className="flex w-full items-center justify-between p-4"
+                    className="flex w-full items-center justify-between p-4 opacity-70"
                     aria-disabled="true"
                   >
                     {rowContent}
@@ -293,7 +331,11 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
         ))}
 
         {/* Logout Button */}
-        <button type="button" className="w-full flex items-center justify-center gap-2 p-4 bg-red-50 rounded-2xl hover:bg-red-100 transition-colors">
+        <button
+          type="button"
+          onClick={() => setDialogMessage("Cerrar sesion requiere un proveedor de autenticacion. El prototipo todavia no crea sesiones reales.")}
+          className="w-full flex items-center justify-center gap-2 p-4 bg-red-50 rounded-2xl hover:bg-red-100 transition-colors"
+        >
           <LogOut className="size-5 text-red-500" />
           <span className="text-red-500 font-medium">Cerrar sesion</span>
         </button>
@@ -304,6 +346,23 @@ export function ProfilePage({ onBack, onOpenThemeCustomization }: ProfilePagePro
           <p className="mt-2 text-xs" style={{ color: "var(--theme-text-secondary)" }}>Version 1.0.0</p>
         </div>
       </div>
+
+      <Dialog open={Boolean(dialogMessage)} onOpenChange={(open) => !open && setDialogMessage(null)}>
+        <DialogContent className="w-[calc(100%-2rem)] max-w-sm rounded-3xl border-0 bg-white">
+          <DialogHeader>
+            <DialogTitle>Flujo pendiente</DialogTitle>
+            <DialogDescription>{dialogMessage}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              className="w-full rounded-xl bg-[var(--theme-primary)] text-white hover:opacity-95"
+              onClick={() => setDialogMessage(null)}
+            >
+              Entendido
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

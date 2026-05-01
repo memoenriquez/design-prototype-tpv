@@ -13,6 +13,7 @@ import {
   ArrowRight
 } from "lucide-react"
 import { TransactionModal, ConfirmTransactionModal, TransactionStatus, TransactionDetails } from "./transaction-modal"
+import { useTransactions } from "@/contexts/transactions-context"
 import { cn } from "@/lib/utils"
 
 interface CobrarPanelProps {
@@ -27,6 +28,7 @@ const paymentMethods = [
 ]
 
 export function CobrarPanel({ onBack }: CobrarPanelProps) {
+  const { addTransaction } = useTransactions()
   const [amount, setAmount] = useState("")
   const [selectedMethod, setSelectedMethod] = useState("tarjeta")
   
@@ -57,6 +59,7 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
     "0.00"
 
   const selectedMethodData = paymentMethods.find(m => m.id === selectedMethod)
+  const amountValue = parseFloat(amount || "0")
 
   const transactionDetails: TransactionDetails = {
     type: `Cobro con ${selectedMethodData?.name || "Tarjeta"}`,
@@ -82,6 +85,14 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
       // 85% success rate for demo
       const success = Math.random() > 0.15
       setTransactionStatus(success ? "success" : "error")
+      if (success) {
+        addTransaction({
+          type: selectedMethod === "qr" ? "qr" : selectedMethod === "vales" ? "vales" : "cobro",
+          description: `Cobro con ${selectedMethodData?.name || "Tarjeta"}`,
+          amount: amountValue,
+          reference: transactionDetails.reference,
+        })
+      }
     }, 3000)
   }
 
@@ -94,6 +105,12 @@ export function CobrarPanel({ onBack }: CobrarPanelProps) {
     setTransactionStatus("processing")
     setTimeout(() => {
       setTransactionStatus("success")
+      addTransaction({
+        type: selectedMethod === "qr" ? "qr" : selectedMethod === "vales" ? "vales" : "cobro",
+        description: `Cobro con ${selectedMethodData?.name || "Tarjeta"}`,
+        amount: amountValue,
+        reference: transactionDetails.reference,
+      })
     }, 2500)
   }
 
