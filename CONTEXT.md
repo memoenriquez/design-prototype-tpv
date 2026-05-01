@@ -56,11 +56,16 @@ A provider-backed operation where the customer pays the merchant at the counter,
 
 ### Merchant Collection
 
-A general payment-terminal operation where CTC Pay collects a customer card, debit, or QR payment for the merchant's own sale. Merchant Collection is separate from provider-backed operations: it does not use Airtime Balance or Services Balance, does not require provider pre-validation, and settles according to the merchant's payment-processing arrangement. For MVP, Merchant Collection does not model cash sales because CTC Pay does not move, settle, or verify cash for the merchant's own inventory.
+A general payment-terminal operation where CTC Pay collects a customer card, debit, QR, or voucher payment for the merchant's own sale. Merchant Collection is separate from provider-backed operations: it does not use Airtime Balance or Services Balance, does not require provider pre-validation, and settles according to the merchant's payment-processing arrangement. For MVP, Merchant Collection does not model cash sales because CTC Pay does not move, settle, or verify cash for the merchant's own inventory.
+
+### Vales de Despensa
+
+A Merchant Collection rail where the merchant accepts a customer's grocery voucher payment for the merchant's own sale.
+_Avoid_: Treating accepted vales as provider-backed voucher issuance or Services Balance-funded operations.
 
 ### Services Balance
 
-Ledger-backed prepaid balance the merchant must have available to fulfill provider-backed operations other than TAE, including service bills, telepeaje, gift cards, and vales. Services Balance top-ups credit 1:1 with no bonus; service earnings happen later through Merchant Spread. When the customer pays cash, the merchant keeps the cash and CTC Pay debits Services Balance immediately. When the customer pays by credit or debit card, CTC Pay still debits Services Balance immediately and the card processor settles the customer payment to the merchant's bank account later, minus applicable card processing fees.
+Ledger-backed prepaid balance the merchant must have available to fulfill provider-backed operations other than TAE, including service bills, telepeaje, and gift cards. Services Balance top-ups credit 1:1 with no bonus; service earnings happen later through Merchant Spread. When the customer pays cash, the merchant keeps the cash and CTC Pay debits Services Balance immediately. When the customer pays by credit or debit card, CTC Pay still debits Services Balance immediately and the card processor settles the customer payment to the merchant's bank account later, minus applicable card processing fees.
 
 For in-flight provider operations, Services Balance is reserved immediately after customer payment succeeds and before final provider submission. The reserved debit prevents double-spending available balance. If the provider confirms success or accepted pending, the reserve becomes final. If the provider fails immediately, the reserve is released or reversed and the operation returns to the last stable audited state.
 
