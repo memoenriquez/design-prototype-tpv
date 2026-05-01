@@ -2,71 +2,24 @@
 
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
 import { cn } from "@/lib/utils"
-import { 
-  Smartphone, 
-  CreditCard, 
-  Receipt,
-  CheckCircle2,
-  Clock,
-  ChevronRight,
-  TrendingUp,
-  Car,
-  Gift,
-  QrCode,
-  Wallet
-} from "lucide-react"
+import { CheckCircle2, Clock, ChevronRight, Receipt, TrendingUp } from "lucide-react"
 import { useState } from "react"
 import { useTransactions } from "@/contexts/transactions-context"
+import { formatMoney } from "@/lib/formatters"
+import {
+  getTransactionToneClassNames,
+  isIncomeTransaction,
+  transactionDisplay,
+} from "@/lib/transaction-display"
 import type { TransactionType } from "@/lib/transactions"
-
-const typeIcons = {
-  "tiempo-aire": <Smartphone className="size-5" />,
-  "cobro": <CreditCard className="size-5" />,
-  "servicio": <Receipt className="size-5" />,
-  "telepeaje": <Car className="size-5" />,
-  "regalo": <Gift className="size-5" />,
-  "vales": <Wallet className="size-5" />,
-  "qr": <QrCode className="size-5" />
-}
-
-const typeColors = {
-  "tiempo-aire": {
-    bg: "bg-[rgba(var(--theme-secondary-rgb),0.1)]",
-    text: "text-[var(--theme-secondary)]",
-    shadow: "shadow-none"
-  },
-  "cobro": {
-    bg: "bg-[rgba(var(--theme-primary-rgb),0.1)]",
-    text: "text-[var(--theme-primary)]",
-    shadow: "shadow-none"
-  },
-  "servicio": {
-    bg: "bg-muted",
-    text: "text-muted-foreground",
-    shadow: "shadow-none"
-  },
-  "telepeaje": {
-    bg: "bg-muted",
-    text: "text-muted-foreground",
-    shadow: "shadow-none"
-  },
-  "regalo": {
-    bg: "bg-muted",
-    text: "text-muted-foreground",
-    shadow: "shadow-none"
-  },
-  "vales": {
-    bg: "bg-[rgba(var(--theme-primary-rgb),0.1)]",
-    text: "text-[var(--theme-primary)]",
-    shadow: "shadow-none"
-  },
-  "qr": {
-    bg: "bg-[rgba(var(--theme-secondary-rgb),0.1)]",
-    text: "text-[var(--theme-secondary)]",
-    shadow: "shadow-none"
-  }
-}
 
 const transactionFilters: Array<{ label: string; type?: TransactionType }> = [
   { label: "Todas" },
@@ -74,11 +27,10 @@ const transactionFilters: Array<{ label: string; type?: TransactionType }> = [
   { label: "Cobros", type: "cobro" },
   { label: "Servicios", type: "servicio" },
   { label: "Telepeaje", type: "telepeaje" },
+  { label: "Regalo", type: "regalo" },
   { label: "Vales", type: "vales" },
   { label: "QR", type: "qr" },
 ]
-
-const incomeTypes: TransactionType[] = ["cobro", "qr", "vales"]
 
 interface RecentTransactionsProps {
   expanded?: boolean
@@ -142,9 +94,14 @@ export function RecentTransactions({ expanded = false, onViewAll }: RecentTransa
       
       <div className="flex min-w-0 flex-col gap-3">
         {displayedTransactions.map((transaction, index) => (
+          (() => {
+            const Icon = transactionDisplay[transaction.type].icon
+            const isIncome = isIncomeTransaction(transaction.type)
+
+            return (
           <Card 
             key={transaction.id}
-            className="min-w-0 rounded-2xl border-0 bg-white shadow-lg shadow-gray-100/50 group animate-scale-in"
+            className="min-w-0 rounded-2xl border-0 bg-card shadow-lg shadow-slate-900/5 group animate-scale-in"
             style={{ animationDelay: `${0.3 + index * 0.05}s` }}
           >
             <CardContent className="flex min-w-0 items-center justify-between gap-3 p-4">
@@ -152,12 +109,10 @@ export function RecentTransactions({ expanded = false, onViewAll }: RecentTransa
                 <div
                   className={cn(
                     "flex size-12 shrink-0 items-center justify-center rounded-2xl shadow-md transition-transform duration-300 group-hover:scale-110",
-                    typeColors[transaction.type].bg,
-                    typeColors[transaction.type].text,
-                    typeColors[transaction.type].shadow
+                    getTransactionToneClassNames(transaction.type)
                   )}
                 >
-                  {typeIcons[transaction.type]}
+                  <Icon className="size-5" aria-hidden="true" />
                 </div>
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-foreground">{transaction.description}</p>
@@ -178,14 +133,30 @@ export function RecentTransactions({ expanded = false, onViewAll }: RecentTransa
                 </div>
               </div>
               <div className="shrink-0 text-right">
-                <p className={cn("font-bold text-base", incomeTypes.includes(transaction.type) ? "text-[var(--theme-secondary)]" : "text-foreground")}>
-                  {incomeTypes.includes(transaction.type) ? "+" : "-"}${transaction.amount.toLocaleString('es-MX')}
+                <p className={cn("font-bold text-base", isIncome ? "text-[var(--theme-secondary)]" : "text-foreground")}>
+                  {isIncome ? "+" : "-"}{formatMoney(transaction.amount)}
                 </p>
               </div>
             </CardContent>
           </Card>
+            )
+          })()
         ))}
       </div>
+
+      {displayedTransactions.length === 0 && (
+        <Empty className="border-0 bg-card py-10 shadow-sm">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <Receipt />
+            </EmptyMedia>
+            <EmptyTitle>Sin movimientos</EmptyTitle>
+            <EmptyDescription>
+              No hay transacciones para este filtro todavía.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      )}
       
       {expanded && (
         <div className="text-center pt-4">

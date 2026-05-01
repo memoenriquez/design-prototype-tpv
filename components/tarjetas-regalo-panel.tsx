@@ -38,6 +38,7 @@ import {
 } from "lucide-react"
 import { TransactionModal, ConfirmTransactionModal, TransactionStatus, TransactionDetails } from "./transaction-modal"
 import { useTransactions } from "@/contexts/transactions-context"
+import { formatMoney } from "@/lib/formatters"
 
 interface GiftCard {
   id: string
@@ -62,7 +63,7 @@ const giftCards: GiftCard[] = [
 const categories = [
   { id: "all", name: "Todos", icon: <Gift className="size-4" /> },
   { id: "gaming", name: "Gaming", icon: <Gamepad2 className="size-4" /> },
-  { id: "music", name: "Musica", icon: <Music className="size-4" /> },
+  { id: "music", name: "Música", icon: <Music className="size-4" /> },
   { id: "streaming", name: "Streaming", icon: <Tv className="size-4" /> },
   { id: "shopping", name: "Compras", icon: <ShoppingBag className="size-4" /> },
 ]
@@ -98,7 +99,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
 
   const transactionDetails: TransactionDetails = {
     type: `Tarjeta ${selectedCard?.name || ""}`,
-    amount: `$${selectedAmount?.toLocaleString('es-MX') || 0}.00`,
+    amount: formatMoney(selectedAmount || 0),
     commission: "$0.00",
     reference: `GFT-${Date.now().toString().slice(-8)}`,
     date: new Date().toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' })
@@ -286,7 +287,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                   {/* Info */}
                   <div className="flex flex-col gap-0.5 min-w-0 flex-1">
                     <h4 className="truncate text-sm font-semibold text-foreground">{card.name}</h4>
-                    <p className="text-xs text-muted-foreground">Desde ${card.amounts[0]}</p>
+                    <p className="text-xs text-muted-foreground">Desde {formatMoney(card.amounts[0])}</p>
                   </div>
                   
                   {/* Badge */}
@@ -403,11 +404,11 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                     disabled={!selectedAmount}
                     onClick={handlePurchase}
                   >
-                    Comprar ${selectedAmount || 0} MXN
+                    Comprar {formatMoney(selectedAmount || 0)}
                   </Button>
 
                   <p className="pb-4 text-center text-[10px] text-muted-foreground sm:text-xs">
-                    Tu codigo se generara despues de confirmar la compra
+                    Tu código se generará después de confirmar la compra
                   </p>
                 </div>
               </div>
@@ -437,9 +438,9 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
           "Procesando Compra..."
         }
         message={
-          transactionStatus === "success" ? `Tu tarjeta ${selectedCard?.name} esta lista` :
+          transactionStatus === "success" ? `Tu tarjeta ${selectedCard?.name} está lista` :
           transactionStatus === "error" ? "No se pudo completar la compra. Intente nuevamente." :
-          "Generando codigo de tarjeta..."
+          "Generando código de tarjeta..."
         }
         details={transactionStatus !== "processing" ? transactionDetails : undefined}
         onRetry={() => {
@@ -460,7 +461,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
 
       {/* Code Display Modal */}
       <Dialog open={showCodeModal} onOpenChange={setShowCodeModal}>
-        <DialogContent className="w-[calc(100%-2rem)] max-w-md bg-white border-0 rounded-2xl shadow-2xl p-5">
+        <DialogContent className="w-[calc(100%-2rem)] max-w-md bg-card border-0 rounded-2xl shadow-2xl p-5">
           <DialogHeader className="text-center pb-4">
             <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-white p-2 shadow-sm ring-1 ring-black/5">
               {selectedCard && <BrandLogo logo={brandLogos[selectedCard.logoKey]} tone="secondary" />}
@@ -469,48 +470,48 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
               Tarjeta {selectedCard?.name}
             </DialogTitle>
             <DialogDescription className="text-sm text-gray-500">
-              ${selectedAmount?.toLocaleString('es-MX')}.00 MXN
+              {formatMoney(selectedAmount || 0)} MXN
             </DialogDescription>
           </DialogHeader>
 
           <div className="flex flex-col gap-4">
             {/* Code Display */}
-            <div className="bg-gray-50 rounded-xl p-4">
-              <p className="text-xs text-gray-500 mb-2 text-center font-medium">Codigo de la tarjeta</p>
-              <div className="flex items-center gap-2 bg-white rounded-lg p-3 border border-gray-200">
-                <code className="text-sm font-mono font-bold text-gray-900 tracking-wider truncate flex-1 min-w-0">
+            <div className="bg-muted rounded-xl p-4">
+              <p className="text-xs text-muted-foreground mb-2 text-center font-medium">Código de la tarjeta</p>
+              <div className="flex items-center gap-2 bg-card rounded-lg p-3 border border-border">
+                <code className="text-sm font-mono font-bold text-foreground tracking-wider truncate flex-1 min-w-0">
                   {generatedCode}
                 </code>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleCopyCode}
-                  className="size-8 shrink-0 p-0 hover:bg-gray-100"
-                  aria-label="Copiar codigo de tarjeta"
+                  className="size-8 shrink-0 p-0 hover:bg-muted"
+                  aria-label="Copiar código de tarjeta"
                 >
                   {codeCopied ? (
                     <Check className="text-[var(--theme-secondary)]" data-icon="inline-start" />
                   ) : (
-                    <Copy className="text-gray-500" data-icon="inline-start" />
+                    <Copy className="text-muted-foreground" data-icon="inline-start" />
                   )}
                 </Button>
               </div>
               {codeCopied && (
-                <p className="mt-2 text-center text-xs font-medium text-[var(--theme-secondary)]">Codigo copiado al portapapeles</p>
+                <p className="mt-2 text-center text-xs font-medium text-[var(--theme-secondary)]">Código copiado al portapapeles</p>
               )}
             </div>
 
             {/* Instructions */}
-            <div className="flex flex-col gap-1 text-center text-xs text-gray-500">
-              <p>Canjea este codigo en {selectedCard?.name}</p>
-              <p>Valido por 12 meses desde la compra</p>
+            <div className="flex flex-col gap-1 text-center text-xs text-muted-foreground">
+              <p>Canjea este código en {selectedCard?.name}</p>
+              <p>Válido por 12 meses desde la compra</p>
             </div>
 
             {/* Actions */}
             <DialogFooter className="gap-3 sm:flex-row">
               <Button
                 variant="outline"
-                className="h-12 w-full rounded-xl border-gray-200 text-sm font-medium sm:flex-1"
+                className="h-12 w-full rounded-xl border-border text-sm font-medium sm:flex-1"
                 onClick={handleCopyCode}
               >
                 <Copy data-icon="inline-start" />

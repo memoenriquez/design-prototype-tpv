@@ -10,9 +10,17 @@ interface BalanceCardProps {
   balance: number
   salesToday: number
   transactionsToday: number
+  salesLabel?: string
+  transactionsLabel?: string
 }
 
-export function BalanceCard({ balance, salesToday, transactionsToday }: BalanceCardProps) {
+export function BalanceCard({
+  balance,
+  salesToday,
+  transactionsToday,
+  salesLabel = "Ingresos registrados",
+  transactionsLabel = "Movimientos",
+}: BalanceCardProps) {
   const [showBalance, setShowBalance] = useState(true)
 
   return (
@@ -72,14 +80,14 @@ export function BalanceCard({ balance, salesToday, transactionsToday }: BalanceC
         <div className="grid grid-cols-2 gap-3 pt-4 sm:gap-5 sm:pt-5">
           <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 transition-all duration-200 active:bg-white/15">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-white/60 text-[10px] sm:text-xs font-medium">Ventas hoy</p>
+              <p className="text-white/70 text-[10px] sm:text-xs font-medium">{salesLabel}</p>
               <ArrowUpRight className="size-3 sm:size-3.5" style={{ color: "var(--theme-secondary)" }} />
             </div>
             <p className="text-lg sm:text-2xl font-bold">${salesToday.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</p>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 transition-all duration-200 active:bg-white/15">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-white/60 text-[10px] sm:text-xs font-medium">Transacciones</p>
+              <p className="text-white/70 text-[10px] sm:text-xs font-medium">{transactionsLabel}</p>
               <div className="size-1.5 rounded-full animate-pulse sm:size-2" style={{ backgroundColor: "var(--theme-secondary)" }} />
             </div>
             <p className="text-lg sm:text-2xl font-bold">{transactionsToday}</p>

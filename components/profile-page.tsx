@@ -36,6 +36,8 @@ import {
   type LucideIcon
 } from "lucide-react"
 import { CTCPayLogo } from "./ctcpay-logo"
+import { useTransactions } from "@/contexts/transactions-context"
+import { formatMoney } from "@/lib/formatters"
 
 interface ProfilePageProps {
   onBack: () => void
@@ -60,24 +62,28 @@ interface ProfileMenuSection {
 }
 
 export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStrategy }: ProfilePageProps) {
+  const { transactions } = useTransactions()
   const [notifications, setNotifications] = useState(true)
   const [biometric, setBiometric] = useState(true)
   const [dialogMessage, setDialogMessage] = useState<string | null>(null)
+  const monthlyIncome = transactions
+    .filter((transaction) => ["cobro", "qr", "vales"].includes(transaction.type))
+    .reduce((total, transaction) => total + transaction.amount, 0)
 
   const menuItems: ProfileMenuSection[] = [
     {
       section: "Cuenta",
       items: [
-        { icon: User, label: "Datos personales", description: "Nombre, correo, telefono", status: "Proximamente" },
-        { icon: Building2, label: "Datos del negocio", description: "RFC, direccion fiscal", status: "Proximamente" },
-        { icon: CreditCard, label: "Metodos de pago", description: "Tarjetas y cuentas bancarias", status: "Proximamente" },
+        { icon: User, label: "Datos personales", description: "Nombre, correo, teléfono", status: "Próximamente" },
+        { icon: Building2, label: "Datos del negocio", description: "RFC, dirección fiscal", status: "Próximamente" },
+        { icon: CreditCard, label: "Métodos de pago", description: "Tarjetas y cuentas bancarias", status: "Próximamente" },
       ]
     },
     {
       section: "Seguridad",
       items: [
-        { icon: Shield, label: "Cambiar contrasena", description: "Actualiza tu contrasena", status: "Requiere auth" },
-        { icon: Smartphone, label: "Autenticacion biometrica", description: "Face ID / Huella", toggle: true, value: biometric, onChange: setBiometric },
+        { icon: Shield, label: "Cambiar contraseña", description: "Actualiza tu contraseña", status: "Requiere auth" },
+        { icon: Smartphone, label: "Autenticación biométrica", description: "Face ID / Huella", toggle: true, value: biometric, onChange: setBiometric },
       ]
     },
     {
@@ -91,8 +97,8 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
     {
       section: "Soporte",
       items: [
-        { icon: HelpCircle, label: "Centro de ayuda", description: "Preguntas frecuentes", status: "Proximamente" },
-        { icon: FileText, label: "Terminos y condiciones", description: "Documentos legales", status: "Proximamente" },
+        { icon: HelpCircle, label: "Centro de ayuda", description: "Preguntas frecuentes", status: "Próximamente" },
+        { icon: FileText, label: "Términos y condiciones", description: "Documentos legales", status: "Próximamente" },
       ]
     },
   ]
@@ -115,7 +121,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
               size="icon"
               className="size-10 rounded-full bg-white/10 hover:bg-white/20"
               aria-label="Editar perfil"
-              onClick={() => setDialogMessage("La edicion de perfil esta marcada como pendiente hasta conectar autenticacion y base de datos.")}
+              onClick={() => setDialogMessage("La edición de perfil está pendiente hasta conectar autenticación y base de datos.")}
             >
               <Edit2 className="text-white" data-icon="inline-start" />
             </Button>
@@ -145,7 +151,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
                 className="absolute right-0 bottom-0 flex size-8 items-center justify-center rounded-full shadow-lg"
                 style={{ backgroundColor: "var(--theme-secondary)" }}
                 aria-label="Cambiar foto de perfil"
-                onClick={() => setDialogMessage("La foto de perfil se habilitara cuando el perfil tenga almacenamiento persistente.")}
+                onClick={() => setDialogMessage("La foto de perfil se habilitará cuando el perfil tenga almacenamiento persistente.")}
               >
                 <Camera className="size-4 text-white" />
               </button>
@@ -156,13 +162,13 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
             {/* Quick Stats */}
             <div className="flex gap-4 sm:gap-6 mt-5 sm:mt-6 flex-wrap justify-center">
               <div className="text-center min-w-[60px]">
-                <p className="text-lg sm:text-2xl font-bold text-white">156</p>
+                <p className="text-lg sm:text-2xl font-bold text-white">{transactions.length}</p>
                 <p className="text-[10px] sm:text-xs text-white/60">Transacciones</p>
               </div>
               <Separator orientation="vertical" className="hidden h-auto self-stretch bg-white/20 sm:block" />
               <div className="text-center min-w-[60px]">
-                <p className="text-lg sm:text-2xl font-bold text-white">$45.2K</p>
-                <p className="text-[10px] sm:text-xs text-white/60">Este mes</p>
+                <p className="text-lg sm:text-2xl font-bold text-white">{formatMoney(monthlyIncome)}</p>
+                <p className="text-[10px] sm:text-xs text-white/60">Registrado</p>
               </div>
               <Separator orientation="vertical" className="hidden h-auto self-stretch bg-white/20 sm:block" />
               <div className="text-center min-w-[60px]">
@@ -187,7 +193,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
           style={{ backgroundColor: "var(--theme-card)" }}
         >
           <h3 className="mb-3 text-sm font-semibold" style={{ color: "var(--theme-text-secondary)" }}>
-            INFORMACION DE CONTACTO
+            INFORMACIÓN DE CONTACTO
           </h3>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3">
@@ -198,7 +204,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
                 <Mail className="size-5" style={{ color: "var(--theme-primary)" }} />
               </div>
               <div>
-                <p className="text-xs" style={{ color: "var(--theme-text-secondary)" }}>Correo electronico</p>
+                <p className="text-xs" style={{ color: "var(--theme-text-secondary)" }}>Correo electrónico</p>
                 <p className="text-sm font-medium" style={{ color: "var(--theme-text-primary)" }}>juan.martinez@email.com</p>
               </div>
             </div>
@@ -210,7 +216,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
                 <Phone className="size-5" style={{ color: "var(--theme-secondary)" }} />
               </div>
               <div>
-                <p className="text-xs" style={{ color: "var(--theme-text-secondary)" }}>Telefono</p>
+                <p className="text-xs" style={{ color: "var(--theme-text-secondary)" }}>Teléfono</p>
                 <p className="text-sm font-medium" style={{ color: "var(--theme-text-primary)" }}>+52 55 1234 5678</p>
               </div>
             </div>
@@ -219,7 +225,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
                 <MapPin className="size-5 text-muted-foreground" />
               </div>
               <div>
-                <p className="text-xs" style={{ color: "var(--theme-text-secondary)" }}>Ubicacion</p>
+                <p className="text-xs" style={{ color: "var(--theme-text-secondary)" }}>Ubicación</p>
                 <p className="text-sm font-medium" style={{ color: "var(--theme-text-primary)" }}>Ciudad de Mexico, Mexico</p>
               </div>
             </div>
@@ -238,7 +244,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
             <h3 className="px-4 pt-4 pb-2 text-xs font-semibold" style={{ color: "var(--theme-text-secondary)" }}>
               {section.section.toUpperCase()}
             </h3>
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-border/50">
               {section.items.map((item) => {
                 const action = 'action' in item ? item.action : undefined
                 const hasAction = Boolean(action)
@@ -251,8 +257,8 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
                       className="w-full flex items-center justify-between p-4"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="flex size-10 items-center justify-center rounded-full bg-gray-100">
-                          <item.icon className="size-5 text-gray-600" />
+                        <div className="flex size-10 items-center justify-center rounded-full bg-muted">
+                          <item.icon className="size-5 text-muted-foreground" />
                         </div>
                         <div className="text-left">
                           <p className="text-sm font-medium" style={{ color: "var(--theme-text-primary)" }}>{item.label}</p>
@@ -309,7 +315,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
                       key={item.label}
                       type="button"
                       onClick={action}
-                      className="flex w-full items-center justify-between p-4 transition-colors hover:bg-gray-50"
+                      className="flex w-full items-center justify-between p-4 transition-colors hover:bg-muted/70"
                     >
                       {rowContent}
                     </button>
@@ -317,13 +323,15 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
                 }
 
                 return (
-                  <div
+                  <button
                     key={item.label}
-                    className="flex w-full items-center justify-between p-4 opacity-70"
+                    type="button"
+                    disabled
+                    className="flex w-full items-center justify-between p-4 text-left opacity-70 disabled:cursor-not-allowed"
                     aria-disabled="true"
                   >
                     {rowContent}
-                  </div>
+                  </button>
                 )
               })}
             </div>
@@ -333,22 +341,22 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
         {/* Logout Button */}
         <button
           type="button"
-          onClick={() => setDialogMessage("Cerrar sesion requiere un proveedor de autenticacion. El prototipo todavia no crea sesiones reales.")}
+          onClick={() => setDialogMessage("Cerrar sesión requiere un proveedor de autenticación. El prototipo todavía no crea sesiones reales.")}
           className="w-full flex items-center justify-center gap-2 p-4 bg-red-50 rounded-2xl hover:bg-red-100 transition-colors"
         >
           <LogOut className="size-5 text-red-500" />
-          <span className="text-red-500 font-medium">Cerrar sesion</span>
+          <span className="text-red-500 font-medium">Cerrar sesión</span>
         </button>
 
         {/* App Version */}
         <div className="flex flex-col items-center py-6">
           <CTCPayLogo size="sm" />
-          <p className="mt-2 text-xs" style={{ color: "var(--theme-text-secondary)" }}>Version 1.0.0</p>
+          <p className="mt-2 text-xs" style={{ color: "var(--theme-text-secondary)" }}>Versión 1.0.0</p>
         </div>
       </div>
 
       <Dialog open={Boolean(dialogMessage)} onOpenChange={(open) => !open && setDialogMessage(null)}>
-        <DialogContent className="w-[calc(100%-2rem)] max-w-sm rounded-3xl border-0 bg-white">
+        <DialogContent className="w-[calc(100%-2rem)] max-w-sm rounded-3xl border-0 bg-card">
           <DialogHeader>
             <DialogTitle>Flujo pendiente</DialogTitle>
             <DialogDescription>{dialogMessage}</DialogDescription>

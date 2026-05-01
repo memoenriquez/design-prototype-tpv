@@ -48,10 +48,10 @@ export default function POSApp() {
   // Mock data
   const airtimeBalance = 2850.50
   const accountBalance = 4850.00
-  const salesToday = transactions
+  const registeredIncome = transactions
     .filter((transaction) => ["cobro", "qr", "vales"].includes(transaction.type))
     .reduce((total, transaction) => total + transaction.amount, 0)
-  const transactionsToday = transactions.length
+  const registeredTransactions = transactions.length
 
   const handleActionClick = (actionId: string) => {
     setActivePanel(actionId as ActivePanel)
@@ -184,12 +184,16 @@ export default function POSApp() {
               {/* Balance Card */}
               <BalanceCard 
                 balance={accountBalance}
-                salesToday={salesToday}
-                transactionsToday={transactionsToday}
+                salesToday={registeredIncome}
+                transactionsToday={registeredTransactions}
+                salesLabel="Ingresos registrados"
+                transactionsLabel="Movimientos"
               />
 
               {/* Quick Actions Grid */}
               <QuickActions onActionClick={handleActionClick} />
+
+              <RecentTransactions onViewAll={() => setActivePanel("historial")} />
             </>
           ) : (
             <div className="flex min-w-0 flex-col gap-4">

@@ -70,7 +70,7 @@ const actions: QuickAction[] = [
   },
   {
     id: "tarjetas-regalo",
-    label: "T. Regalo",
+    label: "Regalo",
     description: "Códigos digitales",
     icon: Gift,
     priority: "secondary",
@@ -193,7 +193,7 @@ export function QuickActions({ onActionClick }: QuickActionsProps) {
           })}
         </div>
 
-        <div className="mt-3 grid grid-cols-4 gap-2">
+        <div className="mt-3 grid grid-cols-2 gap-2">
           {secondaryActions.map((action, index) => {
             const Icon = action.icon
 
@@ -203,14 +203,19 @@ export function QuickActions({ onActionClick }: QuickActionsProps) {
                 type="button"
                 onClick={() => onActionClick?.(action.id)}
                 aria-label={action.label}
-                className="group flex min-h-[78px] flex-col items-center justify-center gap-2 rounded-2xl bg-white/80 p-2 text-center shadow-sm transition-all duration-300 active:scale-95 sm:hover:-translate-y-0.5 sm:hover:bg-white sm:hover:shadow-md"
+                className="group flex min-h-[72px] items-center gap-3 rounded-2xl bg-white/80 p-3 text-left shadow-sm transition-all duration-300 active:scale-95 sm:hover:-translate-y-0.5 sm:hover:bg-white sm:hover:shadow-md"
                 style={{ animationDelay: `${(index + primaryActions.length) * 0.05}s` }}
               >
                 <div className="flex size-10 items-center justify-center rounded-2xl bg-[rgba(var(--theme-primary-rgb),0.07)] text-[var(--theme-primary)] transition-transform duration-300 sm:group-hover:scale-105">
                   <Icon className="size-4.5" aria-hidden="true" />
                 </div>
-                <span className="line-clamp-2 text-[10px] font-semibold leading-tight text-[var(--theme-text-primary)]">
-                  {action.label}
+                <span className="min-w-0">
+                  <span className="block truncate text-xs font-bold leading-tight text-[var(--theme-text-primary)]">
+                    {action.label}
+                  </span>
+                  <span className="mt-0.5 block truncate text-[10px] font-medium text-[var(--theme-text-secondary)]">
+                    {action.description}
+                  </span>
                 </span>
               </button>
             )

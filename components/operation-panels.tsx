@@ -21,12 +21,8 @@ import {
   type TransactionStatus,
 } from "@/components/transaction-modal"
 import { useTransactions } from "@/contexts/transactions-context"
+import { moneyFormatter } from "@/lib/formatters"
 import { cn } from "@/lib/utils"
-
-const currencyFormatter = new Intl.NumberFormat("es-MX", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-})
 
 const quickAmounts = [100, 200, 300, 500, 1000]
 
@@ -55,7 +51,7 @@ const voucherIssuers: ProviderOption[] = [
 
 const parseAmount = (value: string) => Number.parseFloat(value || "0")
 
-const formatAmount = (value: string) => currencyFormatter.format(parseAmount(value))
+const formatAmount = (value: string) => moneyFormatter.format(parseAmount(value))
 
 const buildReference = (prefix: string) => `${prefix}-${Date.now().toString().slice(-8)}`
 
@@ -163,6 +159,7 @@ export function CodigoQrPanel() {
   const { addTransaction } = useTransactions()
   const [amount, setAmount] = useState("")
   const [selectedMethod, setSelectedMethod] = useState(qrMethods[0].id)
+  const [reference, setReference] = useState(buildReference("QR"))
   const [showConfirm, setShowConfirm] = useState(false)
   const [showResult, setShowResult] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -170,7 +167,6 @@ export function CodigoQrPanel() {
 
   const selectedMethodData = qrMethods.find((method) => method.id === selectedMethod)
   const amountValue = parseAmount(amount)
-  const reference = useMemo(() => buildReference("QR"), [showConfirm])
 
   const transactionDetails: TransactionDetails = {
     type: `Cobro ${selectedMethodData?.name || "QR"}`,
@@ -196,6 +192,7 @@ export function CodigoQrPanel() {
   }
 
   const handleConfirmTransaction = () => {
+    setReference(buildReference("QR"))
     setIsProcessing(true)
     setShowConfirm(false)
     setShowResult(true)
@@ -206,6 +203,7 @@ export function CodigoQrPanel() {
   const handleNewTransaction = () => {
     setShowResult(false)
     setAmount("")
+    setReference(buildReference("QR"))
   }
 
   return (
@@ -219,16 +217,19 @@ export function CodigoQrPanel() {
           />
           <CardContent className="flex flex-col gap-5 p-4">
             <div className="mx-auto grid size-44 place-items-center rounded-3xl bg-muted p-4 ring-1 ring-border/70">
-              <div className="grid size-32 grid-cols-5 gap-1 rounded-2xl bg-[var(--theme-primary)] p-2 shadow-inner">
-                {Array.from({ length: 25 }).map((_, index) => (
-                  <span
-                    key={index}
-                    className={cn(
-                      "rounded-[3px] bg-white",
-                      (index + Math.round(amountValue)) % 3 === 0 && "opacity-35"
-                    )}
-                  />
-                ))}
+              <div className="flex size-32 flex-col justify-between rounded-2xl bg-card p-3 shadow-inner ring-1 ring-border">
+                <div className="grid grid-cols-5 gap-1">
+                  {Array.from({ length: 25 }).map((_, index) => (
+                    <span
+                      key={index}
+                      className={cn(
+                        "size-4 rounded-[3px] bg-[var(--theme-primary)]",
+                        (index + Math.round(amountValue)) % 3 === 0 && "opacity-25"
+                      )}
+                    />
+                  ))}
+                </div>
+                <p className="text-center text-[10px] font-semibold text-muted-foreground">Vista previa</p>
               </div>
             </div>
             <FieldGroup className="gap-5">
@@ -240,6 +241,13 @@ export function CodigoQrPanel() {
               />
               <AmountPicker amount={amount} onAmountChange={setAmount} />
             </FieldGroup>
+            <Alert className="rounded-2xl border-0 bg-[rgba(var(--theme-primary-rgb),0.06)]">
+              <QrCode className="size-4 text-[var(--theme-primary)]" aria-hidden="true" />
+              <AlertTitle>QR de demostración</AlertTitle>
+              <AlertDescription>
+                Esta vista simula el flujo de cobro. La referencia final se genera al confirmar la operación.
+              </AlertDescription>
+            </Alert>
             <Button
               className="h-12 rounded-2xl bg-[var(--theme-secondary)] text-base font-bold text-white shadow-xl hover:opacity-95"
               disabled={amountValue <= 0}
@@ -291,6 +299,7 @@ export function TelepeajePanel() {
   const [amount, setAmount] = useState("200")
   const [selectedProvider, setSelectedProvider] = useState(tollProviders[0].id)
   const [tagNumber, setTagNumber] = useState("")
+  const [reference, setReference] = useState(buildReference("TAG"))
   const [showConfirm, setShowConfirm] = useState(false)
   const [showResult, setShowResult] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -298,7 +307,6 @@ export function TelepeajePanel() {
 
   const selectedProviderData = tollProviders.find((provider) => provider.id === selectedProvider)
   const amountValue = parseAmount(amount)
-  const reference = useMemo(() => buildReference("TAG"), [showConfirm])
   const isFormValid = amountValue > 0 && tagNumber.trim().length >= 6
 
   const transactionDetails: TransactionDetails = {
@@ -325,6 +333,7 @@ export function TelepeajePanel() {
   }
 
   const handleConfirmTransaction = () => {
+    setReference(buildReference("TAG"))
     setIsProcessing(true)
     setShowConfirm(false)
     setShowResult(true)
@@ -336,6 +345,7 @@ export function TelepeajePanel() {
     setShowResult(false)
     setTagNumber("")
     setAmount("200")
+    setReference(buildReference("TAG"))
   }
 
   return (
@@ -346,6 +356,7 @@ export function TelepeajePanel() {
             eyebrow="Recarga de tag"
             title="Telepeaje"
             icon={<Car className="size-6" aria-hidden="true" />}
+            tone="secondary"
           />
           <CardContent className="flex flex-col gap-5 p-4">
             <FieldGroup className="gap-5">

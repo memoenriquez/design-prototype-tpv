@@ -30,9 +30,10 @@ import {
   Loader2
 } from "lucide-react"
 import { CloseButton } from "@/components/ui/close-button"
-import { TransactionModal, TransactionStatus, TransactionDetails } from "./transaction-modal"
+import { ConfirmTransactionModal, TransactionModal, TransactionStatus, TransactionDetails } from "./transaction-modal"
 import { BrandLogoKey, brandLogos } from "@/lib/brand-logos"
 import { useTransactions } from "@/contexts/transactions-context"
+import { formatMoney } from "@/lib/formatters"
 import { cn } from "@/lib/utils"
 
 interface ServiceProvider {
@@ -61,7 +62,7 @@ const serviceCategories: ServiceCategory[] = [
     name: "CFE Luz",
     icon: <Zap className="size-6" />,
     services: [
-      serviceProvider("cfe-domestico", "CFE Domestico", "cfe"),
+      serviceProvider("cfe-domestico", "CFE Doméstico", "cfe"),
       serviceProvider("cfe-comercial", "CFE Comercial", "cfe"),
     ],
     popular: true
@@ -101,7 +102,7 @@ const serviceCategories: ServiceCategory[] = [
   },
   {
     id: "telefono",
-    name: "Telefono",
+    name: "Teléfono",
     icon: <Phone className="size-6" />,
     services: [
       serviceProvider("telmex-fijo", "Telmex Fijo", "telmex"),
@@ -119,7 +120,7 @@ const serviceCategories: ServiceCategory[] = [
   },
   {
     id: "auto",
-    name: "Telepeaje",
+    name: "Autos y tags",
     icon: <Car className="size-6" />,
     services: [
       serviceProvider("tag-iave", "TAG IAVE", "tag-iave"),
@@ -159,6 +160,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
   const [refFound, setRefFound] = useState(false)
   
   // Transaction modal states
+  const [showConfirm, setShowConfirm] = useState(false)
   const [showResult, setShowResult] = useState(false)
   const [transactionStatus, setTransactionStatus] = useState<TransactionStatus>("processing")
 
@@ -195,6 +197,11 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
 
   const handlePayService = () => {
     setShowPaymentForm(false)
+    setShowConfirm(true)
+  }
+
+  const handleConfirmServicePayment = () => {
+    setShowConfirm(false)
     setShowResult(true)
     setTransactionStatus("processing")
     
@@ -214,7 +221,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
 
   const transactionDetails: TransactionDetails = {
     type: `Pago ${selectedService?.name || ""}`,
-    amount: `$${parseFloat(paymentAmount || "0").toLocaleString('es-MX', { minimumFractionDigits: 2 })}`,
+    amount: formatMoney(parseFloat(paymentAmount || "0")),
     recipient: serviceReference,
     commission: "$0.00",
     reference: `SRV-${Date.now().toString().slice(-8)}`,
@@ -247,7 +254,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                 <h3 className="text-base sm:text-lg font-bold">+100 Servicios</h3>
               </div>
               <Badge className="bg-white/20 text-white border-0 text-[10px] sm:text-xs shrink-0">
-                Sin comision
+                Sin comisión
               </Badge>
             </div>
             
@@ -357,11 +364,11 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                     <button
                       key={service.id}
                       onClick={() => handleServiceSelect(service)}
-                      className="flex w-full min-w-0 items-center justify-between rounded-xl border border-gray-100 bg-white p-3.5 text-left shadow-sm transition-all duration-200 hover:border-gray-200 hover:shadow-md active:bg-gray-50 sm:rounded-2xl sm:p-4 group touch-target animate-slide-up"
+                    className="flex w-full min-w-0 items-center justify-between rounded-xl border border-border bg-card p-3.5 text-left shadow-sm transition-all duration-200 hover:border-[var(--theme-primary)] hover:shadow-md active:bg-muted sm:rounded-2xl sm:p-4 group touch-target animate-slide-up"
                       style={{ animationDelay: `${index * 0.05}s` }}
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white p-1.5 shadow-sm ring-1 ring-black/5 sm:size-10 sm:rounded-xl sm:p-2">
+                        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-card p-1.5 shadow-sm ring-1 ring-border sm:size-10 sm:rounded-xl sm:p-2">
                           <BrandLogo logo={brandLogos[service.logoKey]} tone="primary" />
                         </div>
                         <div className="min-w-0">
@@ -386,12 +393,12 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
 
       {/* Payment Form Dialog */}
       <Dialog open={showPaymentForm} onOpenChange={setShowPaymentForm}>
-        <DialogContent className="w-[calc(100%-2rem)] max-w-[380px] sm:max-w-md bg-white border-0 rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6">
+        <DialogContent className="w-[calc(100%-2rem)] max-w-[380px] sm:max-w-md border-0 bg-card rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6">
           <DialogHeader className="text-center pb-2">
             <DialogTitle className="text-base font-bold text-[var(--theme-primary)] sm:text-xl">
               {selectedService?.name}
             </DialogTitle>
-            <DialogDescription className="text-xs sm:text-sm text-gray-500">
+            <DialogDescription className="text-xs sm:text-sm text-muted-foreground">
               Ingresa los datos para realizar el pago
             </DialogDescription>
           </DialogHeader>
@@ -399,7 +406,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
           <div className="flex flex-col gap-3 py-3 sm:gap-4 sm:py-4">
             {/* Reference Input */}
             <div className="flex flex-col gap-1.5 sm:gap-2">
-              <label className="text-xs sm:text-sm font-medium text-gray-700">Numero de referencia o contrato</label>
+              <label className="text-xs sm:text-sm font-medium text-foreground">Número de referencia o contrato</label>
               <div className="flex w-full min-w-0 gap-2">
                 <Input
                   type="text"
@@ -427,20 +434,20 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
 
             {/* Amount Display (after reference found) */}
             {refFound && (
-              <div className="flex flex-col gap-2 rounded-xl bg-gray-50 p-3 animate-scale-in sm:gap-3 sm:rounded-2xl sm:p-4">
+              <div className="flex flex-col gap-2 rounded-xl bg-muted p-3 animate-scale-in sm:gap-3 sm:rounded-2xl sm:p-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm text-gray-500">Titular</span>
-                  <span className="text-xs sm:text-sm font-medium text-gray-900 truncate ml-2">Juan Martinez Lopez</span>
+                  <span className="text-xs sm:text-sm text-muted-foreground">Titular</span>
+                  <span className="text-xs sm:text-sm font-medium text-foreground truncate ml-2">Cliente demo</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm text-gray-500">Referencia</span>
-                  <span className="text-xs sm:text-sm font-mono text-gray-600 truncate ml-2">{serviceReference}</span>
+                  <span className="text-xs sm:text-sm text-muted-foreground">Referencia</span>
+                  <span className="text-xs sm:text-sm font-mono text-muted-foreground truncate ml-2">{serviceReference}</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between items-center pt-2">
-                  <span className="text-xs sm:text-sm font-medium text-gray-700">Monto a pagar</span>
+                  <span className="text-xs sm:text-sm font-medium text-foreground">Monto a pagar</span>
                   <span className="text-lg font-bold text-[var(--theme-secondary)] sm:text-xl">
-                    ${parseFloat(paymentAmount).toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+                    {formatMoney(parseFloat(paymentAmount || "0"))}
                   </span>
                 </div>
               </div>
@@ -450,7 +457,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
             <DialogFooter className="gap-2 pt-2 sm:flex-row sm:gap-3">
               <Button
                 variant="outline"
-                className="h-10 w-full rounded-lg border-gray-200 text-xs sm:h-12 sm:flex-1 sm:rounded-xl sm:text-sm"
+                className="h-10 w-full rounded-lg border-border text-xs sm:h-12 sm:flex-1 sm:rounded-xl sm:text-sm"
                 onClick={() => setShowPaymentForm(false)}
               >
                 Cancelar
@@ -460,12 +467,20 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                 disabled={!refFound}
                 onClick={handlePayService}
               >
-                Pagar Servicio
+                Revisar pago
               </Button>
             </DialogFooter>
           </div>
         </DialogContent>
       </Dialog>
+
+      <ConfirmTransactionModal
+        open={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleConfirmServicePayment}
+        title={`Confirmar ${selectedService?.name || "servicio"}`}
+        details={transactionDetails}
+      />
 
       {/* Result Modal */}
       <TransactionModal
