@@ -161,7 +161,9 @@ export default function POSApp() {
       {/* Header */}
       <POSHeader
         airtimeBalance={airtimeBalance}
+        servicesBalance={servicesBalance}
         showAirtimeBalance={activePanel === "tiempo-aire"}
+        showServicesBalance={activePanel === "pago-servicios"}
       />
 
       {/* Main Content */}

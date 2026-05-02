@@ -62,9 +62,9 @@ const giftCards: GiftCard[] = [
 
 const categories = [
   { id: "all", name: "Todos", icon: <Gift className="size-4" /> },
-  { id: "gaming", name: "Gaming", icon: <Gamepad2 className="size-4" /> },
+  { id: "gaming", name: "Juegos", icon: <Gamepad2 className="size-4" /> },
   { id: "music", name: "Música", icon: <Music className="size-4" /> },
-  { id: "streaming", name: "Streaming", icon: <Tv className="size-4" /> },
+  { id: "streaming", name: "Video", icon: <Tv className="size-4" /> },
   { id: "shopping", name: "Compras", icon: <ShoppingBag className="size-4" /> },
 ]
 
@@ -137,7 +137,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
         setGeneratedCode(code)
         addTransaction({
           type: "regalo",
-          description: `${selectedCard?.name || "Tarjeta"} Gift Card`,
+          description: `Tarjeta de regalo ${selectedCard?.name || ""}`.trim(),
           amount: selectedAmount || 0,
           reference: transactionDetails.reference,
         })
@@ -450,7 +450,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
             setGeneratedCode(`${selectedCard?.id.toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`)
             addTransaction({
               type: "regalo",
-              description: `${selectedCard?.name || "Tarjeta"} Gift Card`,
+              description: `Tarjeta de regalo ${selectedCard?.name || ""}`.trim(),
               amount: selectedAmount || 0,
               reference: transactionDetails.reference,
             })
