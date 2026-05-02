@@ -82,7 +82,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
     {
       section: "Seguridad",
       items: [
-        { icon: Shield, label: "Cambiar contraseña", description: "Actualiza tu contraseña", status: "Requiere auth" },
+        { icon: Shield, label: "Cambiar contraseña", description: "Actualiza tu contraseña", status: "Requiere autenticación" },
         { icon: Smartphone, label: "Autenticación biométrica", description: "Face ID / Huella", toggle: true, value: biometric, onChange: setBiometric },
       ]
     },
@@ -91,7 +91,7 @@ export function ProfilePage({ onBack, onOpenThemeCustomization, onOpenBackendStr
       items: [
         { icon: Bell, label: "Notificaciones", description: "Alertas y avisos", toggle: true, value: notifications, onChange: setNotifications },
         { icon: Palette, label: "Personalizar apariencia", description: "Colores, fuentes y estilos", action: onOpenThemeCustomization },
-        { icon: ServerCog, label: "Estado de integraciones", description: "Backend, auth y proveedores", action: onOpenBackendStrategy },
+        { icon: ServerCog, label: "Estado de integraciones", description: "Servidor, autenticación y proveedores", action: onOpenBackendStrategy },
       ]
     },
     {

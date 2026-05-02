@@ -22,7 +22,7 @@ interface CobrarPanelProps {
 
 const paymentMethods = [
   { id: "tarjeta", name: "Tarjeta", icon: <CreditCard className="size-5" /> },
-  { id: "contactless", name: "Contactless", icon: <Nfc className="size-5" /> },
+  { id: "contactless", name: "Sin contacto", icon: <Nfc className="size-5" /> },
   { id: "qr", name: "Codigo QR", icon: <QrCode className="size-5" /> },
   { id: "vales", name: "Vales", icon: <Wallet className="size-5" /> },
 ]

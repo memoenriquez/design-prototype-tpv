@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, type ReactNode } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { ArrowUpRight, Eye, EyeOff, Sparkles, TrendingUp, Wallet } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -36,28 +36,28 @@ export function BalanceCard({
   const [showBalance, setShowBalance] = useState(true)
   const financialBuckets: FinancialBucket[] = [
     {
-      label: "Airtime Balance",
+      label: "Saldo TAE",
       description: "Disponible TAE",
       value: airtimeBalance,
       icon: <Wallet className="size-3.5 sm:size-4" aria-hidden="true" />,
       emphasis: "secondary",
     },
     {
-      label: "Services Balance",
+      label: "Saldo servicios",
       description: "Servicios y productos",
       value: servicesBalance,
       icon: <Wallet className="size-3.5 sm:size-4" aria-hidden="true" />,
       emphasis: "primary",
     },
     {
-      label: "Merchant Collection",
+      label: "Cobros del comercio",
       description: "Cobros de hoy",
       value: merchantCollectionToday,
       icon: <ArrowUpRight className="size-3.5 sm:size-4" aria-hidden="true" />,
       emphasis: "primary",
     },
     {
-      label: "Merchant Spread",
+      label: "Margen del comercio",
       description: "Estimado de hoy",
       value: merchantSpreadToday,
       icon: <TrendingUp className="size-3.5 sm:size-4" aria-hidden="true" />,
@@ -67,7 +67,7 @@ export function BalanceCard({
 
   return (
     <Card
-      className="relative overflow-hidden rounded-2xl border-0 p-4 text-white shadow-2xl animate-scale-in sm:rounded-3xl sm:p-6"
+      className="relative gap-0 overflow-hidden rounded-2xl border-0 p-3 text-white shadow-2xl animate-scale-in sm:rounded-3xl sm:p-4"
       style={{
         background: "linear-gradient(135deg, var(--theme-primary), rgba(var(--theme-primary-rgb), 0.9))",
         boxShadow: "0 24px 50px rgba(var(--theme-primary-rgb), 0.28)",
@@ -85,7 +85,7 @@ export function BalanceCard({
         }} />
       </div>
       
-      <CardHeader className="relative z-10 flex-row items-start justify-between gap-3 p-0">
+      <CardHeader className="relative z-10 gap-1 p-0">
         <div className="min-w-0 flex-1">
           <div className="mb-1.5 flex items-center gap-1.5 sm:mb-2 sm:gap-2">
             <CardDescription className="text-xs font-medium text-white/70 sm:text-sm">
@@ -94,13 +94,13 @@ export function BalanceCard({
             <Sparkles className="size-3 shrink-0 sm:size-3.5" style={{ color: "var(--theme-secondary)" }} />
           </div>
           <CardTitle className="text-xl font-bold tracking-tight text-white sm:text-2xl">
-            Balances separados
+            Saldos
           </CardTitle>
           <p className="mt-1 text-xs font-medium text-white/65 sm:text-sm">
             TAE, servicios, cobros y spread no se mezclan.
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
+        <CardAction className="flex shrink-0 items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
@@ -119,12 +119,12 @@ export function BalanceCard({
           >
             <TrendingUp className="size-5 sm:size-6" />
           </div>
-        </div>
+        </CardAction>
       </CardHeader>
 
-      <CardContent className="relative z-10 mt-4 p-0 sm:mt-5">
+      <CardContent className="relative z-10 mt-2 p-0 sm:mt-3">
         <Separator className="bg-white/15" />
-        <div className="grid grid-cols-2 gap-3 pt-4 sm:gap-5 sm:pt-5">
+        <div className="grid grid-cols-2 gap-2.5 pt-3 sm:gap-3 sm:pt-4">
           {financialBuckets.map((bucket) => {
             const iconColor = bucket.emphasis === "secondary"
               ? "var(--theme-secondary)"
@@ -133,11 +133,11 @@ export function BalanceCard({
             return (
               <div
                 key={bucket.label}
-                className="rounded-xl bg-white/10 p-3 backdrop-blur-sm transition-all duration-200 active:bg-white/15 sm:rounded-2xl sm:p-4"
+                className="rounded-xl bg-white/10 p-2.5 backdrop-blur-sm transition-all duration-200 active:bg-white/15 sm:rounded-2xl sm:p-3"
               >
-                <div className="mb-2 flex items-start justify-between gap-2">
+                <div className="mb-1.5 flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="truncate text-[10px] font-semibold text-white/80 sm:text-xs">
+                    <p className="truncate text-[9px] font-semibold text-white/80 sm:text-[11px]">
                       {bucket.label}
                     </p>
                     <p className="truncate text-[9px] font-medium text-white/55 sm:text-[11px]">

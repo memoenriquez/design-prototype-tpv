@@ -23,7 +23,7 @@ export function BackendStrategyPage({ onBack }: BackendStrategyPageProps) {
               Estrategia elegida
             </p>
             <h1 className="text-lg font-bold" style={{ color: "var(--theme-text-primary)" }}>
-              Integraciones y backend
+              Integraciones y servidor
             </h1>
           </div>
         </div>
@@ -35,9 +35,9 @@ export function BackendStrategyPage({ onBack }: BackendStrategyPageProps) {
                 <Badge className="mb-3 rounded-full border-0 bg-white/15 text-white">
                   Modo actual: prototipo local
                 </Badge>
-                <CardTitle className="text-xl">Ruta recomendada: Supabase + API adapters</CardTitle>
+                <CardTitle className="text-xl">Ruta recomendada: Supabase + adaptadores API</CardTitle>
                 <p className="mt-2 text-sm text-white/75">
-                  Mantiene la UI actual, agrega persistencia real y deja cada proveedor detras de una capa server-side.
+                  Mantiene la interfaz actual, agrega persistencia real y deja cada proveedor detras de una capa del lado del servidor.
                 </p>
               </div>
               <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/15">
@@ -48,7 +48,7 @@ export function BackendStrategyPage({ onBack }: BackendStrategyPageProps) {
           <CardContent className="flex flex-col gap-4 p-4">
             <div className="grid grid-cols-3 gap-2">
               {[
-                { label: "Auth", icon: ShieldCheck },
+                { label: "Acceso", icon: ShieldCheck },
                 { label: "Datos", icon: Database },
                 { label: "APIs", icon: ServerCog },
               ].map((item) => (

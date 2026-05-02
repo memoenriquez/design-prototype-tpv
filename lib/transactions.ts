@@ -65,7 +65,7 @@ export const seedTransactions: AppTransaction[] = [
   {
     id: "seed-5",
     type: "regalo",
-    description: "Xbox Gift Card",
+    description: "Tarjeta de regalo Xbox",
     amount: 400,
     time: "Hace 1.5 horas",
     status: "completed",
@@ -81,7 +81,7 @@ export const seedTransactions: AppTransaction[] = [
   {
     id: "seed-7",
     type: "cobro",
-    description: "Venta contactless",
+    description: "Venta sin contacto",
     amount: 125,
     time: "Hace 3 horas",
     status: "completed",
