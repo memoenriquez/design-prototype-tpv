@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { BrandLogo } from "@/components/brand-logo"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { 
   Sheet,
   SheetContent,
@@ -27,7 +28,10 @@ import {
   Shield,
   ChevronRight,
   Star,
-  Loader2
+  Loader2,
+  CheckCircle2,
+  Clock,
+  AlertCircle
 } from "lucide-react"
 import { CloseButton } from "@/components/ui/close-button"
 import { ConfirmTransactionModal, TransactionModal, TransactionStatus, TransactionDetails } from "./transaction-modal"
@@ -48,6 +52,13 @@ interface ServiceCategory {
   icon: React.ReactNode
   services: ServiceProvider[]
   popular?: boolean
+}
+
+interface ProviderPreValidation {
+  billAmount: number
+  serviceFee: number
+  customerTotal: number
+  expiresAt: number
 }
 
 const serviceProvider = (id: string, name: string, logoKey: BrandLogoKey): ServiceProvider => ({
@@ -141,6 +152,20 @@ const serviceCategories: ServiceCategory[] = [
   }
 ]
 
+const providerPreValidationDurationMs = 2 * 60 * 1000
+
+const createProviderPreValidation = (): ProviderPreValidation => {
+  const billAmount = Number((Math.random() * 1000 + 100).toFixed(2))
+  const serviceFee = 12
+
+  return {
+    billAmount,
+    serviceFee,
+    customerTotal: billAmount + serviceFee,
+    expiresAt: Date.now() + providerPreValidationDurationMs,
+  }
+}
+
 interface PagoServiciosPanelProps {
   onBack?: () => void
 }
@@ -155,9 +180,9 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
   // Payment form state
   const [showPaymentForm, setShowPaymentForm] = useState(false)
   const [serviceReference, setServiceReference] = useState("")
-  const [paymentAmount, setPaymentAmount] = useState("")
   const [isSearchingRef, setIsSearchingRef] = useState(false)
-  const [refFound, setRefFound] = useState(false)
+  const [providerPreValidation, setProviderPreValidation] = useState<ProviderPreValidation | null>(null)
+  const [currentTime, setCurrentTime] = useState(Date.now())
   
   // Transaction modal states
   const [showConfirm, setShowConfirm] = useState(false)
@@ -168,6 +193,26 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
     cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     cat.services.some(s => s.name.toLowerCase().includes(searchQuery.toLowerCase()))
   )
+  const isProviderPreValidationExpired = Boolean(
+    providerPreValidation && providerPreValidation.expiresAt <= currentTime
+  )
+  const hasActiveProviderPreValidation = Boolean(providerPreValidation && !isProviderPreValidationExpired)
+  const providerPreValidationExpiryLabel = providerPreValidation
+    ? new Date(providerPreValidation.expiresAt).toLocaleTimeString("es-MX", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : ""
+
+  useEffect(() => {
+    if (!providerPreValidation || !showPaymentForm) return
+
+    const intervalId = window.setInterval(() => {
+      setCurrentTime(Date.now())
+    }, 1000)
+
+    return () => window.clearInterval(intervalId)
+  }, [providerPreValidation, showPaymentForm])
 
   const handleCategorySelect = (category: ServiceCategory) => {
     setSelectedCategory(category)
@@ -178,9 +223,9 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
     setSelectedService(service)
     setShowCategorySheet(false)
     setShowPaymentForm(true)
-    setRefFound(false)
+    setProviderPreValidation(null)
     setServiceReference("")
-    setPaymentAmount("")
+    setCurrentTime(Date.now())
   }
 
   const handleSearchReference = () => {
@@ -189,13 +234,14 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
     // Simulate API lookup
     setTimeout(() => {
       setIsSearchingRef(false)
-      setRefFound(true)
-      // Mock amount found
-      setPaymentAmount((Math.random() * 1000 + 100).toFixed(2))
+      setProviderPreValidation(createProviderPreValidation())
+      setCurrentTime(Date.now())
     }, 1500)
   }
 
   const handlePayService = () => {
+    if (!hasActiveProviderPreValidation) return
+
     setShowPaymentForm(false)
     setShowConfirm(true)
   }
@@ -212,7 +258,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
         addTransaction({
           type: selectedCategory?.id === "auto" ? "telepeaje" : "servicio",
           description: `Pago ${selectedService?.name || "servicio"}`,
-          amount: parseFloat(paymentAmount || "0"),
+          amount: providerPreValidation?.customerTotal || 0,
           reference: transactionDetails.reference,
         })
       }
@@ -221,9 +267,9 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
 
   const transactionDetails: TransactionDetails = {
     type: `Pago ${selectedService?.name || ""}`,
-    amount: formatMoney(parseFloat(paymentAmount || "0")),
+    amount: formatMoney(providerPreValidation?.customerTotal || 0),
     recipient: serviceReference,
-    commission: "$0.00",
+    commission: formatMoney(providerPreValidation?.serviceFee || 0),
     reference: `SRV-${Date.now().toString().slice(-8)}`,
     date: new Date().toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' })
   }
@@ -232,6 +278,8 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
     setShowResult(false)
     setSelectedService(null)
     setSelectedCategory(null)
+    setServiceReference("")
+    setProviderPreValidation(null)
   }
 
   const handleCloseSheet = () => {
@@ -254,7 +302,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                 <h3 className="text-base sm:text-lg font-bold">+100 Servicios</h3>
               </div>
               <Badge className="bg-white/20 text-white border-0 text-[10px] sm:text-xs shrink-0">
-                Sin comisión
+                Pre-validación
               </Badge>
             </div>
             
@@ -403,22 +451,25 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex flex-col gap-3 py-3 sm:gap-4 sm:py-4">
+          <FieldGroup className="gap-3 py-3 sm:gap-4 sm:py-4">
             {/* Reference Input */}
-            <div className="flex flex-col gap-1.5 sm:gap-2">
-              <label className="text-xs sm:text-sm font-medium text-foreground">Número de referencia o contrato</label>
+            <Field>
+              <FieldLabel htmlFor="service-reference">Número de referencia o contrato</FieldLabel>
               <div className="flex w-full min-w-0 gap-2">
                 <Input
+                  id="service-reference"
                   type="text"
                   placeholder="Ej: 123456789012"
                   value={serviceReference}
                   onChange={(e) => {
                     setServiceReference(e.target.value)
-                    setRefFound(false)
+                    setProviderPreValidation(null)
                   }}
                   className="h-10 min-w-0 flex-1 rounded-lg border-border text-sm focus:border-[var(--theme-primary)] focus:ring-[rgba(var(--theme-primary-rgb),0.2)] sm:h-12 sm:rounded-xl"
                 />
                 <Button
+                  type="button"
+                  aria-label="Validar referencia con el proveedor"
                   onClick={handleSearchReference}
                   disabled={serviceReference.length < 8 || isSearchingRef}
                   className="h-10 shrink-0 rounded-lg bg-[var(--theme-primary)] px-3 hover:opacity-95 sm:h-12 sm:rounded-xl sm:px-4"
@@ -430,11 +481,31 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                   )}
                 </Button>
               </div>
-            </div>
+              <FieldDescription>
+                Valida con el proveedor antes de aceptar el pago del cliente.
+              </FieldDescription>
+            </Field>
 
-            {/* Amount Display (after reference found) */}
-            {refFound && (
+            {/* Provider Pre-Validation result */}
+            {providerPreValidation && (
               <div className="flex flex-col gap-2 rounded-xl bg-muted p-3 animate-scale-in sm:gap-3 sm:rounded-2xl sm:p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <Badge
+                    variant={isProviderPreValidationExpired ? "destructive" : "secondary"}
+                    className="rounded-full"
+                  >
+                    {isProviderPreValidationExpired ? (
+                      <AlertCircle data-icon="inline-start" />
+                    ) : (
+                      <CheckCircle2 data-icon="inline-start" />
+                    )}
+                    {isProviderPreValidationExpired ? "Validación vencida" : "Referencia pagable"}
+                  </Badge>
+                  <span className="flex shrink-0 items-center gap-1 text-[10px] text-muted-foreground sm:text-xs">
+                    <Clock className="size-3" aria-hidden="true" />
+                    Vence {providerPreValidationExpiryLabel}
+                  </span>
+                </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs sm:text-sm text-muted-foreground">Titular</span>
                   <span className="text-xs sm:text-sm font-medium text-foreground truncate ml-2">Cliente demo</span>
@@ -444,12 +515,30 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
                   <span className="text-xs sm:text-sm font-mono text-muted-foreground truncate ml-2">{serviceReference}</span>
                 </div>
                 <Separator />
-                <div className="flex justify-between items-center pt-2">
-                  <span className="text-xs sm:text-sm font-medium text-foreground">Monto a pagar</span>
-                  <span className="text-lg font-bold text-[var(--theme-secondary)] sm:text-xl">
-                    {formatMoney(parseFloat(paymentAmount || "0"))}
+                <div className="flex justify-between items-center">
+                  <span className="text-xs sm:text-sm text-muted-foreground">Adeudo</span>
+                  <span className="text-xs sm:text-sm font-medium text-foreground">
+                    {formatMoney(providerPreValidation.billAmount)}
                   </span>
                 </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs sm:text-sm text-muted-foreground">Comisión de servicio</span>
+                  <span className="text-xs sm:text-sm font-medium text-foreground">
+                    {formatMoney(providerPreValidation.serviceFee)}
+                  </span>
+                </div>
+                <Separator />
+                <div className="flex justify-between items-center pt-2">
+                  <span className="text-xs sm:text-sm font-medium text-foreground">Total cliente</span>
+                  <span className="text-lg font-bold text-[var(--theme-secondary)] sm:text-xl">
+                    {formatMoney(providerPreValidation.customerTotal)}
+                  </span>
+                </div>
+                {isProviderPreValidationExpired && (
+                  <p className="text-xs text-muted-foreground">
+                    Vuelve a validar la referencia antes de aceptar el pago del cliente.
+                  </p>
+                )}
               </div>
             )}
 
@@ -464,13 +553,13 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
               </Button>
               <Button
                 className="h-10 w-full rounded-lg bg-[var(--theme-secondary)] text-xs text-white hover:opacity-95 sm:h-12 sm:flex-1 sm:rounded-xl sm:text-sm"
-                disabled={!refFound}
+                disabled={!hasActiveProviderPreValidation}
                 onClick={handlePayService}
               >
-                Revisar pago
+                {isProviderPreValidationExpired ? "Revalidar antes de cobrar" : "Revisar pago"}
               </Button>
             </DialogFooter>
-          </div>
+          </FieldGroup>
         </DialogContent>
       </Dialog>
 
@@ -505,7 +594,7 @@ export function PagoServiciosPanel({ onBack }: PagoServiciosPanelProps) {
             addTransaction({
               type: selectedCategory?.id === "auto" ? "telepeaje" : "servicio",
               description: `Pago ${selectedService?.name || "servicio"}`,
-              amount: parseFloat(paymentAmount || "0"),
+              amount: providerPreValidation?.customerTotal || 0,
               reference: transactionDetails.reference,
             })
           }, 2000)

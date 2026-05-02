@@ -10,7 +10,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty"
 import { cn } from "@/lib/utils"
-import { CheckCircle2, Clock, ChevronRight, Receipt, TrendingUp } from "lucide-react"
+import { CheckCircle2, ChevronRight, Receipt, TrendingUp } from "lucide-react"
 import { useState } from "react"
 import { useTransactions } from "@/contexts/transactions-context"
 import { formatMoney } from "@/lib/formatters"
@@ -117,17 +117,10 @@ export function RecentTransactions({ expanded = false, onViewAll }: RecentTransa
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-foreground">{transaction.description}</p>
                   <div className="mt-0.5 flex min-w-0 items-center gap-2">
-                    {transaction.status === "completed" ? (
-                      <Badge className="border-0 bg-[rgba(var(--theme-secondary-rgb),0.1)] text-[var(--theme-secondary)]">
-                        <CheckCircle2 className="size-3.5" />
-                        Completada
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="border-border bg-muted text-muted-foreground">
-                        <Clock className="size-3.5 animate-pulse" />
-                        Pendiente
-                      </Badge>
-                    )}
+                    <Badge className="shrink-0 border-0 bg-[rgba(var(--theme-secondary-rgb),0.1)] text-[var(--theme-secondary)]">
+                      <CheckCircle2 data-icon="inline-start" />
+                      Completada
+                    </Badge>
                     <span className="truncate text-xs text-muted-foreground">- {transaction.time}</span>
                   </div>
                 </div>

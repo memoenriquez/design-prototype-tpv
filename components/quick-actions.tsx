@@ -38,7 +38,7 @@ const actions: QuickAction[] = [
   {
     id: "cobrar",
     label: "Cobrar",
-    description: "Tarjeta o efectivo",
+    description: "Tarjeta, QR o vales",
     icon: CreditCard,
     priority: "primary",
     tone: "brand"

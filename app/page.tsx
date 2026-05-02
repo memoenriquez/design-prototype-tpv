@@ -47,11 +47,13 @@ export default function POSApp() {
 
   // Mock data
   const airtimeBalance = 2850.50
-  const accountBalance = 4850.00
-  const registeredIncome = transactions
+  const servicesBalance = 4850.00
+  const merchantCollectionToday = transactions
     .filter((transaction) => ["cobro", "qr", "vales"].includes(transaction.type))
     .reduce((total, transaction) => total + transaction.amount, 0)
-  const registeredTransactions = transactions.length
+  const merchantSpreadToday = transactions
+    .filter((transaction) => ["servicio", "telepeaje", "regalo"].includes(transaction.type))
+    .reduce((total, transaction) => total + Math.round(transaction.amount * 0.06), 0)
 
   const handleActionClick = (actionId: string) => {
     setActivePanel(actionId as ActivePanel)
@@ -156,8 +158,11 @@ export default function POSApp() {
         <div className="absolute top-20 left-1/2 size-72 -translate-x-1/2 rounded-full blur-3xl" style={{ background: "linear-gradient(135deg, rgba(var(--theme-secondary-rgb), 0.03), rgba(var(--theme-primary-rgb), 0.03))" }} />
       </div>
 
-      {/* Header with persistent airtime balance */}
-      <POSHeader airtimeBalance={airtimeBalance} />
+      {/* Header */}
+      <POSHeader
+        airtimeBalance={airtimeBalance}
+        showAirtimeBalance={activePanel === "tiempo-aire"}
+      />
 
       {/* Main Content */}
       <div className="scrollbar-hide relative z-10 flex-1 overflow-x-hidden overflow-y-auto pb-32">
@@ -183,11 +188,10 @@ export default function POSApp() {
 
               {/* Balance Card */}
               <BalanceCard 
-                balance={accountBalance}
-                salesToday={registeredIncome}
-                transactionsToday={registeredTransactions}
-                salesLabel="Ingresos registrados"
-                transactionsLabel="Movimientos"
+                airtimeBalance={airtimeBalance}
+                servicesBalance={servicesBalance}
+                merchantCollectionToday={merchantCollectionToday}
+                merchantSpreadToday={merchantSpreadToday}
               />
 
               {/* Quick Actions Grid */}
