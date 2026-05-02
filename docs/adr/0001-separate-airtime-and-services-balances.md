@@ -20,7 +20,7 @@ A single shared operating balance would be simpler to display, but it could let 
 CTC Pay will use separate ledger-backed prepaid balances for MVP:
 
 - Airtime Balance funds TAE operations and includes upfront TAE bonus margin.
-- Services Balance funds provider-backed operations other than TAE, including service bills, telepeaje, gift cards, and vales.
+- Services Balance funds provider-backed operations other than TAE, including service bills, telepeaje, and gift cards.
 - Merchant Collection does not use either prepaid balance.
 
 These balances are money-like stored value and must be implemented as immutable ledger-derived balances, not mutable fields. The ledger must support posted, reserved or pending, and available balance views. Corrections use reversal or adjustment entries instead of editing posted movements.

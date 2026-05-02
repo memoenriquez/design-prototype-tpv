@@ -9,7 +9,7 @@ export type TransactionType =
   | "vales"
   | "qr"
 
-export type TransactionStatus = "completed" | "pending"
+export type TransactionStatus = "completed"
 
 export interface AppTransaction {
   id: string
@@ -76,7 +76,7 @@ export const seedTransactions: AppTransaction[] = [
     description: "Pago CFE",
     amount: 245,
     time: "Hace 2 horas",
-    status: "pending",
+    status: "completed",
   },
   {
     id: "seed-7",

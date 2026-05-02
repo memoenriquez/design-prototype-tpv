@@ -189,7 +189,7 @@ export function TarjetasRegaloPanel({ onBack }: TarjetasRegaloPanelProps) {
                   <h3 className="text-base font-bold leading-tight sm:text-lg">Regala experiencias</h3>
                 </div>
                 <Badge className="shrink-0 border-0 bg-white/20 text-[10px] text-white sm:text-xs">
-                  Entrega inmediata
+                  Disponibilidad validada
                 </Badge>
               </div>
               
